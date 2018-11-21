@@ -1,9 +1,12 @@
 package database;
 
+import account.Account;
+import account.ReceiveBlock;
 import constants.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -89,7 +92,7 @@ public class Database {
     }
 
     public static boolean createAccount(Connection con, String publicKey, String hash,
-                                 String signature) throws SQLException {
+                                        String signature) throws SQLException {
         String sql = "{? = call CREATE_ACCOUNT(?, ?, ?, ?, ?)}";
         CallableStatement cs = con.prepareCall(sql);
 
@@ -134,7 +137,7 @@ public class Database {
     }
 
     public static void performTransaction(Connection con, String sender, String recipient, int amount, String signature,
-                                             String senderHash, String recipientHash) throws SQLException {
+                                          String senderHash, String recipientHash) throws SQLException {
         String sql = "{call PERFORM_TRANSACTION(?, ?, ?, ?, ?, ?, ?)}";
         CallableStatement cs = con.prepareCall(sql);
 
@@ -167,7 +170,7 @@ public class Database {
         }
     }
     public static List<AccountList> GetAccounts(Connection con) throws SQLException {
-       List<AccountList> AccountData=new ArrayList<>();
+        List<AccountList> AccountData=new ArrayList<>();
         Statement st = con.createStatement();
         String sql = ("SELECT * FROM ACCOUNT");
         ResultSet rs = st.executeQuery(sql);
@@ -177,18 +180,46 @@ public class Database {
             AccountData.add(new AccountList(str1,id));
             System.out.println(id);
         }
-        con.close();
+
         return AccountData;
     }
-    public static void InsertAccounts(Connection con, AccountList Account) throws SQLException {
-
+    public static List<ReceiveBlockData> GetReciveBlocks(Connection con) throws SQLException {
+        List<ReceiveBlockData> AccountData=new ArrayList<>();
         Statement st = con.createStatement();
-        String sql = ("INSERT INTO ACCOUNT ("+Account.PublicKey+","+Account.id+")");
-
+        System.out.println("GetReceiveBlocks");
+        String sql = ("SELECT * FROM RECEIVE_BLOCK");
         ResultSet rs = st.executeQuery(sql);
 
-        con.close();
+        while(rs.next()) {
+            String str1 = rs.getString("SENDER");
+            int id = rs.getInt("ID");
+
+            AccountData.add(new ReceiveBlockData(id,str1));
+            System.out.println(id+"  "+str1);
+        }
+
+        return AccountData;
+    }
+    public static void InsertAccounts(Connection con,AccountList Account) throws SQLException {
+
+        String sql = ("INSERT INTO ACCOUNT (PUBLIC_KEY,BLOCKCHAIN) VALUES(?,?)");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1,Account.PublicKey);
+        pstmt.setInt(2,Account.id);
+        pstmt.executeUpdate();
+
+
     }
 
+    public static void InsertReceiveBlock(Connection con,ReceiveBlockData Account) throws SQLException {
+
+        String sql = ("INSERT INTO ACCOUNT (ID,SENDER) VALUES(?,?)");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(2,Account.Sender);
+        pstmt.setInt(1,Account.id);
+        pstmt.executeUpdate();
+
+
+    }
 
 }

@@ -1,5 +1,5 @@
 package datagramInterfaces;
-
+import database.Database;
 import account.ReceiveBlock;
 import account.SendBlock;
 import cryptography.CryptoConverter;

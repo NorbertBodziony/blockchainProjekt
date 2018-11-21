@@ -1,5 +1,4 @@
 package node;
-
 import database.Database;
 import datagramInterfaces.GetAccounts;
 
@@ -19,6 +18,7 @@ public class NodeTCP implements Runnable {
     public NodeTCP() throws IOException {
         this.welcomeSocket =new ServerSocket(6666);
         this.connection = Database.connect();
+
     }
 
     @Override
@@ -32,10 +32,9 @@ public class NodeTCP implements Runnable {
                 ObjectInputStream inFromUser = new ObjectInputStream(connectionSocket.getInputStream());
                 if(inFromUser.readObject().getClass().equals(new GetAccounts(1).getClass()))
                 {
-                    System.out.println("Class getAccounts");
 
-                    outToUser.writeObject(Database.GetAccounts(connection));
-                    System.out.println("obcject send");
+                    outToUser.writeObject(Database.GetReciveBlocks(connection));
+                    System.out.println();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
