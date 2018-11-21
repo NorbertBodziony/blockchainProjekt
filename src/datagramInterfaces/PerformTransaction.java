@@ -4,7 +4,6 @@ import account.ReceiveBlock;
 import account.SendBlock;
 import cryptography.CryptoConverter;
 import cryptography.EllipticCurveHelper;
-import database.Database;
 
 import java.security.InvalidKeyException;
 import java.security.PublicKey;

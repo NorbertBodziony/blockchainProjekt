@@ -3,7 +3,8 @@ package database;
 import constants.Constants;
 
 import java.sql.*;
-import java.util.Formatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Database {
@@ -11,8 +12,8 @@ public class Database {
     public static String hostname = "localhost";
     public static String dbName = "orcl";
     public static String url = "jdbc:oracle:thin:@" + hostname + ":1521:" + dbName;
-    public static String user = "c##blockchain";
-    public static String password = "blockchain";
+    public static String user = "BLOCKCHAIN";
+    public static String password = "admin";
 
     static {
         if(!loadDriver())
@@ -164,6 +165,29 @@ public class Database {
             e.printStackTrace();
             throw new RuntimeException();
         }
+    }
+    public static List<AccountList> GetAccounts(Connection con) throws SQLException {
+       List<AccountList> AccountData=new ArrayList<>();
+        Statement st = con.createStatement();
+        String sql = ("SELECT * FROM ACCOUNT");
+        ResultSet rs = st.executeQuery(sql);
+        if(rs.next()) {
+            String str1 = rs.getString("PUBLIC_KEY");
+            int id = rs.getInt("BLOCKCHAIN");
+            AccountData.add(new AccountList(str1,id));
+            System.out.println(id);
+        }
+        con.close();
+        return AccountData;
+    }
+    public static void InsertAccounts(Connection con, AccountList Account) throws SQLException {
+
+        Statement st = con.createStatement();
+        String sql = ("INSERT INTO ACCOUNT ("+Account.PublicKey+","+Account.id+")");
+
+        ResultSet rs = st.executeQuery(sql);
+
+        con.close();
     }
 
 
