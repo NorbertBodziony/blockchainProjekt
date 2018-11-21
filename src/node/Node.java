@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 
-public class Node {
+public class Node implements Runnable {
     private DatagramSocket socket;
     private Connection connection;
 
@@ -46,4 +46,29 @@ public class Node {
     }
 
 
+    @Override
+    public void run() {
+        Node node = null;
+        try {
+            node = new Node();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+        try {
+            while (true) {
+                System.out.println("listen");
+                DatagramPacket request = node.listen();
+                System.out.println("new request");
+                node.handle(request);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                node.connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

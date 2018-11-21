@@ -67,5 +67,6 @@ public class ClientTCP implements Runnable {
         Socket clientSocket = new Socket("localhost", 6666);
         ClientTCP client=new ClientTCP(clientSocket);
         client.GetDatabase();
+        client.run();
     }
 }
