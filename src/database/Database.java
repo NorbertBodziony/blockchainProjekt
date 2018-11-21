@@ -236,6 +236,49 @@ public class Database {
 
         return AccountData;
     }
+    public static List<BlockData> GetBlocks(Connection con) throws SQLException {
+        List<BlockData> AccountData=new ArrayList<>();
+        Statement st = con.createStatement();
+        System.out.println("GetBlockchain");
+        String sql = ("SELECT * FROM BLOCK");
+        ResultSet rs = st.executeQuery(sql);
+
+        while(rs.next()) {
+            int Block_ID = rs.getInt("BLOCK_ID");
+           int  Previous_Block = rs.getInt("PREVIOUS_BLOCK");
+            int  Blockchain_ID = rs.getInt("BLOCKCHAIN_ID");
+            String  Signature =rs.getString("SIGNATURE");
+            String Hash_Code = rs.getString("HASH_CODE");
+            String  Previous_Hash_Code =rs.getString("PREVIOUS_HASH_CODE");
+          int  Amount = rs.getInt("AMOUNT");
+         int   Receive_Type = rs.getInt("RECEIVE_TYPE");
+          int  Send_Type = rs.getInt("SEND_TYPE");
+
+
+            AccountData.add(new BlockData(Block_ID,Blockchain_ID,Previous_Block,Signature,Hash_Code,Previous_Hash_Code,Amount,Receive_Type,Send_Type));
+
+        }
+
+        return AccountData;
+    }
+    public static void InsertBlocks(Connection con,BlockData Account) throws SQLException {
+
+        String sql = ("INSERT INTO BLOCK(Block_ID,BLOCKCHAIN_ID,PREVIOUS_BLOCK,SIGNATURE,HASH_CODE,PREVIOUS_HASH_CODE,AMOUNT,RECEIVE_TYPE,SEND_TYPE) VALUES(?,?,?,?,?,?,?,?,?)");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(4,Account.Signature);
+        pstmt.setString(5,Account.Hash_Code);
+        pstmt.setString(6,Account.Previous_Hash_Code);
+        pstmt.setInt(1,Account.Block_ID);
+        pstmt.setInt(2,Account.Blockchain_ID);
+        pstmt.setInt(3,Account.Previous_Block);
+        pstmt.setInt(7,Account.Amount);
+        pstmt.setInt(8,Account.Receive_Type);
+        pstmt.setInt(9,Account.Send_Type);
+
+        pstmt.executeUpdate();
+
+
+    }
     public static void InsertBlockchain(Connection con,BlockchainData Account) throws SQLException {
 
         String sql = ("INSERT INTO BLOCKCHAIN (BLOCKCHAIN_ID,LAST_BLOCK) VALUES(?,?)");

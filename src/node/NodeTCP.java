@@ -37,6 +37,7 @@ public class NodeTCP implements Runnable {
                     outToUser.writeObject(Database.GetAccounts(connection));
                     outToUser.writeObject(Database.GetSendBlocks(connection));
                     outToUser.writeObject(Database.GetReciveBlocks(connection));
+                    outToUser.writeObject(Database.GetBlocks(connection));
 
                 }
             } catch (IOException e) {

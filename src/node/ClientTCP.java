@@ -1,15 +1,15 @@
 package node;
-import database.Database;
-import database.AccountList;
+
+import database.*;
 import datagramInterfaces.GetAccounts;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
+import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 
 public class ClientTCP implements Runnable {
     Socket clientSocket;
@@ -23,10 +23,35 @@ public class ClientTCP implements Runnable {
         ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
         ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
         outToServer.writeObject(new GetAccounts(1));
-        List<AccountList> AccountData= (List<AccountList>) inFromServer.readObject();
+        List<BlockchainData> AccountData= (List<BlockchainData>) inFromServer.readObject();
         for(int i=0;i<AccountData.size();i++)
-        {
-            Database.InsertAccounts(connection,AccountData.get(i));
+        {System.out.println("dataupdate1");
+            Database.InsertBlockchain(connection,AccountData.get(i));
+
+        }
+        List<AccountList> AccountData1= (List<AccountList>) inFromServer.readObject();
+
+        for(int i=0;i<AccountData1.size();i++)
+        {System.out.println("dataupdate2");
+            Database.InsertAccounts(connection,AccountData1.get(i));
+        }
+        List<SendBlockData> AccountData2= (List<SendBlockData>) inFromServer.readObject();
+
+        for(int i=0;i<AccountData2.size();i++)
+        {System.out.println("dataupdate3");
+            Database.InsertSendBlock(connection,AccountData2.get(i));
+        }
+        List<ReceiveBlockData> AccountData3= (List<ReceiveBlockData>) inFromServer.readObject();
+
+        for(int i=0;i<AccountData3.size();i++)
+        {System.out.println("dataupdate4");
+            Database.InsertReceiveBlock(connection,AccountData3.get(i));
+        }
+        List<BlockData> AccountData4= (List<BlockData>) inFromServer.readObject();
+
+        for(int i=0;i<AccountData4.size();i++)
+        {System.out.println("dataupdate6");
+            Database.InsertBlocks(connection,AccountData4.get(i));
         }
     }
     @Override
