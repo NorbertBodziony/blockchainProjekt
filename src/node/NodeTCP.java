@@ -33,8 +33,11 @@ public class NodeTCP implements Runnable {
                 if(inFromUser.readObject().getClass().equals(new GetAccounts(1).getClass()))
                 {
 
+                    outToUser.writeObject(Database.GetBlockchain(connection));
+                    outToUser.writeObject(Database.GetAccounts(connection));
+                    outToUser.writeObject(Database.GetSendBlocks(connection));
                     outToUser.writeObject(Database.GetReciveBlocks(connection));
-                    System.out.println();
+
                 }
             } catch (IOException e) {
                 e.printStackTrace();

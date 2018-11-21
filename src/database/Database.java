@@ -172,9 +172,10 @@ public class Database {
     public static List<AccountList> GetAccounts(Connection con) throws SQLException {
         List<AccountList> AccountData=new ArrayList<>();
         Statement st = con.createStatement();
+        System.out.println("getAccountlist");
         String sql = ("SELECT * FROM ACCOUNT");
         ResultSet rs = st.executeQuery(sql);
-        if(rs.next()) {
+        while(rs.next()) {
             String str1 = rs.getString("PUBLIC_KEY");
             int id = rs.getInt("BLOCKCHAIN");
             AccountData.add(new AccountList(str1,id));
@@ -200,6 +201,61 @@ public class Database {
 
         return AccountData;
     }
+    public static List<SendBlockData> GetSendBlocks(Connection con) throws SQLException {
+        List<SendBlockData> AccountData=new ArrayList<>();
+        Statement st = con.createStatement();
+        System.out.println("SendBlockData");
+        String sql = ("SELECT * FROM SEND_BLOCK");
+        ResultSet rs = st.executeQuery(sql);
+
+        while(rs.next()) {
+            String str1 = rs.getString("RECIPIENT");
+            int id = rs.getInt("ID");
+
+            AccountData.add(new SendBlockData(id,str1));
+            System.out.println(id+"  "+str1);
+        }
+
+        return AccountData;
+    }
+
+    public static List<BlockchainData> GetBlockchain(Connection con) throws SQLException {
+        List<BlockchainData> AccountData=new ArrayList<>();
+        Statement st = con.createStatement();
+        System.out.println("GetBlockchain");
+        String sql = ("SELECT * FROM BLOCKCHAIN");
+        ResultSet rs = st.executeQuery(sql);
+
+        while(rs.next()) {
+
+            int id = rs.getInt("BLOCKCHAIN_ID");
+
+            AccountData.add(new BlockchainData(id));
+            System.out.println(id);
+        }
+
+        return AccountData;
+    }
+    public static void InsertBlockchain(Connection con,BlockchainData Account) throws SQLException {
+
+        String sql = ("INSERT INTO BLOCKCHAIN (BLOCKCHAIN_ID,LAST_BLOCK) VALUES(?,?)");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(2,null);
+        pstmt.setInt(1,Account.id);
+        pstmt.executeUpdate();
+
+
+    }
+    public static void InsertSendBlock(Connection con,SendBlockData Account) throws SQLException {
+
+        String sql = ("INSERT INTO SEND_BLOCK (ID,RECIPIENT) VALUES(?,?)");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(2,Account.Recipient);
+        pstmt.setInt(1,Account.ID);
+        pstmt.executeUpdate();
+
+
+    }
     public static void InsertAccounts(Connection con,AccountList Account) throws SQLException {
 
         String sql = ("INSERT INTO ACCOUNT (PUBLIC_KEY,BLOCKCHAIN) VALUES(?,?)");
@@ -213,7 +269,7 @@ public class Database {
 
     public static void InsertReceiveBlock(Connection con,ReceiveBlockData Account) throws SQLException {
 
-        String sql = ("INSERT INTO ACCOUNT (ID,SENDER) VALUES(?,?)");
+        String sql = ("INSERT INTO RECEIVE_BLOCK (ID,SENDER) VALUES(?,?)");
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(2,Account.Sender);
         pstmt.setInt(1,Account.id);
