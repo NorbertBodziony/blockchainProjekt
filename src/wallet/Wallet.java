@@ -107,6 +107,17 @@ public class Wallet {
         is.close();
         return respond;
     }
+    public PublicKey getPublicKey() {
+        return currentAccount.getPublicKey();
+    }
+    public PrivateKey getPrivateKey() {
+        return currentAccount.getPrivateKey();
+    }
+    public String getAddress() {
+        return CryptoConverter.keyToHexString(currentAccount.getPublicKey());
+    }
+
+
 
 
 
