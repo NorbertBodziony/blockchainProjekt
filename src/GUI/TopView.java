@@ -1,6 +1,5 @@
 package GUI;
 
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -21,14 +20,7 @@ public class TopView extends BorderPane {
     private Button logout;
     private HBox hBox;
 
-    public  int returnOne()
-    {
-        return  1;
-    }
-
-
-    public TopView()
-    {
+    public TopView() {
 
         name = new Text("Oxygen Network");
         name.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
@@ -39,17 +31,17 @@ public class TopView extends BorderPane {
         logout = new Button("Logout");
         logout.setStyle("-fx-background-color: #4286f4; ");
 
-        logout.setOnMouseEntered(e->
+        logout.setOnMouseEntered(e ->
         {
             logout.setStyle("-fx-background-color: #f44289; ");
         });
-        logout.setOnMouseExited(e->
+        logout.setOnMouseExited(e ->
         {
             logout.setStyle("-fx-background-color: #4286f4; ");
         });
 
 
-       logout.setOnAction(new LogoutAction());
+        logout.setOnAction(new LogoutAction());
 
 
         hBox = new HBox();
@@ -57,13 +49,10 @@ public class TopView extends BorderPane {
         hBox.setAlignment(Pos.CENTER);
 
 
+        hBox.getChildren().addAll(version, logout);
 
 
-
-        hBox.getChildren().addAll(version,logout);
-
-
-        this.setPrefSize(MainView.WIDTH,HEIGHT);
+        this.setPrefSize(MainView.WIDTH, HEIGHT);
         this.setPadding(new Insets(20));
         this.setLeft(name);
         this.setRight(hBox);
@@ -71,12 +60,15 @@ public class TopView extends BorderPane {
 
     }
 
+    public int returnOne() {
+        return 1;
+    }
+
     public void setLogoutOnAction(LogoutAction logoutAction) {
         logout.setOnAction(logoutAction);
     }
 
-    public class LogoutAction implements EventHandler
-    {
+    public class LogoutAction implements EventHandler {
 
         @Override
         public void handle(Event event) {

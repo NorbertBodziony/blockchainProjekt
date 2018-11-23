@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
@@ -59,7 +58,6 @@ public class sendDialog extends Dialog<Pair<String, String>> {
 
         Platform.runLater(() -> amount.requestFocus());
 
-
         this.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
                 return new Pair<>(amount.getText(), recipent.getText());
@@ -67,12 +65,13 @@ public class sendDialog extends Dialog<Pair<String, String>> {
             return null;
         });
 
-        Image image = new Image(getClass().getResource("back3.png").toExternalForm());
+        javafx.scene.image.Image image = new javafx.scene.image.Image(getClass().getResource("back3.png").toExternalForm());
 
         BackgroundImage myBI = new BackgroundImage(image,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
         this.getDialogPane().setBackground(new Background(myBI));
+
 
         this.getDialogPane().setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override

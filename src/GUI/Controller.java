@@ -1,14 +1,18 @@
 package GUI;
 
 import cryptography.CryptoConverter;
+import datagramInterfaces.NodeRespond;
+import datagramInterfaces.PreviousHashesRespond;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import wallet.Wallet;
-import datagramInterfaces.NodeRespond;
-import datagramInterfaces.PreviousHashesRespond;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
@@ -16,34 +20,35 @@ import java.security.spec.InvalidKeySpecException;
 
 import static datagramInterfaces.ErrorCode.OK;
 
-public class Controller  {
-    private  MainView mainView;
-    private  Model model;
+public class Controller {
+    private MainView mainView;
     private Wallet wallet;
+    private Utility utils;
 
 
     public Controller(MainView mainView, Wallet wallet) throws Exception {
 
-
+        utils = new Utility();
 
         this.mainView = mainView;
         this.wallet = wallet;
 
+        this.mainView.setWalletsLoginUsingSavedWallet(utils.getListOfWallets().toArray(new String[0]));
+
 
         this.mainView.setGenerateWalletButton(new listenForGenerateNewWallet());
 
-        this.mainView.setReciveButtonWalletScreen(e->
+        this.mainView.setReciveButtonWalletScreen(e ->
         {
             new reciveDialog(wallet.getAddress()).showAndWait();
         });
 
-        this.mainView.setLoginButtonLoginUsingSavedWallet(e->
+        this.mainView.setLoginButtonLoginUsingSavedWallet(e ->
         {
-            System.out.println(            this.mainView.getSelectedWalletLoginUsingSavedWallet()
-            );
+            System.out.println(this.mainView.getSelectedWalletLoginUsingSavedWallet());
         });
 
-        this.mainView.setLoginUsingPrivKey(e->
+        this.mainView.setLoginUsingPrivKey(e ->
         {
 
             try {
@@ -54,17 +59,15 @@ public class Controller  {
                 this.mainView.setScreenVisible("walletScreen");
                 System.out.println(this.mainView.getPasswordLoginUsingPrivKey());
                 System.out.println(this.mainView.getLoginUsingPrivKeyPublicKey());
-            }catch (InvalidKeySpecException exec) {
+            } catch (InvalidKeySpecException exec) {
                 System.out.println("InvalidKeySpecException");
 
             }
 
 
-
-
         });
 
-        this.mainView.setGenerateKeys(e->
+        this.mainView.setGenerateKeys(e ->
         {
             try {
                 wallet.createAccount();
@@ -79,8 +82,8 @@ public class Controller  {
             }
             keysDialog keysDialog = new keysDialog(wallet.getAddress(), CryptoConverter.keyToHexString(wallet.getPrivateKey()));
 
-            System.out.println(keysDialog.getPrivateKey());
             System.out.println(keysDialog.getPublicKey());
+            System.out.println(keysDialog.getPrivateKey());
 
 
             keysDialog.showAndWait();
@@ -89,11 +92,9 @@ public class Controller  {
 
         this.mainView.setAmountWalletScreen("80");
 
-        this.mainView.setSendButtonWalletScreen(e->
+        this.mainView.setSendButtonWalletScreen(e ->
         {
             sendDialog sendDialog = new sendDialog();
-
-
 
 
             sendDialog.showAndWait().ifPresent(amountAndRecipent -> {
@@ -115,9 +116,8 @@ public class Controller  {
                     String recipientHash = hashRespond.getRecipientPreviousHash();
                     String senderHash = hashRespond.getSenderPreviousHash();
                     wallet.performTransaction(amount, recipient, senderHash, recipientHash);
-                    System.out.println("Send: "+amount+" to: " + recipient);
-                }
-                catch (IOException e1) {
+                    System.out.println("Send: " + amount + " to: " + recipient);
+                } catch (IOException e1) {
                     e1.printStackTrace();
                 } catch (SignatureException e1) {
                     e1.printStackTrace();
@@ -131,22 +131,81 @@ public class Controller  {
 
 
         });
+
+        this.mainView.setLoginButtonLoginUsingSavedWallet(new listenForLoginUsingSavedWallet());
+
     }
 
-    private  class listenForGenerateNewWallet implements EventHandler<ActionEvent>
-    {
+    private class listenForLoginUsingSavedWallet implements EventHandler<ActionEvent> {
+        String[] keys;
+
+        @Override
+        public void handle(ActionEvent event) {
+            try {
+
+                keys = utils.decipherWalletFile(mainView.getSelectedWalletLoginUsingSavedWallet(), mainView.getPasswordLoginUsingSavedWallet());
+
+                System.out.println(keys[0]);
+                System.out.println(keys[1]);
+
+                wallet.login(keys[0], keys[1]);
+                //this.mainView.setAmountWalletScreen();
+
+
+                mainView.setScreenVisible("walletScreen");
+
+            } catch (InvalidKeySpecException exec) {
+                System.out.println("InvalidKeySpecException");
+
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+    private class listenForGenerateNewWallet implements EventHandler<ActionEvent> {
 
         @Override
         public void handle(ActionEvent actionEvent) {
             System.out.println("XD");
             try {
-                if(mainView.getCreateNewWalletPassword().equals(mainView.getCreateNewWalletPassword2()))
-                {
+                if (mainView.getCreateNewWalletPassword().equals(mainView.getCreateNewWalletPassword2())) {
+                    try {
+                        wallet.createAccount();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    } catch (NoSuchAlgorithmException e1) {
+                        e1.printStackTrace();
+                    } catch (SignatureException e1) {
+                        e1.printStackTrace();
+                    } catch (InvalidKeyException e1) {
+                        e1.printStackTrace();
+                    }
 
+                    utils.createWalletFile(mainView.getCreateNewWalletPassword(), wallet.getAddress(), CryptoConverter.keyToHexString(wallet.getPrivateKey()), mainView.getCreateNewWalletWalletName());
+
+
+                    mainView.setWalletsLoginUsingSavedWallet(utils.getListOfWallets().toArray(new String[0]));
+
+                    //System.out.println(mainView.getCreateNewWalletWalletName());
                     System.out.println("Password Equals ");
-                }
-                else
-                {
+                } else {
                     System.out.println("Password not equal");
                 }
             } catch (Exception e) {

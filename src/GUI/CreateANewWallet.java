@@ -1,10 +1,11 @@
 package GUI;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
@@ -16,7 +17,6 @@ public class CreateANewWallet extends GridPane {
     Button generateWalletButton, home;
 
 
-
     Label text, walletLabel;
     //ChoiceBox<String> wallets;
     PasswordField passwordField;
@@ -24,9 +24,7 @@ public class CreateANewWallet extends GridPane {
     TextField walletName;
 
 
-
-    public CreateANewWallet()
-    {
+    public CreateANewWallet() {
         text = new Label("Choose a passphrase to encrypt your private key: ");
         text.setTextFill(Color.WHITE);
         walletLabel = new Label("Wallet Name: ");
@@ -42,24 +40,23 @@ public class CreateANewWallet extends GridPane {
         home = new Button("Home");
 
 
-
-        home.setOnAction(e->
+        home.setOnAction(e ->
         {
             System.out.println("Hello");
         });
 
-        this.add(text,1,0);
+        this.add(text, 1, 0);
 
-        this.add(passwordField,1,1,2,1);
-        this.add(repeatPassword,1,2,2,1);
-        this.add(walletLabel,1,3);
-        this.add(walletName, 2,3);
+        this.add(passwordField, 1, 1, 2, 1);
+        this.add(repeatPassword, 1, 2, 2, 1);
+        this.add(walletLabel, 1, 3);
+        this.add(walletName, 2, 3);
 
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(generateWalletButton,home);
+        hBox.getChildren().addAll(generateWalletButton, home);
         hBox.setSpacing(20);
 
-        this.add(hBox,1,4,2,1);
+        this.add(hBox, 1, 4, 2, 1);
 
 
         this.setVgap(5);
@@ -73,41 +70,33 @@ public class CreateANewWallet extends GridPane {
         return home;
     }
 
-    public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler)
-    {
+    public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler) {
         home.setOnAction(actionEventEventHandler);
     }
 
-    public void setGenerateWalletButton(EventHandler<ActionEvent> actionEventEventHandler)
-    {
+    public void setGenerateWalletButton(EventHandler<ActionEvent> actionEventEventHandler) {
         generateWalletButton.setOnAction(actionEventEventHandler);
     }
 
-    public String getWalletName()
-    {
+    public String getWalletName() {
         return walletName.getText();
     }
 
-    public String getPassword() throws Exception
-    {
-        if(passwordField.getText().isEmpty())
-        {
+    public String getPassword() throws Exception {
+        if (passwordField.getText().isEmpty()) {
             throw new Exception("Password is empty");
 
-        }
-        else {
+        } else {
             return passwordField.getText();
 
         }
     }
-    public String getPassword2() throws Exception
-    {
-        if(repeatPassword.getText().isEmpty())
-        {
+
+    public String getPassword2() throws Exception {
+        if (repeatPassword.getText().isEmpty()) {
             throw new Exception("Password is empty");
 
-        }
-        else {
+        } else {
             return repeatPassword.getText();
         }
     }

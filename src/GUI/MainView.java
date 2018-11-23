@@ -1,4 +1,3 @@
-
 package GUI;
 
 import constants.Constants;
@@ -8,7 +7,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -19,13 +17,10 @@ import wallet.Wallet;
 
 public class MainView extends Application {
 
-    Controller controller;
-    Wallet wallet;
-
-
     public final static int HEIGHT = 700;
     public final static int WIDTH = 1000;
-
+    Controller controller;
+    Wallet wallet;
     private double xOffset = 0;
     private double yOffset = 0;
 
@@ -34,10 +29,6 @@ public class MainView extends Application {
     private MiddleView middleView;
     private TopView topView;
     private VBox vBox;
-
-
-
-
 
 
     @Override
@@ -49,7 +40,6 @@ public class MainView extends Application {
         botView = new BotView();
 
         wallet = new Wallet(Constants.NODE_IP, Constants.NODE_PORT);
-
 
 
         vBox = new VBox(5);
@@ -84,7 +74,7 @@ public class MainView extends Application {
             }
         });
 
-        Image image = new Image(getClass().getResource("back3.png").toExternalForm());
+        javafx.scene.image.Image image = new javafx.scene.image.Image(getClass().getResource("back3.png").toExternalForm());
 
         BackgroundImage myBI = new BackgroundImage(image,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -105,6 +95,7 @@ public class MainView extends Application {
 
         controller = new Controller(this, wallet);
 
+
         stage.setScene(scene);
         stage.setTitle("BlockChain 0.1");
         stage.show();
@@ -115,6 +106,91 @@ public class MainView extends Application {
 
     public void setOnMousePressed(EventHandler<MouseEvent> mouseEventEventHandler) {
         vBox.setOnMousePressed(mouseEventEventHandler);
+    }
+
+    public double getxOffset() {
+        return xOffset;
+    }
+
+    public void setxOffset(double xOffset) {
+        this.xOffset = xOffset;
+    }
+
+    public double getyOffset() {
+        return yOffset;
+    }
+
+    public void setyOffset(double yOffset) {
+        this.yOffset = yOffset;
+    }
+
+    public void setScreenVisible(String name) {
+        middleView.setScreenVisible(name);
+    }
+
+    public String getCreateNewWalletWalletName() {
+        return middleView.getCreateNewWalletWalletName();
+    }
+
+    public String getCreateNewWalletPassword() throws Exception {
+        return middleView.getCreateNewWalletPassword();
+    }
+
+    public String getCreateNewWalletPassword2() throws Exception {
+        return middleView.getCreateNewWalletPassword2();
+    }
+
+    public void setGenerateWalletButton(EventHandler<ActionEvent> actionEventEventHandler) throws Exception {
+        middleView.setGenerateWalletButton(actionEventEventHandler);
+
+    }
+
+    public void setLoginUsingPrivKey(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setLoginUsingPrivKey(actionEventEventHandler);
+    }
+
+    public String getPasswordLoginUsingPrivKey() {
+        return middleView.getPasswordLoginUsingPrivKey();
+    }
+
+    public String getLoginUsingPrivKeyPublicKey() {
+        return middleView.getLoginUsingPrivKeyPublicKey();
+    }
+
+    public void setAmountWalletScreen(String amount) {
+        middleView.setAmountWalletScreen(amount);
+    }
+
+    public void setWalletsLoginUsingSavedWallet(String[] tempWallets) {
+        middleView.setWalletsLoginUsingSavedWallet(tempWallets);
+    }
+
+    public String getPasswordLoginUsingSavedWallet() throws Exception {
+        return middleView.getPasswordLoginUsingSavedWallet();
+    }
+
+    public String getSelectedWalletLoginUsingSavedWallet() {
+        return middleView.getSelectedWalletLoginUsingSavedWallet();
+    }
+
+    public void setLoginButtonLoginUsingSavedWallet(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setLoginButtonLoginUsingSavedWallet(actionEventEventHandler);
+    }
+
+    public void setSendButtonWalletScreen(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setSendButtonWalletScreen(actionEventEventHandler);
+    }
+
+    public void setReciveButtonWalletScreen(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setReciveButtonWalletScreen(actionEventEventHandler);
+    }
+
+    public String getSendToWalletScreen() {
+        return middleView.getSendToWalletScreen();
+    }
+
+    public void setGenerateKeys(EventHandler<ActionEvent> ac) {
+        middleView.setGenerateKeys(ac);
     }
 
     private class ListenForMouse implements EventHandler<MouseEvent> {
@@ -133,98 +209,6 @@ public class MainView extends Application {
 
         }
     }
-
-
-    public double getxOffset() {
-        return xOffset;
-    }
-
-    public void setxOffset(double xOffset) {
-        this.xOffset = xOffset;
-    }
-
-    public double getyOffset() {
-        return yOffset;
-    }
-
-    public void setyOffset(double yOffset) {
-        this.yOffset = yOffset;
-    }
-
-    public void setScreenVisible(String name)
-    {
-        middleView.setScreenVisible(name);
-    }
-
-    public String getCreateNewWalletWalletName()
-    {
-        return middleView.getCreateNewWalletWalletName();
-    }
-
-    public String getCreateNewWalletPassword() throws Exception {
-        return middleView.getCreateNewWalletPassword();
-    }
-
-    public String getCreateNewWalletPassword2() throws Exception {
-        return middleView.getCreateNewWalletPassword2();
-    }
-
-    public void setGenerateWalletButton(EventHandler<ActionEvent> actionEventEventHandler) throws Exception {
-        middleView.setGenerateWalletButton(actionEventEventHandler);
-
-    }
-    public  void setLoginUsingPrivKey(EventHandler<ActionEvent> actionEventEventHandler)
-    {
-        middleView.setLoginUsingPrivKey(actionEventEventHandler);
-    }
-
-    public String getPasswordLoginUsingPrivKey()
-    {
-        return middleView.getPasswordLoginUsingPrivKey();
-    }
-
-    public String getLoginUsingPrivKeyPublicKey()
-    {
-        return middleView.getLoginUsingPrivKeyPublicKey();
-    }
-
-    public void setAmountWalletScreen(String amount)
-    {
-        middleView.setAmountWalletScreen(amount);
-    }
-
-    public void setWalletsLoginUsingSavedWallet(String[] tempWallets)
-    {
-        middleView.setWalletsLoginUsingSavedWallet(tempWallets);
-    }
-
-    public String getSelectedWalletLoginUsingSavedWallet()
-    {
-        return middleView.getSelectedWalletLoginUsingSavedWallet();
-    }
-    public void setLoginButtonLoginUsingSavedWallet(EventHandler<ActionEvent> actionEventEventHandler)
-    {
-        middleView.setLoginButtonLoginUsingSavedWallet(actionEventEventHandler);
-    }
-    public void setSendButtonWalletScreen(EventHandler<ActionEvent> actionEventEventHandler)
-    {
-        middleView.setSendButtonWalletScreen(actionEventEventHandler);
-    }
-    public void setReciveButtonWalletScreen(EventHandler<ActionEvent> actionEventEventHandler)
-    {
-        middleView.setReciveButtonWalletScreen(actionEventEventHandler);
-    }
-
-
-    public String getSendToWalletScreen() {
-        return middleView.getSendToWalletScreen();
-    }
-
-    public void setGenerateKeys(EventHandler<ActionEvent> ac) {
-        middleView.setGenerateKeys(ac);
-    }
-
-
 
 
 }

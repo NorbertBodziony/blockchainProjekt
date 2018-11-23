@@ -1,7 +1,5 @@
 package GUI;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
@@ -23,48 +21,56 @@ public class LoginUsingSavedWallet extends GridPane {
     TextField publicKey;
 
 
-
-    public LoginUsingSavedWallet()
-    {
+    public LoginUsingSavedWallet() {
         text = new Label("Login using a saved wallet: ");
         text.setTextFill(Color.WHITE);
         wallets = new ChoiceBox<>();
         wallets.setPrefWidth(100);
 
 
-
-
         passwordField = new PasswordField();
-        publicKey = new TextField();
+        //publicKey = new TextField();
 
 
-        wallets.getItems().setAll("Wallet 1", "Wallet 2", "Wallet 3");
+        // 4'th parameter in rgba is a % of transparency
+        passwordField.setStyle("-fx-background-color: rgba(255, 0, 172, 0.4);" +
+                "-fx-border-color: #630043;");
+/*
+        +"-fx-border-radius: 10 10 10 10;" +
+                "-fx-background-radius: 10 10 10 10;");*/
+
+        /*publicKey.setStyle("-fx-background-color: rgba(255, 0, 172, 0.4);" +
+                "-fx-border-color: #630043");*/
+
+        wallets.setStyle("-fx-background-color: rgba(255, 0, 172, 0.4);" +
+                "-fx-border-color: #630043;");
+
+
+        //wallets.getItems().setAll("Wallet 1", "Wallet 2", "Wallet 3");
         wallets.getSelectionModel().selectFirst();
-        //wallets.setStyle("-fx-background-color: #53f442; ");
 
 
         text.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
-       // passwordField
-
 
 
         login = new Button("Login");
         home = new Button("Home");
 
-        home.setOnAction(e->
+
+        home.setOnAction(e ->
         {
             System.out.println("Hello");
         });
 
-        this.add(text,1,0);
-        this.add(wallets,1,1);
-        this.add(publicKey,1,2,2,1);
-        this.add(passwordField,1,3,2,1);
+        this.add(text, 1, 0);
+        this.add(wallets, 1, 1);
+        this.add(passwordField, 1, 2, 2, 1);
+        //this.add(passwordField,1,3,2,1);
 
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(login,home);
+        hBox.getChildren().addAll(login, home);
         hBox.setSpacing(20);
-        this.add(hBox,1,4,2,1);
+        this.add(hBox, 1, 3, 2, 1);
 
 
        /* this.add(login,1,3);
@@ -81,33 +87,28 @@ public class LoginUsingSavedWallet extends GridPane {
         return home;
     }
 
-    public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler)
-    {
+    public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler) {
         home.setOnAction(actionEventEventHandler);
     }
-    public void setLoginButton(EventHandler<ActionEvent> actionEventEventHandler)
-    {
+
+    public void setLoginButton(EventHandler<ActionEvent> actionEventEventHandler) {
         login.setOnAction(actionEventEventHandler);
     }
-    public String getPassword() throws Exception
-    {
-        if(passwordField.getText().isEmpty())
-        {
+
+    public String getPassword() throws Exception {
+        if (passwordField.getText().isEmpty()) {
             throw new Exception("Password is empty");
 
-        }
-        else {
+        } else {
             return passwordField.getText();
         }
     }
 
-    public void setWallets(String[] tempWallets)
-    {
-        wallets.getItems().addAll(tempWallets);
+    public void setWallets(String[] tempWallets) {
+        wallets.getItems().setAll(tempWallets);
     }
 
-    public String getSelectedWallet()
-    {
+    public String getSelectedWallet() {
         return wallets.getValue();
     }
 }

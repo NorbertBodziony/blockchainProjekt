@@ -1,25 +1,17 @@
 package GUI;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
 import java.util.Optional;
-
-import static java.lang.Thread.sleep;
 
 public class WalletScreen extends GridPane {
 
@@ -38,23 +30,6 @@ public class WalletScreen extends GridPane {
 
     Optional<Pair<String, String>> recipientAndAmount;
 
-
-    public void setAmount(String amount) {
-        this.amount = amount;
-    }
-
-    public String getAmount() {
-        return amount;
-    }
-
-
-    public String getSendTo() {
-        return sendTo;
-    }
-
-    public void setSendTo(String sendTo) {
-        this.sendTo = sendTo;
-    }
 
     public WalletScreen() {
 
@@ -161,6 +136,22 @@ public class WalletScreen extends GridPane {
 
     }
 
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getSendTo() {
+        return sendTo;
+    }
+
+    public void setSendTo(String sendTo) {
+        this.sendTo = sendTo;
+    }
+
     public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler) {
         home.setOnAction(actionEventEventHandler);
     }
@@ -168,6 +159,7 @@ public class WalletScreen extends GridPane {
     public void setSendButton(EventHandler<ActionEvent> actionEventEventHandler) {
         send.setOnAction(actionEventEventHandler);
     }
+
     public void setReciveButton(EventHandler<ActionEvent> actionEventEventHandler) {
         recive.setOnAction(actionEventEventHandler);
     }

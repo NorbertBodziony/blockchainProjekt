@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
@@ -12,34 +11,15 @@ import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
-public class keysDialog extends Dialog<Pair<String, String>>
-{
+public class keysDialog extends Dialog<Pair<String, String>> {
+    private static String publicKey = "null";
+    private static String privateKey = "null2";
     double xOffset;
     double yOffset;
-    private static String publicKey ="null";
-    private static String privateKey ="null2";
-
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
-
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
-
     Clipboard clipboard;
     ClipboardContent content;
 
-    public keysDialog(String publicKey, String privateKey)
-    {
+    public keysDialog(String publicKey, String privateKey) {
         this.setPublicKey(publicKey);
         this.setPrivateKey(privateKey);
 
@@ -55,10 +35,7 @@ public class keysDialog extends Dialog<Pair<String, String>>
         Button copy1 = new Button("Copy");
 
 
-
-        this.getDialogPane().getButtonTypes().addAll( ButtonType.CANCEL);
-
-
+        this.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 
 
         GridPane grid = new GridPane();
@@ -75,19 +52,19 @@ public class keysDialog extends Dialog<Pair<String, String>>
 
         grid.add(new Label("Public Key:"), 0, 0);
         grid.add(PublicKey, 1, 0);
-        grid.add(copy,2,0);
+        grid.add(copy, 2, 0);
         grid.add(new Label("Private Key:"), 0, 1);
         grid.add(recipent, 1, 1);
-        grid.add(copy1,2,1);
+        grid.add(copy1, 2, 1);
 
-        copy.setOnAction(e->
+        copy.setOnAction(e ->
         {
             content.putString(publicKey);
             clipboard.setContent(content);
             content.clear();
         });
 
-        copy1.setOnAction(e->
+        copy1.setOnAction(e ->
         {
             content.putString(privateKey);
             clipboard.setContent(content);
@@ -97,7 +74,7 @@ public class keysDialog extends Dialog<Pair<String, String>>
         this.getDialogPane().setContent(grid);
 
         Platform.runLater(() -> PublicKey.requestFocus());
-        Image image = new Image(getClass().getResource("back3.png").toExternalForm());
+        javafx.scene.image.Image image = new javafx.scene.image.Image(getClass().getResource("back3.png").toExternalForm());
 
         BackgroundImage myBI = new BackgroundImage(image,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
@@ -110,9 +87,7 @@ public class keysDialog extends Dialog<Pair<String, String>>
                 try {
                     xOffset = event.getSceneX();
                     yOffset = event.getSceneY();
-                }
-                catch (Exception e)
-                {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -129,6 +104,22 @@ public class keysDialog extends Dialog<Pair<String, String>>
         });
 
 
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
 

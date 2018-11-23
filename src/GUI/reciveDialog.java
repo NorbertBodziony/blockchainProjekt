@@ -4,12 +4,7 @@ package GUI;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
@@ -17,8 +12,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
-
-import java.awt.*;
 
 public class reciveDialog extends Dialog<Pair<String, String>> {
     double xOffset;
@@ -40,7 +33,7 @@ public class reciveDialog extends Dialog<Pair<String, String>> {
         //this.getDialogPane().setStyle("-fx-background-color: #20a013; ");
 
 
-        this.getDialogPane().getButtonTypes().addAll( ButtonType.CANCEL);
+        this.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
 
 
         GridPane grid = new GridPane();
@@ -60,7 +53,7 @@ public class reciveDialog extends Dialog<Pair<String, String>> {
         grid.add(publicKeyField, 1, 0);
         grid.add(copy, 3, 0);
 
-        copy.setOnAction(e->
+        copy.setOnAction(e ->
         {
             content.putString(publicKeyField.getText());
             clipboard.setContent(content);
@@ -68,12 +61,9 @@ public class reciveDialog extends Dialog<Pair<String, String>> {
         });
 
 
-
-
         this.getDialogPane().setContent(grid);
 
         Platform.runLater(() -> publicKeyField.requestFocus());
-
 
 
         javafx.scene.image.Image image = new javafx.scene.image.Image(getClass().getResource("back3.png").toExternalForm());

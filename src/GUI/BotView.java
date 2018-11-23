@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 
-
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
@@ -32,24 +31,21 @@ public class BotView extends BorderPane {
         a.setTextFill(Color.WHITE);
 
 
-         Hyperlink hlink = new Hyperlink(urlPath);
-         hlink.setCursor(Cursor.HAND);
+        Hyperlink hlink = new Hyperlink(urlPath);
+        hlink.setCursor(Cursor.HAND);
         hlink.setOnAction(e -> {
             System.out.println("A");
-          if(Desktop.isDesktopSupported())
-          {
-              try {
-                  Desktop.getDesktop().browse(new URL("https://google.com").toURI());
-              } catch (IOException b) {
-                  b.printStackTrace();
-              } catch (URISyntaxException c) {
-                  c.printStackTrace();
-              }
-          }
-          else
-          {
-              System.out.println("Not supported");
-          }
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(new URL("https://google.com").toURI());
+                } catch (IOException b) {
+                    b.printStackTrace();
+                } catch (URISyntaxException c) {
+                    c.printStackTrace();
+                }
+            } else {
+                System.out.println("Not supported");
+            }
 
         });
 

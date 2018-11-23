@@ -1,8 +1,6 @@
 package GUI;
 
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -11,19 +9,36 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
-import java.util.Optional;
-
 public class GenerateKeyPair extends GridPane {
 
-    Button  home;
+    Button home;
 
-    String publicKey ="a";
-    String privateKey ="b";
+    String publicKey = "a";
+    String privateKey = "b";
+
+    public GenerateKeyPair() {
+
+        home = new Button("Home");
+
+        home.setOnAction(e ->
+        {
+            System.out.println("Hello");
+        });
+
+        this.add(home, 1, 0);
+
+        //Optional<Pair<String,String>>recipientAndAmount =  new keysDialog().showAndWait();
+
+
+        this.setVgap(5);
+        this.setHgap(5);
+        this.setVisible(false);
+
+
+    }
 
     public String getPrivateKey() {
         return privateKey;
@@ -41,45 +56,19 @@ public class GenerateKeyPair extends GridPane {
         this.publicKey = publicKey;
     }
 
-    public GenerateKeyPair()
-    {
-
-        home = new Button("Home");
-
-        home.setOnAction(e->
-        {
-            System.out.println("Hello");
-        });
-
-        this.add(home,1,0);
-
-        //Optional<Pair<String,String>>recipientAndAmount =  new keysDialog().showAndWait();
-
-
-
-
-
-        this.setVgap(5);
-        this.setHgap(5);
-        this.setVisible(false);
-
-
-    }
-
     public Button getHome() {
         return home;
     }
 
-    public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler)
-    {
+    public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler) {
         home.setOnAction(actionEventEventHandler);
     }
-    public class keysDialog extends Dialog<Pair<String, String>>
-    {
+
+    public class keysDialog extends Dialog<Pair<String, String>> {
         double xOffset;
         double yOffset;
-        public keysDialog()
-        {
+
+        public keysDialog() {
             this.setTitle("Send");
             this.setHeaderText(null);
             this.setGraphic(null);
@@ -88,13 +77,10 @@ public class GenerateKeyPair extends GridPane {
             //this.getDialogPane().setPrefSize(700,1000);
 
 
-
             ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.FINISH);
 
 
             this.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
-
-
 
 
             GridPane grid = new GridPane();
@@ -134,14 +120,10 @@ public class GenerateKeyPair extends GridPane {
             });
 
 
-
-
-            BackgroundImage myBI= new BackgroundImage(new Image("back3.png",this.getWidth(),this.getWidth(),false,true),
+            BackgroundImage myBI = new BackgroundImage(new Image("back3.png", this.getWidth(), this.getWidth(), false, true),
                     BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                     BackgroundSize.DEFAULT);
             this.getDialogPane().setBackground(new Background(myBI));
-
-
 
 
             this.getDialogPane().setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -150,15 +132,12 @@ public class GenerateKeyPair extends GridPane {
                     try {
                         xOffset = event.getSceneX();
                         yOffset = event.getSceneY();
-                    }
-                    catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                 }
             });
-
 
 
             //move around here
@@ -169,7 +148,6 @@ public class GenerateKeyPair extends GridPane {
                     setY(event.getScreenY() - yOffset);
 
 
-
                 }
             });
 
@@ -177,4 +155,5 @@ public class GenerateKeyPair extends GridPane {
         }
 
 
-}}
+    }
+}
