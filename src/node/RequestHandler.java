@@ -1,13 +1,17 @@
 package node;
 
+import datagramInterfaces.ErrorCode;
 import datagramInterfaces.NodeRespond;
 import datagramInterfaces.WalletRequest;
 
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 
@@ -15,7 +19,16 @@ public class RequestHandler implements Runnable {
     private DatagramSocket socket;
     private DatagramPacket packet;
     private Connection connection;
+    ClientTCP clientTCP;
+    List<InetAddress> TCPnodes=new ArrayList<>();
 
+    public RequestHandler(DatagramSocket socket, DatagramPacket packet, Connection connection,ClientTCP clientTCP,List<InetAddress> TCPnodes) {
+        this.socket = socket;
+        this.packet = packet;
+        this.connection = connection;
+        this.TCPnodes=TCPnodes;
+        this.clientTCP=clientTCP;
+    }
     public RequestHandler(DatagramSocket socket, DatagramPacket packet, Connection connection) {
         this.socket = socket;
         this.packet = packet;
@@ -29,6 +42,7 @@ public class RequestHandler implements Runnable {
             System.out.println(request.toString());
             NodeRespond respond = request.handle(connection);
             sendRespond(respond);
+
         } catch (SQLException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

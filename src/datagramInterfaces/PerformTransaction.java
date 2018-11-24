@@ -4,27 +4,40 @@ import account.ReceiveBlock;
 import account.SendBlock;
 import cryptography.CryptoConverter;
 import cryptography.EllipticCurveHelper;
+import node.ClientTCP;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static datagramInterfaces.ErrorCode.*;
 
 public class PerformTransaction extends WalletRequest {
     private SendBlock sendBlock;
     private ReceiveBlock receiveBlock;
+    ClientTCP clientTCP;
+    List<InetAddress> TCPnodes=new ArrayList<>();
 
     public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) {
         this.sendBlock = sendBlock;
         this.receiveBlock = receiveBlock;
     }
+    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock,ClientTCP clientTCP, List<InetAddress> TCPnodes) {
+        this.sendBlock = sendBlock;
+        this.receiveBlock = receiveBlock;
+        this.TCPnodes=TCPnodes;
+        this.clientTCP=clientTCP;
+    }
 
     @Override
-    public NodeRespond handle(Connection con) throws SQLException {
+    public NodeRespond handle(Connection con) throws SQLException, IOException {
         String sender = receiveBlock.getSource();
         String recipient = sendBlock.getRecipient();
         int amount = sendBlock.getAmount();
@@ -54,6 +67,7 @@ public class PerformTransaction extends WalletRequest {
 
         Database.performTransaction(con, sender, recipient, amount, CryptoConverter.bytesToHexString(signature),
                 sendBlock.getHash(), receiveBlock.getHash());
+                clientTCP.SendTransaction(sendBlock,receiveBlock);
         return new NodeRespond(OK);
     }
 }
