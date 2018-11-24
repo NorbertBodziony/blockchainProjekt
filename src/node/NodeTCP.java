@@ -18,6 +18,8 @@ public class NodeTCP implements Runnable {
     public NodeTCP() throws IOException {
         this.welcomeSocket =new ServerSocket(6666);
         this.connection = Database.connect();
+        Node nodeUDP=new Node();
+        //nodeUDP.run();
 
     }
 

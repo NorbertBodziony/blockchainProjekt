@@ -267,13 +267,34 @@ public class Database {
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(4,Account.Signature);
         pstmt.setString(5,Account.Hash_Code);
-        pstmt.setString(6,Account.Previous_Hash_Code);
+        if(Account.Previous_Hash_Code!=null){
+            pstmt.setString(6,Account.Previous_Hash_Code);}
+        else
+        {
+            pstmt.setString(6,null);
+        }
         pstmt.setInt(1,Account.Block_ID);
         pstmt.setInt(2,Account.Blockchain_ID);
-        pstmt.setInt(3,Account.Previous_Block);
+        if(Account.Previous_Block!=0){
+            pstmt.setInt(3,Account.Previous_Block);}
+        else
+        {
+            pstmt.setObject(3,null);
+        }
         pstmt.setInt(7,Account.Amount);
-        pstmt.setInt(8,Account.Receive_Type);
-        pstmt.setInt(9,Account.Send_Type);
+        if(Account.Receive_Type!=0) {
+            pstmt.setInt(8, Account.Receive_Type);
+        }
+        else
+        {
+            pstmt.setObject(8,null);
+        }
+        if(Account.Send_Type!=0){
+            pstmt.setInt(9,Account.Send_Type);}
+        else {
+
+            pstmt.setObject(9,null);
+        }
 
         pstmt.executeUpdate();
 
