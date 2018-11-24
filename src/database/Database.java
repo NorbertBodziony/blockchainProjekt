@@ -240,7 +240,7 @@ public class Database {
         List<BlockData> AccountData=new ArrayList<>();
         Statement st = con.createStatement();
         System.out.println("GetBlockchain");
-        String sql = ("SELECT * FROM BLOCK");
+        String sql = ("SELECT * FROM BLOCK ORDER BY BLOCK_ID");
         ResultSet rs = st.executeQuery(sql);
 
         while(rs.next()) {
