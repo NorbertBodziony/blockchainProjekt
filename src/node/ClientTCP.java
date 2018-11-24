@@ -1,15 +1,14 @@
 package node;
 
 import database.*;
-import datagramInterfaces.GetAccounts;
+
+import datagramInterfaces.TCPinterface;
 
 import java.io.*;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-
-import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 
 public class ClientTCP implements Runnable {
     Socket clientSocket;
@@ -22,7 +21,8 @@ public class ClientTCP implements Runnable {
     public void GetDatabase() throws IOException, ClassNotFoundException, SQLException {
         ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
         ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
-        outToServer.writeObject(new GetAccounts(1));
+        TCPinterface.TCPid request=TCPinterface.TCPid.Blockchain;
+        outToServer.writeObject(request);
         List<BlockchainData> AccountData= (List<BlockchainData>) inFromServer.readObject();
         for(int i=0;i<AccountData.size();i++)
         {System.out.println("dataupdate1");

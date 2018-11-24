@@ -1,6 +1,7 @@
 package node;
 import database.Database;
-import datagramInterfaces.GetAccounts;
+
+import datagramInterfaces.TCPinterface;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,7 +33,8 @@ public class NodeTCP implements Runnable {
                 System.out.println("new user");
                 ObjectOutputStream outToUser = new ObjectOutputStream(connectionSocket.getOutputStream());
                 ObjectInputStream inFromUser = new ObjectInputStream(connectionSocket.getInputStream());
-                if(inFromUser.readObject().getClass().equals(new GetAccounts(1).getClass()))
+                TCPinterface.TCPid request= (TCPinterface.TCPid) inFromUser.readObject();
+                if(request.equals(TCPinterface.TCPid.Blockchain))
                 {
 
                     outToUser.writeObject(Database.GetBlockchain(connection));
