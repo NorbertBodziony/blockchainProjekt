@@ -34,6 +34,9 @@ public class PerformTransaction extends WalletRequest {
         if(!Database.accountExists(con, recipient))
             return new NodeRespond(UNKNOWN_RECIPIENT);
 
+        if(sender.equals(recipient))
+            return new NodeRespond(SELF_TRANSACTION);
+
         try {
             PublicKey senderPublicKey = CryptoConverter.hexToPublicKey(sender);
             if(!sendBlock.getSignature().equals(receiveBlock.getSignature()))
@@ -50,7 +53,7 @@ public class PerformTransaction extends WalletRequest {
             return new NodeRespond(INVALID_AMOUNT);
 
         Database.performTransaction(con, sender, recipient, amount, CryptoConverter.bytesToHexString(signature),
-                sendBlock.getPrevBlock(), receiveBlock.getPrevBlock());
+                sendBlock.getHash(), receiveBlock.getHash());
         return new NodeRespond(OK);
     }
 }

@@ -71,6 +71,9 @@ public class Controller {
         {
             try {
                 wallet.createAccount();
+                DatagramPacket packet = wallet.listenToNodeRespond();
+                NodeRespond respond = wallet.unpackRespond(packet);
+                System.out.println(respond);
             } catch (IOException e1) {
                 e1.printStackTrace();
             } catch (NoSuchAlgorithmException e1) {
@@ -78,6 +81,8 @@ public class Controller {
             } catch (SignatureException e1) {
                 e1.printStackTrace();
             } catch (InvalidKeyException e1) {
+                e1.printStackTrace();
+            } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
             }
             keysDialog keysDialog = new keysDialog(wallet.getAddress(), CryptoConverter.keyToHexString(wallet.getPrivateKey()));
@@ -112,11 +117,15 @@ public class Controller {
                         System.out.println(respond);
                         System.out.println("Invalid Transaction");
                     }
-                    PreviousHashesRespond hashRespond = (PreviousHashesRespond) respond;
-                    String recipientHash = hashRespond.getRecipientPreviousHash();
-                    String senderHash = hashRespond.getSenderPreviousHash();
-                    wallet.performTransaction(amount, recipient, senderHash, recipientHash);
-                    System.out.println("Send: " + amount + " to: " + recipient);
+                    else {
+                        PreviousHashesRespond hashRespond = (PreviousHashesRespond) respond;
+                        String recipientHash = hashRespond.getRecipientPreviousHash();
+                        String senderHash = hashRespond.getSenderPreviousHash();
+                        wallet.performTransaction(amount, recipient, senderHash, recipientHash);
+                        System.out.println("Send: " + amount + " to: " + recipient);
+                        DatagramPacket nodePacket = wallet.listenToNodeRespond();
+                        System.out.println(wallet.unpackRespond(nodePacket));
+                    }
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 } catch (SignatureException e1) {
@@ -188,6 +197,9 @@ public class Controller {
                 if (mainView.getCreateNewWalletPassword().equals(mainView.getCreateNewWalletPassword2())) {
                     try {
                         wallet.createAccount();
+                        DatagramPacket packet = wallet.listenToNodeRespond();
+                        NodeRespond respond = wallet.unpackRespond(packet);
+                        System.out.println(respond);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     } catch (NoSuchAlgorithmException e1) {
