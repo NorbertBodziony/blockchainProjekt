@@ -48,24 +48,20 @@ public class Node implements Runnable {
 
     @Override
     public void run() {
-        Node node = null;
-        try {
-            node = new Node();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+
+
         try {
             while (true) {
                 System.out.println("listen");
-                DatagramPacket request = node.listen();
+                DatagramPacket request = this.listen();
                 System.out.println("new request");
-                node.handle(request);
+                this.handle(request);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             try {
-                node.connection.close();
+                this.connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

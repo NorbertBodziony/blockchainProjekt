@@ -1,4 +1,5 @@
 package node;
+import constants.Constants;
 import database.Database;
 
 import datagramInterfaces.TCPinterface;
@@ -17,10 +18,11 @@ public class NodeTCP implements Runnable {
     private static Connection connection;
 
     public NodeTCP() throws IOException {
-        this.welcomeSocket =new ServerSocket(6666);
+
         this.connection = Database.connect();
         Node nodeUDP=new Node();
-        //nodeUDP.run();
+        nodeUDP.run();
+        this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
 
     }
 

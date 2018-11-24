@@ -1,5 +1,6 @@
 package node;
 
+import constants.Constants;
 import database.*;
 
 import datagramInterfaces.TCPinterface;
@@ -64,7 +65,7 @@ public class ClientTCP implements Runnable {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException {
-        Socket clientSocket = new Socket("localhost", 6666);
+        Socket clientSocket = new Socket("localhost", Constants.TCP_PORT);
         ClientTCP client=new ClientTCP(clientSocket);
         client.GetDatabase();
         client.run();
