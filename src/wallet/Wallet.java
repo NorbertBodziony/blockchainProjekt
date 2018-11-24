@@ -12,9 +12,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
+import java.security.*;
 import java.security.spec.InvalidKeySpecException;
 
 import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
@@ -109,6 +107,17 @@ public class Wallet {
         is.close();
         return respond;
     }
+    public PublicKey getPublicKey() {
+        return currentAccount.getPublicKey();
+    }
+    public PrivateKey getPrivateKey() {
+        return currentAccount.getPrivateKey();
+    }
+    public String getAddress() {
+        return CryptoConverter.keyToHexString(currentAccount.getPublicKey());
+    }
+
+
 
 
 

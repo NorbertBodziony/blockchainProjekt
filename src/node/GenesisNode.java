@@ -21,19 +21,18 @@ import java.util.List;
 
 import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 
-public class NodeTCP implements Runnable {
+public class GenesisNode implements Runnable {
 
     private ServerSocket welcomeSocket ;
     private static Connection connection;
     List<InetAddress> TCPnodes=new ArrayList<>();
     List<ClientTCP> clientTCP=new ArrayList<>();
-    public NodeTCP() throws IOException {
+    public GenesisNode() throws IOException {
 
         this.connection = Database.connect();
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
 
-        clientTCP.add(new ClientTCP(new Socket("localhost", 6667)));
-        new Thread(clientTCP.get(clientTCP.size()-1)).start();
+
         Node nodeUDP=new Node(TCPnodes,clientTCP);
         new Thread(nodeUDP).start();
 
@@ -47,8 +46,9 @@ public class NodeTCP implements Runnable {
             try {
                 System.out.println("Node startTCP");
                 Socket connectionSocket = welcomeSocket.accept();
-                System.out.println(TCPnodes.size());
+
                 TCPnodes.add(connectionSocket.getLocalAddress());
+
                 System.out.println("new user");
                 ObjectOutputStream outToUser = new ObjectOutputStream(connectionSocket.getOutputStream());
                 ObjectInputStream inFromUser = new ObjectInputStream(connectionSocket.getInputStream());
@@ -61,7 +61,9 @@ public class NodeTCP implements Runnable {
                     outToUser.writeObject(Database.GetSendBlocks(connection));
                     outToUser.writeObject(Database.GetReciveBlocks(connection));
                     outToUser.writeObject(Database.GetBlocks(connection));
-                    
+                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getLocalAddress(), connectionSocket.getLocalPort())));
+                    new Thread(clientTCP.get(clientTCP.size()-1)).start();
+                    System.out.println(TCPnodes.size());
 
                 }
                 if(request.equals(TCPinterface.TCPid.Transaction))
@@ -83,7 +85,7 @@ public class NodeTCP implements Runnable {
     }
 
     public static void main(String[] args) throws IOException {
-        NodeTCP tcp=new NodeTCP();
+        GenesisNode tcp=new GenesisNode();
         new Thread(tcp).start();
     }
 }
