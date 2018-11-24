@@ -7,6 +7,7 @@ import database.Database;
 import datagramInterfaces.PerformTransaction;
 import datagramInterfaces.TCPinterface;
 
+import javax.sound.midi.Soundbank;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,7 +32,13 @@ public class GenesisNode implements Runnable {
 
         this.connection = Database.connect();
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
-
+        if(clientTCP==null)
+        {
+            System.out.println("ERROR");
+        }else
+        {
+            System.out.println("works!");
+        }
 
         Node nodeUDP=new Node(TCPnodes,clientTCP);
         new Thread(nodeUDP).start();
@@ -61,8 +68,15 @@ public class GenesisNode implements Runnable {
                     outToUser.writeObject(Database.GetSendBlocks(connection));
                     outToUser.writeObject(Database.GetReciveBlocks(connection));
                     outToUser.writeObject(Database.GetBlocks(connection));
-                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getLocalAddress(), connectionSocket.getLocalPort())));
+                    System.out.println("Adding new server");
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    clientTCP.add(new ClientTCP(new Socket("localhost", 6667)));
                     new Thread(clientTCP.get(clientTCP.size()-1)).start();
+                    TCPnodes.add(connectionSocket.getLocalAddress());
                     System.out.println(TCPnodes.size());
 
                 }

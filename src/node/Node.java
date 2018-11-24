@@ -24,9 +24,13 @@ public class Node implements Runnable {
         this.connection = Database.connect();
         this.TCPnodes=TCPnodes;
         this.clientTCP=clientTCP;
+        System.out.println("node UDP START");
         if(clientTCP==null)
         {
             System.out.println("ERROR");
+        }else
+        {
+            System.out.println("works!");
         }
     }
     public Node() throws SocketException {
