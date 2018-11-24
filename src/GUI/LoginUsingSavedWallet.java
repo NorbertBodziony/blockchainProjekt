@@ -83,10 +83,6 @@ public class LoginUsingSavedWallet extends GridPane {
 
     }
 
-    public Button getHome() {
-        return home;
-    }
-
     public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler) {
         home.setOnAction(actionEventEventHandler);
     }

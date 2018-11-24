@@ -24,11 +24,14 @@ public class Controller {
     private MainView mainView;
     private Wallet wallet;
     private Utility utils;
+    private keysDialog keysDialog;
+    private reciveDialog reciveDialog;
+    private sendDialog sendDialog;
 
 
     public Controller(MainView mainView, Wallet wallet) throws Exception {
 
-        utils = new Utility();
+        this.utils = new Utility();
 
         this.mainView = mainView;
         this.wallet = wallet;
@@ -40,7 +43,8 @@ public class Controller {
 
         this.mainView.setReciveButtonWalletScreen(e ->
         {
-            new reciveDialog(wallet.getAddress()).showAndWait();
+            reciveDialog = new reciveDialog(wallet.getAddress());
+            reciveDialog.showAndWait();
         });
 
         this.mainView.setLoginButtonLoginUsingSavedWallet(e ->
@@ -53,8 +57,6 @@ public class Controller {
 
             try {
                 wallet.login(this.mainView.getLoginUsingPrivKeyPublicKey(), this.mainView.getPasswordLoginUsingPrivKey());
-                //this.mainView.setAmountWalletScreen();
-
 
                 this.mainView.setScreenVisible("walletScreen");
                 System.out.println(this.mainView.getPasswordLoginUsingPrivKey());
@@ -85,7 +87,7 @@ public class Controller {
             } catch (ClassNotFoundException e1) {
                 e1.printStackTrace();
             }
-            keysDialog keysDialog = new keysDialog(wallet.getAddress(), CryptoConverter.keyToHexString(wallet.getPrivateKey()));
+            keysDialog = new keysDialog(wallet.getAddress(), CryptoConverter.keyToHexString(wallet.getPrivateKey()));
 
             System.out.println(keysDialog.getPublicKey());
             System.out.println(keysDialog.getPrivateKey());
@@ -99,7 +101,7 @@ public class Controller {
 
         this.mainView.setSendButtonWalletScreen(e ->
         {
-            sendDialog sendDialog = new sendDialog();
+            sendDialog = new sendDialog();
 
 
             sendDialog.showAndWait().ifPresent(amountAndRecipent -> {
@@ -116,8 +118,7 @@ public class Controller {
                     if (respond.getErrorCode() != OK) {
                         System.out.println(respond);
                         System.out.println("Invalid Transaction");
-                    }
-                    else {
+                    } else {
                         PreviousHashesRespond hashRespond = (PreviousHashesRespond) respond;
                         String recipientHash = hashRespond.getRecipientPreviousHash();
                         String senderHash = hashRespond.getSenderPreviousHash();
@@ -142,6 +143,9 @@ public class Controller {
         });
 
         this.mainView.setLoginButtonLoginUsingSavedWallet(new listenForLoginUsingSavedWallet());
+        this.mainView.setWalletsManageSetting(utils.getListOfWallets().toArray(new String[0]));
+        this.mainView.setDeleteButtonManageSetting(new listenForDeleteButtonManageSetting());
+        this.mainView.setViewButtonManageSetting(new listenForViewButtonManageSetting());
 
     }
 
@@ -158,8 +162,6 @@ public class Controller {
                 System.out.println(keys[1]);
 
                 wallet.login(keys[0], keys[1]);
-                //this.mainView.setAmountWalletScreen();
-
 
                 mainView.setScreenVisible("walletScreen");
 
@@ -192,7 +194,6 @@ public class Controller {
 
         @Override
         public void handle(ActionEvent actionEvent) {
-            System.out.println("XD");
             try {
                 if (mainView.getCreateNewWalletPassword().equals(mainView.getCreateNewWalletPassword2())) {
                     try {
@@ -215,7 +216,6 @@ public class Controller {
 
                     mainView.setWalletsLoginUsingSavedWallet(utils.getListOfWallets().toArray(new String[0]));
 
-                    //System.out.println(mainView.getCreateNewWalletWalletName());
                     System.out.println("Password Equals ");
                 } else {
                     System.out.println("Password not equal");
@@ -223,6 +223,68 @@ public class Controller {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+        }
+    }
+
+    private class listenForDeleteButtonManageSetting implements EventHandler<ActionEvent> {
+
+        @Override
+        public void handle(ActionEvent event) {
+
+            try {
+                String temp = mainView.getSelectedWalletManageSetting();
+                System.out.println(temp);
+                utils.deleteWalletFile(temp);
+                System.out.println(temp + ": delted.");
+                mainView.setWalletsManageSetting(utils.getListOfWallets().toArray(new String[0]));
+                mainView.setWalletsLoginUsingSavedWallet(utils.getListOfWallets().toArray(new String[0]));
+
+            } catch (Exception a) {
+                a.printStackTrace();
+            }
+
+        }
+    }
+
+    private class listenForViewButtonManageSetting implements EventHandler<ActionEvent> {
+        String[] keys;
+
+        @Override
+        public void handle(ActionEvent event) {
+
+
+            try {
+                String temp = mainView.getSelectedWalletManageSetting();
+
+                keys = utils.decipherWalletFile(temp, mainView.getPasswordManageSetting());
+
+
+                keysDialog = new keysDialog(keys[0], keys[1]);
+                System.out.println(keysDialog.getPublicKey());
+                System.out.println(keysDialog.getPrivateKey());
+
+                keysDialog.showAndWait();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            } catch (InvalidKeySpecException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InvalidAlgorithmParameterException e) {
+                e.printStackTrace();
+            } catch (InvalidKeyException e) {
+                e.printStackTrace();
+            } catch (NoSuchPaddingException e) {
+                e.printStackTrace();
+            } catch (BadPaddingException e) {
+                e.printStackTrace();
+            } catch (IllegalBlockSizeException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
 
         }
     }

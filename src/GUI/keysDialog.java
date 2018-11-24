@@ -81,6 +81,7 @@ public class keysDialog extends Dialog<Pair<String, String>> {
                 BackgroundSize.DEFAULT);
         this.getDialogPane().setBackground(new Background(myBI));
 
+
         this.getDialogPane().setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
