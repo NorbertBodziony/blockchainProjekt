@@ -67,6 +67,7 @@ public class NodeTCP implements Runnable {
                 if(request.equals(TCPinterface.TCPid.Transaction))
                 {
                     System.out.println("new transaction");
+
                     SendBlock sendBlock= (SendBlock) inFromUser.readObject();
                     ReceiveBlock receiveBlock= (ReceiveBlock) inFromUser.readObject();
                     new PerformTransaction(sendBlock,receiveBlock,clientTCP,TCPnodes).handle(connection);

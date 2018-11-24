@@ -68,7 +68,7 @@ public class PerformTransaction extends WalletRequest {
 
         Database.performTransaction(con, sender, recipient, amount, CryptoConverter.bytesToHexString(signature),
                 sendBlock.getHash(), receiveBlock.getHash());
-
+            new ClientTCP(new Socket("localhost", 6667)).SendTransaction(sendBlock, receiveBlock);
                 if(clientTCP!=null){
 
                 for(int i=0;i<clientTCP.size()-1;i++) {

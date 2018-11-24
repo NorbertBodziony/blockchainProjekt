@@ -74,8 +74,8 @@ public class GenesisNode implements Runnable {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    clientTCP.add(new ClientTCP(new Socket("localhost", 6667)));
-                    new Thread(clientTCP.get(clientTCP.size()-1)).start();
+                   // clientTCP.add(new ClientTCP(new Socket("localhost", 6667)));
+                  //  new Thread(clientTCP.get(clientTCP.size()-1)).start();
                     TCPnodes.add(connectionSocket.getLocalAddress());
                     System.out.println(TCPnodes.size());
 
