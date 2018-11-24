@@ -31,10 +31,9 @@ public class NodeTCP implements Runnable {
         this.connection = Database.connect();
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
 
-        ClientTCP clientTCP=new ClientTCP(new Socket("localhost", Constants.TCP_PORT));
-        new Thread(clientTCP).start();
-        Node nodeUDP=new Node(TCPnodes,clientTCP);
-        new Thread(nodeUDP).start();
+
+        //Node nodeUDP=new Node(TCPnodes,clientTCP);
+       // new Thread(nodeUDP).start();
 
 
 
@@ -49,6 +48,8 @@ public class NodeTCP implements Runnable {
                 System.out.println(TCPnodes.size());
                 TCPnodes.add(connectionSocket.getLocalAddress());
                 System.out.println("new user");
+                ClientTCP clientTCP=new ClientTCP(new Socket("localhost", Constants.TCP_PORT));
+                new Thread(clientTCP).start();
                 ObjectOutputStream outToUser = new ObjectOutputStream(connectionSocket.getOutputStream());
                 ObjectInputStream inFromUser = new ObjectInputStream(connectionSocket.getInputStream());
                 TCPinterface.TCPid request= (TCPinterface.TCPid) inFromUser.readObject();

@@ -15,7 +15,7 @@ public class Database {
     public static String hostname = "localhost";
     public static String dbName = "orcl";
     public static String url = "jdbc:oracle:thin:@" + hostname + ":1521:" + dbName;
-    public static String user = "BLOCKCHAIN";
+    public static String user = "4BLOCKCHAIN";
     public static String password = "admin";
 
     static {
