@@ -26,12 +26,13 @@ public class NodeTCP implements Runnable {
     private ServerSocket welcomeSocket ;
     private static Connection connection;
     List<InetAddress> TCPnodes=new ArrayList<>();
+    ClientTCP clientTCP;
     public NodeTCP() throws IOException {
 
         this.connection = Database.connect();
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
 
-        ClientTCP clientTCP=new ClientTCP(new Socket("localhost", Constants.TCP_PORT));
+        clientTCP=new ClientTCP(new Socket("localhost", 6667));
         new Thread(clientTCP).start();
         Node nodeUDP=new Node(TCPnodes,clientTCP);
         new Thread(nodeUDP).start();
@@ -64,9 +65,10 @@ public class NodeTCP implements Runnable {
                 }
                 if(request.equals(TCPinterface.TCPid.Transaction))
                 {
+                    System.out.println("new transaction");
                     SendBlock sendBlock= (SendBlock) inFromUser.readObject();
                     ReceiveBlock receiveBlock= (ReceiveBlock) inFromUser.readObject();
-                    new PerformTransaction(sendBlock,receiveBlock).handle(connection);
+                    new PerformTransaction(sendBlock,receiveBlock,clientTCP,TCPnodes).handle(connection);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

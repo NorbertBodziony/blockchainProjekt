@@ -2,7 +2,9 @@ package account;
 
 import cryptography.CryptoConverter;
 
-public class ReceiveBlock extends Block {
+import java.io.Serializable;
+
+public class ReceiveBlock extends Block implements Serializable {
     private String source;
 
     public ReceiveBlock(int amount, String signature, String prevBlock, String source) {

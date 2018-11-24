@@ -8,6 +8,7 @@ import node.ClientTCP;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.SignatureException;
@@ -22,14 +23,14 @@ import static datagramInterfaces.ErrorCode.*;
 public class PerformTransaction extends WalletRequest {
     private SendBlock sendBlock;
     private ReceiveBlock receiveBlock;
-    ClientTCP clientTCP;
+    ClientTCP clientTCP=new ClientTCP(new Socket("localhost", 6667));;
     List<InetAddress> TCPnodes=new ArrayList<>();
 
-    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) {
+    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) throws IOException {
         this.sendBlock = sendBlock;
         this.receiveBlock = receiveBlock;
     }
-    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock,ClientTCP clientTCP, List<InetAddress> TCPnodes) {
+    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock,ClientTCP clientTCP, List<InetAddress> TCPnodes) throws IOException {
         this.sendBlock = sendBlock;
         this.receiveBlock = receiveBlock;
         this.TCPnodes=TCPnodes;
@@ -67,7 +68,8 @@ public class PerformTransaction extends WalletRequest {
 
         Database.performTransaction(con, sender, recipient, amount, CryptoConverter.bytesToHexString(signature),
                 sendBlock.getHash(), receiveBlock.getHash());
-                clientTCP.SendTransaction(sendBlock,receiveBlock);
+                System.out.println("PERFORMIG TCP TRANSACTION");
+              clientTCP.SendTransaction(sendBlock,receiveBlock);
         return new NodeRespond(OK);
     }
 }
