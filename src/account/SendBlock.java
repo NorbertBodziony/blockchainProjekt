@@ -2,7 +2,9 @@ package account;
 
 import cryptography.CryptoConverter;
 
-public class SendBlock extends Block {
+import java.io.Serializable;
+
+public class SendBlock extends Block implements Serializable {
     private String recipient;
 
     private SendBlock() { }

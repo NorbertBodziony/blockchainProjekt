@@ -8,6 +8,7 @@ import node.ClientTCP;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.SignatureException;
@@ -22,14 +23,14 @@ import static datagramInterfaces.ErrorCode.*;
 public class PerformTransaction extends WalletRequest {
     private SendBlock sendBlock;
     private ReceiveBlock receiveBlock;
-    ClientTCP clientTCP;
-    List<InetAddress> TCPnodes=new ArrayList<>();
+    List<ClientTCP> clientTCP;
+    List<InetAddress> TCPnodes;
 
-    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) {
+    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) throws IOException {
         this.sendBlock = sendBlock;
         this.receiveBlock = receiveBlock;
     }
-    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock,ClientTCP clientTCP, List<InetAddress> TCPnodes) {
+    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock,List<ClientTCP> clientTCP, List<InetAddress> TCPnodes) throws IOException {
         this.sendBlock = sendBlock;
         this.receiveBlock = receiveBlock;
         this.TCPnodes=TCPnodes;
@@ -67,7 +68,18 @@ public class PerformTransaction extends WalletRequest {
 
         Database.performTransaction(con, sender, recipient, amount, CryptoConverter.bytesToHexString(signature),
                 sendBlock.getHash(), receiveBlock.getHash());
-                clientTCP.SendTransaction(sendBlock,receiveBlock);
+
+                if(clientTCP!=null){
+
+                for(int i=0;i<clientTCP.size()-1;i++) {
+                    System.out.println("PERFORMIG TCP TRANSACTION");
+                    clientTCP.get(i).SendTransaction(sendBlock, receiveBlock);
+                }}
+                else
+                    {
+                        System.out.println("client are empty");
+                    }
+
         return new NodeRespond(OK);
     }
 }

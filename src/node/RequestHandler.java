@@ -19,15 +19,18 @@ public class RequestHandler implements Runnable {
     private DatagramSocket socket;
     private DatagramPacket packet;
     private Connection connection;
-    ClientTCP clientTCP;
-    List<InetAddress> TCPnodes=new ArrayList<>();
+    List<ClientTCP> clientTCP;
+    List<InetAddress> TCPnodes;
 
-    public RequestHandler(DatagramSocket socket, DatagramPacket packet, Connection connection,ClientTCP clientTCP,List<InetAddress> TCPnodes) {
+    public RequestHandler(DatagramSocket socket, DatagramPacket packet, Connection connection,List<ClientTCP> clientTCP,List<InetAddress> TCPnodes) {
         this.socket = socket;
         this.packet = packet;
         this.connection = connection;
         this.TCPnodes=TCPnodes;
         this.clientTCP=clientTCP;
+        {
+            System.out.println("ERROR");
+        }
     }
     public RequestHandler(DatagramSocket socket, DatagramPacket packet, Connection connection) {
         this.socket = socket;

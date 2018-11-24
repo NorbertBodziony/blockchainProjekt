@@ -17,13 +17,17 @@ import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 public class Node implements Runnable {
     private DatagramSocket socket;
     private Connection connection;
-    ClientTCP clientTCP;
-    List<InetAddress> TCPnodes=new ArrayList<>();
-    public Node(List<InetAddress> TCPnodes,ClientTCP clientTCP) throws SocketException {
+    List<ClientTCP> clientTCP;
+    List<InetAddress> TCPnodes;
+    public Node(List<InetAddress> TCPnodes,List<ClientTCP> clientTCP) throws SocketException {
         this.socket = new DatagramSocket(Constants.NODE_PORT, Constants.NODE_IP);
         this.connection = Database.connect();
         this.TCPnodes=TCPnodes;
         this.clientTCP=clientTCP;
+        if(clientTCP==null)
+        {
+            System.out.println("ERROR");
+        }
     }
     public Node() throws SocketException {
         this.socket = new DatagramSocket(Constants.NODE_PORT, Constants.NODE_IP);
