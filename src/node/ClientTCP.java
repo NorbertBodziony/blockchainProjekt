@@ -72,11 +72,11 @@ public class ClientTCP implements Runnable {
         ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
 //        ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
         TCPinterface.TCPid request=TCPinterface.TCPid.Transaction;
-        outToServer.flush();
+
         outToServer.writeObject(request);
         outToServer.writeObject(sendBlock);
         outToServer.writeObject(receiveBlock);
-        outToServer.flush();
+
     }
     @Override
     public void run() {
