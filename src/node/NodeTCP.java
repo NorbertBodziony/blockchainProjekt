@@ -64,15 +64,14 @@ public class NodeTCP implements Runnable {
                     outToUser.writeObject(Database.GetSendBlocks(connection));
                     outToUser.writeObject(Database.GetReciveBlocks(connection));
                     outToUser.writeObject(Database.GetBlocks(connection));
-                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getLocalAddress(),6666)));
+                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getInetAddress(),6666)));
                     new Thread(clientTCP.get(clientTCP.size()-1)).start();
-                    TCPnodes.add(connectionSocket.getLocalAddress());
+                    TCPnodes.add(connectionSocket.getInetAddress());
 
                 }
                 if(request.equals(TCPinterface.TCPid.Transaction))
                 {
                     System.out.println("new transaction");
-
                     SendBlock sendBlock= (SendBlock) inFromUser.readObject();
                     ReceiveBlock receiveBlock= (ReceiveBlock) inFromUser.readObject();
                     new PerformTransaction(sendBlock,receiveBlock,clientTCP,TCPnodes).handle(connection);

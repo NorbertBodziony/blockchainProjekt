@@ -297,6 +297,22 @@ public class Database {
 
         pstmt.executeUpdate();
 
+        Statement st = con.createStatement();
+
+       sql = ("SELECT count(*) FROM ACCOUNT");
+        ResultSet rs = st.executeQuery(sql);
+        rs.next();
+        int i=rs.getInt(1);
+
+
+
+        for(int a = 0;a<i;a++)
+        {   sql = ("UPDATE BLOCKCHAIN SET last_block =( SELECT MAX(BLOCK.BLOCK_ID) FROM BLOCK WHERE BLOCK.blockchain_id=?) where BLOCKCHAIN.BLOCKCHAIN_ID=?");
+            pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1,a+1 );
+            pstmt.setInt(2,a+1 );
+            pstmt.executeUpdate();
+        }
 
     }
     public static void InsertBlockchain(Connection con,BlockchainData Account) throws SQLException {

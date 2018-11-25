@@ -67,19 +67,27 @@ public class ClientTCP implements Runnable {
         }
     }
     public void SendTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) throws IOException {
+        System.out.println(clientSocket.getInetAddress()+"   "+clientSocket.getPort());
 
         ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
-        ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
+//        ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
         TCPinterface.TCPid request=TCPinterface.TCPid.Transaction;
+        outToServer.flush();
         outToServer.writeObject(request);
         outToServer.writeObject(sendBlock);
         outToServer.writeObject(receiveBlock);
+        outToServer.flush();
     }
     @Override
     public void run() {
         while(true)
         {
-
+            System.out.println("i woork");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
     }

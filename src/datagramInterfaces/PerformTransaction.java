@@ -70,8 +70,8 @@ public class PerformTransaction extends WalletRequest {
                 sendBlock.getHash(), receiveBlock.getHash());
 
                 if(clientTCP!=null){
-                    System.out.println("Sending to clients ");
-                for(int i=0;i<clientTCP.size()-1;i++) {
+                    System.out.println("Sending to clients "+clientTCP.size());
+                for(int i=0;i<clientTCP.size();i++) {
                     System.out.println("PERFORMIG TCP TRANSACTION");
                     clientTCP.get(i).SendTransaction(sendBlock, receiveBlock);
                 }
