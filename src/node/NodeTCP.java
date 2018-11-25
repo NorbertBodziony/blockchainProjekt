@@ -50,37 +50,10 @@ public class NodeTCP implements Runnable {
             try {
                 System.out.println("Node startTCP");
                 Socket connectionSocket = welcomeSocket.accept();
-                System.out.println(TCPnodes.size());
-                TCPnodes.add(connectionSocket.getLocalAddress());
-                System.out.println("new user");
-                ObjectOutputStream outToUser = new ObjectOutputStream(connectionSocket.getOutputStream());
-                ObjectInputStream inFromUser = new ObjectInputStream(connectionSocket.getInputStream());
-                TCPinterface.TCPid request= (TCPinterface.TCPid) inFromUser.readObject();
-                if(request.equals(TCPinterface.TCPid.Blockchain))
-                {
 
-                    outToUser.writeObject(Database.GetBlockchain(connection));
-                    outToUser.writeObject(Database.GetAccounts(connection));
-                    outToUser.writeObject(Database.GetSendBlocks(connection));
-                    outToUser.writeObject(Database.GetReciveBlocks(connection));
-                    outToUser.writeObject(Database.GetBlocks(connection));
-                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getInetAddress(),6666)));
-                    new Thread(clientTCP.get(clientTCP.size()-1)).start();
-                    TCPnodes.add(connectionSocket.getInetAddress());
+                new ServerThread(connectionSocket,TCPnodes,clientTCP).start();
 
-                }
-                if(request.equals(TCPinterface.TCPid.Transaction))
-                {
-                    System.out.println("new transaction");
-                    SendBlock sendBlock= (SendBlock) inFromUser.readObject();
-                    ReceiveBlock receiveBlock= (ReceiveBlock) inFromUser.readObject();
-                    new PerformTransaction(sendBlock,receiveBlock,clientTCP,TCPnodes).handle(connection);
-                }
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
                 e.printStackTrace();
             }
 
