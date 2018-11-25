@@ -42,7 +42,10 @@ public class PerformTransaction extends WalletRequest {
         String sender = receiveBlock.getSource();
         String recipient = sendBlock.getRecipient();
         int amount = sendBlock.getAmount();
+        String recipientSignature = receiveBlock.getSignature();
+        String senderPreviousHash = sendBlock.getPrevBlock();
         byte[] signature = CryptoConverter.hexStringToByteArray(sendBlock.getSignature());
+
         if(!Database.accountExists(con, sender))
             return new NodeRespond(UNKNOWN_SENDER);
         if(!Database.accountExists(con, recipient))
@@ -53,10 +56,12 @@ public class PerformTransaction extends WalletRequest {
 
         try {
             PublicKey senderPublicKey = CryptoConverter.hexToPublicKey(sender);
+
             if(!sendBlock.getSignature().equals(receiveBlock.getSignature()))
                 return new NodeRespond(INVALID_SIGNATURE);
-            if(!EllipticCurveHelper.verifySignature(senderPublicKey, sender + recipient + amount, signature)) {
-                System.out.println("valid signature");
+
+            if(!EllipticCurveHelper.verifySignature(senderPublicKey, senderPreviousHash + amount, signature)) {
+                System.out.println("invalid signature");
                 return new NodeRespond(INVALID_SIGNATURE);
             }
         } catch (InvalidKeyException | InvalidKeySpecException | SignatureException e) {
