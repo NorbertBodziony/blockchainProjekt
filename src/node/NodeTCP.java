@@ -27,13 +27,16 @@ public class NodeTCP implements Runnable {
     private static Connection connection;
     List<InetAddress> TCPnodes=new ArrayList<>();
     List<ClientTCP> clientTCP=new ArrayList<>();
-    public NodeTCP() throws IOException {
+    public NodeTCP() throws IOException, SQLException, ClassNotFoundException {
 
         this.connection = Database.connect();
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
 
         clientTCP.add(new ClientTCP(new Socket("localhost", 6667)));
+        System.out.println("getdatabase");
+        clientTCP.get(0).GetDatabase();
         new Thread(clientTCP.get(clientTCP.size()-1)).start();
+
         Node nodeUDP=new Node(TCPnodes,clientTCP);
         new Thread(nodeUDP).start();
 
@@ -61,7 +64,9 @@ public class NodeTCP implements Runnable {
                     outToUser.writeObject(Database.GetSendBlocks(connection));
                     outToUser.writeObject(Database.GetReciveBlocks(connection));
                     outToUser.writeObject(Database.GetBlocks(connection));
-
+                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getLocalAddress(),6666)));
+                    new Thread(clientTCP.get(clientTCP.size()-1)).start();
+                    TCPnodes.add(connectionSocket.getLocalAddress());
 
                 }
                 if(request.equals(TCPinterface.TCPid.Transaction))
@@ -83,7 +88,7 @@ public class NodeTCP implements Runnable {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         NodeTCP tcp=new NodeTCP();
         new Thread(tcp).start();
     }
