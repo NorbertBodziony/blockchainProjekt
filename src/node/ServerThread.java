@@ -20,7 +20,7 @@ public class ServerThread extends Thread {
     Socket connectionSocket;
     private static Connection connection;
     List<InetAddress> TCPnodes;
-    List<ClientTCP> clientTCP=new ArrayList<>();
+    List<ClientTCP> clientTCP;
 
     public ServerThread(Socket connectionSocket, List<InetAddress> TCPnodes, List<ClientTCP> clientTCP) {
         this.connectionSocket = connectionSocket;
