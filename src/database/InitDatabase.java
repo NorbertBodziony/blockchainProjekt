@@ -35,27 +35,36 @@ public class InitDatabase {
                 "    send_type INT NULL\n" +
                 ")", s, Constants.SIGNATURE_LENGTH, Constants.HASH_LENGTH);
 
-        execute("ALTER TABLE block ADD CONSTRAINT fk_send_block FOREIGN KEY (send_type) REFERENCES send_block(id)", s);
-        execute("ALTER TABLE block ADD CONSTRAINT fk_receive_block FOREIGN KEY (receive_type) REFERENCES receive_block(id)", s);
-        execute("ALTER TABLE block ADD CONSTRAINT fk_previous_block FOREIGN KEY (previous_block) REFERENCES block(block_id)", s);
-        execute("ALTER TABLE block ADD CONSTRAINT unique_receive_type UNIQUE(receive_type)", s);
-        execute("ALTER TABLE block ADD CONSTRAINT unique_send_type UNIQUE(send_type)", s);
-        execute("ALTER TABLE block ADD CONSTRAINT unique_previous_block UNIQUE(previous_block)", s);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         execute("CREATE TABLE blockchain(\n" +
                 "    blockchain_id INT PRIMARY KEY,\n" +
                 "    last_block INT NULL\n" +
                 ")", s);
-        execute("ALTER TABLE blockchain ADD CONSTRAINT fk_last_block FOREIGN KEY (last_block) REFERENCES block(block_id)", s);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         execute("CREATE TABLE account(\n" +
                 "    public_key VARCHAR2(%d) PRIMARY KEY,\n" +
                 "    blockchain INT NOT NULL\n" +
                 ")", s, Constants.PUBLIC_KEY_LENGTH);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    }
+
+    public static void createConstraints(Statement s) throws SQLException {
+        execute("ALTER TABLE block ADD CONSTRAINT fk_send_block FOREIGN KEY (send_type) REFERENCES send_block(id)", s);
+        execute("ALTER TABLE block ADD CONSTRAINT fk_receive_block FOREIGN KEY (receive_type) REFERENCES receive_block(id)", s);
+        execute("ALTER TABLE block ADD CONSTRAINT fk_previous_block FOREIGN KEY (previous_block) REFERENCES block(block_id)", s);
+        execute("ALTER TABLE block ADD CONSTRAINT unique_receive_type UNIQUE(receive_type)", s);
+        execute("ALTER TABLE block ADD CONSTRAINT unique_send_type UNIQUE(send_type)", s);
+        execute("ALTER TABLE block ADD CONSTRAINT unique_previous_block UNIQUE(previous_block)", s);
+
+        execute("ALTER TABLE blockchain ADD CONSTRAINT fk_last_block FOREIGN KEY (last_block) REFERENCES block(block_id)", s);
+
         execute("ALTER TABLE account ADD CONSTRAINT fk_blockchain FOREIGN KEY (blockchain) REFERENCES blockchain(blockchain_id)", s);
         execute("ALTER TABLE account ADD CONSTRAINT unique_blockchain UNIQUE(blockchain)", s);
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         execute("ALTER TABLE receive_block ADD CONSTRAINT fk_sender FOREIGN KEY (sender) REFERENCES account(public_key)", s);
         execute("ALTER TABLE send_block ADD CONSTRAINT fk_recipient FOREIGN KEY (recipient) REFERENCES account(public_key)", s);
         execute("ALTER TABLE block ADD CONSTRAINT fk_block_in_blockchain FOREIGN KEY (blockchain_id) REFERENCES blockchain(blockchain_id)", s);
@@ -362,17 +371,19 @@ public class InitDatabase {
     }
 
     public static void dropSchema(Statement s) throws SQLException {
-        execute("ALTER TABLE receive_block DROP CONSTRAINT fk_sender", s);
-        execute("ALTER TABLE send_block DROP CONSTRAINT fk_recipient", s);
-        execute("ALTER TABLE block DROP CONSTRAINT fk_send_block", s);
-        execute("ALTER TABLE block DROP CONSTRAINT fk_receive_block", s);
-        execute("ALTER TABLE block DROP CONSTRAINT fk_block_in_blockchain", s);
-
         execute("DROP TABLE SEND_BLOCK", s);
         execute("DROP TABLE RECEIVE_BLOCK", s);
         execute("DROP TABLE ACCOUNT", s);
         execute("DROP TABLE BLOCKCHAIN", s);
         execute("DROP TABLE BLOCK", s);
+    }
+
+    public static void dropConstraints(Statement s) throws SQLException {
+        execute("ALTER TABLE receive_block DROP CONSTRAINT fk_sender", s);
+        execute("ALTER TABLE send_block DROP CONSTRAINT fk_recipient", s);
+        execute("ALTER TABLE block DROP CONSTRAINT fk_send_block", s);
+        execute("ALTER TABLE block DROP CONSTRAINT fk_receive_block", s);
+        execute("ALTER TABLE block DROP CONSTRAINT fk_block_in_blockchain", s);
     }
 
     public static void dropFunctions(Statement s) throws SQLException {
