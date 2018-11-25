@@ -68,9 +68,9 @@ public class ClientTCP implements Runnable {
     }
     public void SendTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) throws IOException {
 
-        System.out.println("send to "+clientSocket.getLocalAddress()+clientSocket.getLocalPort());
+        System.out.println("send to "+clientSocket.getInetAddress()+clientSocket.getPort());
         ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
-        ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
+
         TCPinterface.TCPid request=TCPinterface.TCPid.Transaction;
         outToServer.flush();
         outToServer.writeObject(request);
