@@ -29,6 +29,7 @@ public class RequestHandler implements Runnable {
         this.connection = connection;
         this.TCPnodes=TCPnodes;
         this.clientTCP=clientTCP;
+        if(clientTCP==null)
         {
             System.out.println("ERROR");
         }
@@ -64,10 +65,10 @@ public class RequestHandler implements Runnable {
         os.writeObject(respond);
         os.flush();
         byte[] sendBuf = byteStream.toByteArray();
-        System.out.println("buff size: " + sendBuf.length);
+      //  System.out.println("buff size: " + sendBuf.length);
         DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length,
                 this.packet.getAddress(), this.packet.getPort());
-        System.out.println("packet length = " + packet.getLength());
+      // System.out.println("packet length = " + packet.getLength());
         socket.send(packet);
         os.close();
     }

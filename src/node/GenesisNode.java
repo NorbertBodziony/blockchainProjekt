@@ -54,8 +54,6 @@ public class GenesisNode implements Runnable {
                 System.out.println("Node startTCP");
                 Socket connectionSocket = welcomeSocket.accept();
 
-                TCPnodes.add(connectionSocket.getLocalAddress());
-
                 System.out.println("new user");
                 ObjectOutputStream outToUser = new ObjectOutputStream(connectionSocket.getOutputStream());
                 ObjectInputStream inFromUser = new ObjectInputStream(connectionSocket.getInputStream());
@@ -74,10 +72,11 @@ public class GenesisNode implements Runnable {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    clientTCP.add(new ClientTCP(new Socket(welcomeSocket.getInetAddress(), 6666)));
-                    System.out.println(clientTCP.get(clientTCP.size()-1).clientSocket.getInetAddress());
+                    System.out.println(connectionSocket.getInetAddress());
+
+                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getInetAddress(), 6666)));
                     new Thread(clientTCP.get(clientTCP.size()-1)).start();
-                    TCPnodes.add(connectionSocket.getLocalAddress());
+                    TCPnodes.add(connectionSocket.getInetAddress());
                     System.out.println(TCPnodes.size());
 
                 }

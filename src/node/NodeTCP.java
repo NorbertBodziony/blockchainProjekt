@@ -64,9 +64,9 @@ public class NodeTCP implements Runnable {
                     outToUser.writeObject(Database.GetSendBlocks(connection));
                     outToUser.writeObject(Database.GetReciveBlocks(connection));
                     outToUser.writeObject(Database.GetBlocks(connection));
-                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getLocalAddress(),6666)));
-                    new Thread(clientTCP.get(clientTCP.size()-1)).start();
-                    TCPnodes.add(connectionSocket.getLocalAddress());
+                    //clientTCP.add(new ClientTCP(new Socket(connectionSocket.getLocalAddress(),6666)));
+                  //  new Thread(clientTCP.get(clientTCP.size()-1)).start();
+                    //TCPnodes.add(connectionSocket.getLocalAddress());
 
                 }
                 if(request.equals(TCPinterface.TCPid.Transaction))

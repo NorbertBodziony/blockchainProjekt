@@ -18,7 +18,7 @@ import java.util.List;
 public class ClientTCP implements Runnable {
     Socket clientSocket;
     private Connection connection;
-    List<InetAddress> TCPnodes=new ArrayList<>();
+    List<InetAddress> TCPnodes;
 
     public ClientTCP(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -68,12 +68,15 @@ public class ClientTCP implements Runnable {
     }
     public void SendTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) throws IOException {
 
+        System.out.println("send to "+clientSocket.getLocalAddress()+clientSocket.getLocalPort());
         ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
         ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
         TCPinterface.TCPid request=TCPinterface.TCPid.Transaction;
+        outToServer.flush();
         outToServer.writeObject(request);
         outToServer.writeObject(sendBlock);
         outToServer.writeObject(receiveBlock);
+        outToServer.flush();
     }
     @Override
     public void run() {
@@ -89,5 +92,14 @@ public class ClientTCP implements Runnable {
         ClientTCP client=new ClientTCP(clientSocket);
         client.GetDatabase();
         client.run();
+    }
+
+    @Override
+    public String toString() {
+        return "ClientTCP{" +
+                "clientSocket=" + clientSocket.getLocalAddress() +
+                ", connection=" + connection +
+                ", TCPnodes=" + TCPnodes +
+                '}';
     }
 }

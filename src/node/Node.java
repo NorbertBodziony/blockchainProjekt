@@ -61,6 +61,9 @@ public class Node implements Runnable {
     }
 
     public void handle(DatagramPacket packet) {
+        if(clientTCP.size()>0){
+        System.out.println(clientTCP.get(clientTCP.size()-1));
+        System.out.println(TCPnodes.get(TCPnodes.size()-1));}
         new Thread(new RequestHandler(socket, packet, connection,clientTCP,TCPnodes)).start();
     }
 
