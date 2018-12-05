@@ -1,5 +1,6 @@
 package database;
 
+import account.ReceiveBlock;
 import constants.Constants;
 
 import java.sql.*;
@@ -12,7 +13,7 @@ public class Database {
     public static String hostname = "localhost";
     public static String dbName = "orcl";
     public static String url = "jdbc:oracle:thin:@" + hostname + ":1521:" + dbName;
-    public static String user = "5BLOCKCHAIN";
+    public static String user = "4BLOCKCHAIN";
     public static String password = "admin";
 
     static {
@@ -339,6 +340,17 @@ public class Database {
         pstmt.executeUpdate();
 
 
+    }
+    public static String GetLastHash(Connection con, ReceiveBlock block)throws  SQLException{
+        Statement st = con.createStatement();
+        System.out.println("GetLastHash");
+        String sql = ("SELECT PREVIOUS_HASH_CODE FROM BLOCK WHERE BLOCKCHAIN_ID=(SELECT BLOCKCHAIN FROM ACCOUNT WHERE PUBLIC_KEY=?) AND BLOCK_ID=(SELECT LAST_BLOCK FROM BLOCKCHAIN WHERE BLOCKCHAIN_ID=(SELECT BLOCKCHAIN FROM ACCOUNT WHERE PUBLIC_KEY=?)) ");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setString(1,block.getSource());
+        pstmt.setString(2,block.getSource());
+        ResultSet rs =pstmt.executeQuery();
+        rs.next();
+        return rs.getString(1);
     }
 
 }
