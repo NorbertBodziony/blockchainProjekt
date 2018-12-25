@@ -42,6 +42,8 @@ public class PerformTransaction extends WalletRequest {
         String sender = receiveBlock.getSource();
         String recipient = sendBlock.getRecipient();
         int amount = sendBlock.getAmount();
+        String recipientSignature = receiveBlock.getSignature();
+        String senderPreviousHash = sendBlock.getPrevBlock();
         byte[] signature = CryptoConverter.hexStringToByteArray(sendBlock.getSignature());
         if(!Database.accountExists(con, sender))
             return new NodeRespond(UNKNOWN_SENDER);
@@ -55,8 +57,8 @@ public class PerformTransaction extends WalletRequest {
             PublicKey senderPublicKey = CryptoConverter.hexToPublicKey(sender);
             if(!sendBlock.getSignature().equals(receiveBlock.getSignature()))
                 return new NodeRespond(INVALID_SIGNATURE);
-            if(!EllipticCurveHelper.verifySignature(senderPublicKey, sender + recipient + amount, signature)) {
-                System.out.println("valid signature");
+            if(!EllipticCurveHelper.verifySignature(senderPublicKey, senderPreviousHash + amount, signature)) {
+                System.out.println("invalid signature");
                 return new NodeRespond(INVALID_SIGNATURE);
             }
         } catch (InvalidKeyException | InvalidKeySpecException | SignatureException e) {
@@ -71,15 +73,33 @@ public class PerformTransaction extends WalletRequest {
 
                 if(clientTCP!=null){
 
-                for(int i=0;i<clientTCP.size()-1;i++) {
+                    System.out.println("Sending to clients ="+clientTCP.size());
+                for(int i=0;i<clientTCP.size();i++) {
                     System.out.println("PERFORMIG TCP TRANSACTION");
                     clientTCP.get(i).SendTransaction(sendBlock, receiveBlock);
-                }}
+                }
+                }
                 else
                     {
                         System.out.println("client are empty");
                     }
 
         return new NodeRespond(OK);
+    }
+
+    public List<ClientTCP> getClientTCP() {
+        return clientTCP;
+    }
+
+    public void setClientTCP(List<ClientTCP> clientTCP) {
+        this.clientTCP = clientTCP;
+    }
+
+    public List<InetAddress> getTCPnodes() {
+        return TCPnodes;
+    }
+
+    public void setTCPnodes(List<InetAddress> TCPnodes) {
+        this.TCPnodes = TCPnodes;
     }
 }

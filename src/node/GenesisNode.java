@@ -7,6 +7,7 @@ import database.Database;
 import datagramInterfaces.PerformTransaction;
 import datagramInterfaces.TCPinterface;
 
+import javax.sound.midi.Soundbank;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,7 +32,13 @@ public class GenesisNode implements Runnable {
 
         this.connection = Database.connect();
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
-
+        if(clientTCP==null)
+        {
+            System.out.println("ERROR");
+        }else
+        {
+            System.out.println("works!");
+        }
 
         Node nodeUDP=new Node(TCPnodes,clientTCP);
         new Thread(nodeUDP).start();
@@ -47,37 +54,8 @@ public class GenesisNode implements Runnable {
                 System.out.println("Node startTCP");
                 Socket connectionSocket = welcomeSocket.accept();
 
-                TCPnodes.add(connectionSocket.getLocalAddress());
-
-                System.out.println("new user");
-                ObjectOutputStream outToUser = new ObjectOutputStream(connectionSocket.getOutputStream());
-                ObjectInputStream inFromUser = new ObjectInputStream(connectionSocket.getInputStream());
-                TCPinterface.TCPid request= (TCPinterface.TCPid) inFromUser.readObject();
-                if(request.equals(TCPinterface.TCPid.Blockchain))
-                {
-
-                    outToUser.writeObject(Database.GetBlockchain(connection));
-                    outToUser.writeObject(Database.GetAccounts(connection));
-                    outToUser.writeObject(Database.GetSendBlocks(connection));
-                    outToUser.writeObject(Database.GetReciveBlocks(connection));
-                    outToUser.writeObject(Database.GetBlocks(connection));
-                    clientTCP.add(new ClientTCP(new Socket(connectionSocket.getLocalAddress(), connectionSocket.getLocalPort())));
-                    new Thread(clientTCP.get(clientTCP.size()-1)).start();
-                    System.out.println(TCPnodes.size());
-
-                }
-                if(request.equals(TCPinterface.TCPid.Transaction))
-                {
-                    System.out.println("new transaction");
-                    SendBlock sendBlock= (SendBlock) inFromUser.readObject();
-                    ReceiveBlock receiveBlock= (ReceiveBlock) inFromUser.readObject();
-                    new PerformTransaction(sendBlock,receiveBlock,clientTCP,TCPnodes).handle(connection);
-                }
+                new ServerThread(connectionSocket,TCPnodes,clientTCP).start();
             } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
                 e.printStackTrace();
             }
 

@@ -29,8 +29,8 @@ public class Wallet {
         this.socket = new DatagramSocket();
     }
 
-    public byte[] sign(String recipient, int amount) throws SignatureException, InvalidKeyException {
-        String transactionContents = currentAccount.getAddress() + recipient + amount;
+    public byte[] sign(String previousHash, int amount) throws SignatureException, InvalidKeyException {
+        String transactionContents = previousHash + amount;
         return currentAccount.sign(transactionContents);
     }
 
@@ -38,7 +38,7 @@ public class Wallet {
         String recipient = currentAccount.getAddress();
         String sender = "";
         int amount = Constants.INITIAL_BALANCE;
-        byte[] signature = sign(recipient, amount);
+        byte[] signature = sign(Constants.GENESIS_PREV_HASH, amount);
         return new ReceiveBlock(amount, signature, Constants.GENESIS_PREV_HASH, sender);
     }
 
@@ -68,9 +68,9 @@ public class Wallet {
 
     public void performTransaction(int amount, String recipient, String senderPrevHash, String recpientPrevHash)
             throws SignatureException, InvalidKeyException, IOException {
-        byte[] signature = sign(recipient, amount);
-        SendBlock sendBlock = new SendBlock(amount, signature, senderPrevHash, recipient);
-        ReceiveBlock receiveBlock = new ReceiveBlock(amount, signature, recpientPrevHash, currentAccount.getAddress());
+        byte[] senderSignature = sign(senderPrevHash, amount);
+        SendBlock sendBlock = new SendBlock(amount, senderSignature, senderPrevHash, recipient);
+        ReceiveBlock receiveBlock = new ReceiveBlock(amount, senderSignature, recpientPrevHash, currentAccount.getAddress());
         PerformTransaction walletRequest = new PerformTransaction(sendBlock, receiveBlock);
         send(walletRequest);
     }

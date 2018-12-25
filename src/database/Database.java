@@ -1,12 +1,9 @@
 package database;
 
-import account.Account;
-import account.ReceiveBlock;
 import constants.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Formatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +12,7 @@ public class Database {
     public static String hostname = "localhost";
     public static String dbName = "orcl";
     public static String url = "jdbc:oracle:thin:@" + hostname + ":1521:" + dbName;
-    public static String user = "4BLOCKCHAIN";
+    public static String user = "5BLOCKCHAIN";
     public static String password = "admin";
 
     static {
@@ -34,6 +31,7 @@ public class Database {
             if(decision.toLowerCase().equals("d")) {
                 System.out.println("DROP");
                 InitDatabase.dropTriggers(statement);
+                //InitDatabase.dropConstraints(statement);
                 InitDatabase.dropSchema(statement);
                 InitDatabase.dropSequences(statement);
                 InitDatabase.dropProcedures(statement);
@@ -41,6 +39,7 @@ public class Database {
             }else {
                 System.out.println("INIT");
                 InitDatabase.createSchema(statement);
+                //InitDatabase.createConstraints(statement);
                 InitDatabase.createSequences(statement);
                 InitDatabase.createTriggers(statement);
                 InitDatabase.createProcedures(statement);
@@ -240,7 +239,7 @@ public class Database {
         List<BlockData> AccountData=new ArrayList<>();
         Statement st = con.createStatement();
         System.out.println("GetBlockchain");
-        String sql = ("SELECT * FROM BLOCK");
+        String sql = ("SELECT * FROM BLOCK ORDER BY BLOCK_ID");
         ResultSet rs = st.executeQuery(sql);
 
         while(rs.next()) {
