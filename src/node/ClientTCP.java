@@ -1,5 +1,6 @@
 package node;
 
+import account.Account;
 import account.ReceiveBlock;
 import account.SendBlock;
 import constants.Constants;
@@ -78,6 +79,15 @@ public class ClientTCP implements Runnable {
         outToServer.writeObject(sendBlock);
         outToServer.writeObject(receiveBlock);
 
+    }
+    public void SendNewAccount(Account account,ReceiveBlock genesisBlock) throws IOException {
+        ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+
+        TCPinterface.TCPid request=TCPinterface.TCPid.NewAccount;
+
+        outToServer.writeObject(request);
+        outToServer.writeObject(account);
+        outToServer.writeObject(genesisBlock);
     }
     @Override
     public void run() {

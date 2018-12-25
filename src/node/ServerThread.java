@@ -1,8 +1,10 @@
 package node;
 
+import account.Account;
 import account.ReceiveBlock;
 import account.SendBlock;
 import database.Database;
+import datagramInterfaces.CreateAccount;
 import datagramInterfaces.PerformTransaction;
 import datagramInterfaces.TCPinterface;
 
@@ -64,13 +66,19 @@ public class ServerThread extends Thread {
                 ReceiveBlock receiveBlock= (ReceiveBlock) inFromUser.readObject();
                 new PerformTransaction(sendBlock,receiveBlock,clientTCP,TCPnodes).handle(connection);
             }
+            if(request.equals(TCPinterface.TCPid.NewAccount))
+            {
+                System.out.println("new Account");
+                new CreateAccount((Account)inFromUser.readObject(),(ReceiveBlock)inFromUser.readObject()).handle(connection);
+            }
             sleep(1000);
 
         } catch (IOException e) {
             e.printStackTrace();
             return ;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();return ;
+            e.printStackTrace();
+            return ;
         } catch (SQLException e) {
             e.printStackTrace();return ;
         } catch (InterruptedException e) {
