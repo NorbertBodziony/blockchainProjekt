@@ -12,7 +12,7 @@ public class BlockData implements Serializable {
     int Amount;
     int Receive_Type;
     int Send_Type;
-
+    public static final long serialVersionUID = 3L;
     public BlockData(int block_ID, int blockchain_ID, int previous_Block, String signature, String hash_Code, String previous_Hash_Code, int amount, int receive_Type, int send_Type) {
         Block_ID = block_ID;
         Blockchain_ID = blockchain_ID;
