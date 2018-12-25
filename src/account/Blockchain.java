@@ -6,4 +6,5 @@ import java.util.List;
 
 public class Blockchain implements Serializable {
     List<Blockchain> BlockChain = new LinkedList<>();
+    public static final long serialVersionUID = 10L;
 }
