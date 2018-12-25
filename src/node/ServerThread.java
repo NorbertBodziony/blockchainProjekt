@@ -68,12 +68,13 @@ public class ServerThread extends Thread {
 
         } catch (IOException e) {
             e.printStackTrace();
+            return ;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            e.printStackTrace();return ;
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace();return ;
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            e.printStackTrace();return ;
         }
 
     }}
