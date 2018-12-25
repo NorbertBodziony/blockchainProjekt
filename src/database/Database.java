@@ -13,7 +13,7 @@ public class Database {
     public static String hostname = "localhost";
     public static String dbName = "orcl";
     public static String url = "jdbc:oracle:thin:@" + hostname + ":1521:" + dbName;
-    public static String user = "5BLOCKCHAIN";
+    public static String user = "9BLOCKCHAIN";
     public static String password = "admin";
 
     static {
@@ -346,11 +346,30 @@ public class Database {
         System.out.println("GetLastHash");
         String sql = ("SELECT HASH_CODE FROM BLOCK WHERE BLOCKCHAIN_ID=(SELECT BLOCKCHAIN FROM ACCOUNT WHERE PUBLIC_KEY=?) AND BLOCK_ID=(SELECT LAST_BLOCK FROM BLOCKCHAIN WHERE BLOCKCHAIN_ID=(SELECT BLOCKCHAIN FROM ACCOUNT WHERE PUBLIC_KEY=?)) ");
         PreparedStatement pstmt = con.prepareStatement(sql);
+
         pstmt.setString(1,block.getSource());
         pstmt.setString(2,block.getSource());
         ResultSet rs =pstmt.executeQuery();
         rs.next();
+        System.out.println(rs.getString(1));
         return rs.getString(1);
     }
+    public static void InsertLastBlocks(Connection con) throws  SQLException
+    {
+        Statement st = con.createStatement();
+        String sql = ("SELECT max(BLOCK_ID) FROM block group by BLOCKCHAIN_ID");
+        ResultSet rs = st.executeQuery(sql);
+        int i=1;
+        while(rs.next())
+        {
+            sql = ("Update blockchain set last_block =? where Blockchain_id =?");
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setInt(1,rs.getInt(1));
+            pstmt.setInt(2,i);
+            pstmt.executeUpdate();
+            i++;
+        }
+    }
+
 
 }
