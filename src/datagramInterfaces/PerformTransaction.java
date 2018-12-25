@@ -43,7 +43,7 @@ public class PerformTransaction extends WalletRequest {
         String recipient = sendBlock.getRecipient();
         int amount = sendBlock.getAmount();
         String recipientSignature = receiveBlock.getSignature();
-        System.out.println("Otrzymany "+sendBlock.getPrevBlock() );
+
         String senderPreviousHash = Database.GetLastHash(con,receiveBlock);
         byte[] signature = CryptoConverter.hexStringToByteArray(sendBlock.getSignature());
         if(!Database.accountExists(con, sender))

@@ -5,8 +5,8 @@ import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 
 public class Constants {
-    public static final int NODE_PORT = 6667;
-    public static final int TCP_PORT = 6667;
+    public static final int NODE_PORT = 6666;
+    public static final int TCP_PORT = 6666;
     public static final InetAddress NODE_IP;
 
     public static final int PRIVATE_KEY_LENGTH = 238;

@@ -69,7 +69,14 @@ public class ServerThread extends Thread {
             if(request.equals(TCPinterface.TCPid.NewAccount))
             {
                 System.out.println("new Account");
-                new CreateAccount((Account)inFromUser.readObject(),(ReceiveBlock)inFromUser.readObject()).handle(connection);
+                Account account=(Account)inFromUser.readObject();
+                ReceiveBlock receiveBlock=(ReceiveBlock)inFromUser.readObject();
+                if(Database.AccountExist(connection,account)){
+                    System.out.println("account exist");
+                }
+                else {
+                new CreateAccount(account,receiveBlock).handle(connection);
+                }
             }
             sleep(1000);
 

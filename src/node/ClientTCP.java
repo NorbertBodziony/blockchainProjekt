@@ -67,6 +67,7 @@ public class ClientTCP implements Runnable {
             Database.InsertBlocks(connection,AccountData4.get(i));
         }
       Database.InsertLastBlocks(connection);
+        Database.UpdateSeq(connection);
     }
     public void SendTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) throws IOException {
 
