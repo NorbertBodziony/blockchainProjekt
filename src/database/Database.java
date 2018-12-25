@@ -385,7 +385,7 @@ public class Database {
         pstmt.executeUpdate();
     }
     public static  boolean AccountExist(Connection con, Account account) throws SQLException {
-        String sql = ("Select * account where public_key=? ");
+        String sql = ("Select * from account where public_key=? ");
 
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1,account.getAddress());

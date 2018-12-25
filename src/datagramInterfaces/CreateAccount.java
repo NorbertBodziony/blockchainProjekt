@@ -37,11 +37,12 @@ public class CreateAccount extends WalletRequest {
         NodeRespond respond;
         if(result) {
             respond = new NodeRespond(OK);
-            System.out.println("sending new account");
+
              if(clientTCP!=null)
              {
+
                  for(int i=0;i<clientTCP.size();i++)
-                 {
+                 {System.out.println("sending new account  " + i);
                      clientTCP.get(i).SendNewAccount(account,genesisBlock);
                  }
              }

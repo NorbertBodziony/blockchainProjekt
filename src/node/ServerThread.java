@@ -75,7 +75,9 @@ public class ServerThread extends Thread {
                     System.out.println("account exist");
                 }
                 else {
-                new CreateAccount(account,receiveBlock).handle(connection);
+
+                new CreateAccount(account,receiveBlock,clientTCP).handle(connection);
+
                 }
             }
             sleep(1000);
