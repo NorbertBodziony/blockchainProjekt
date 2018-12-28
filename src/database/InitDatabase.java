@@ -419,21 +419,21 @@ public class InitDatabase {
 
     private static void execute(String sql, Statement s) throws SQLException {
         sb.append(sql);
-        System.out.println(sb.toString()+"\n\n");
+
         s.executeUpdate(sb.toString());
         sb.setLength(0);
     }
 
     private static void execute(String sql, Statement s, int arg) throws SQLException {
         f.format(sql, arg);
-        System.out.println(sb.toString()+"\n\n");
+
         s.executeUpdate(sb.toString());
         sb.setLength(0);
     }
 
     private static void execute(String sql, Statement s, int arg0, int arg1) throws SQLException {
         f.format(sql, arg0, arg1);
-        System.out.println(sb.toString()+"\n\n");
+
         s.executeUpdate(sb.toString());
         sb.setLength(0);
     }

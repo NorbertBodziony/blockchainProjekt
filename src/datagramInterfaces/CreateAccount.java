@@ -24,6 +24,10 @@ public class CreateAccount extends WalletRequest {
         this.clientTCP=clientTCP;
     }
 
+    public void setClientTCP(List<ClientTCP> clientTCP) {
+        this.clientTCP = clientTCP;
+    }
+
     @Override
     public String toString() {
         return "CreateAccount{" +

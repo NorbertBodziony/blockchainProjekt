@@ -1,9 +1,6 @@
 package node;
 
-import datagramInterfaces.ErrorCode;
-import datagramInterfaces.NodeRespond;
-import datagramInterfaces.PerformTransaction;
-import datagramInterfaces.WalletRequest;
+import datagramInterfaces.*;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -44,11 +41,15 @@ public class RequestHandler implements Runnable {
     public void run() {
         try {
             WalletRequest request = unpackRequest();
-            System.out.println(request.toString());
+
             if(request.getClass()==PerformTransaction.class)
             {
                 ((PerformTransaction) request).setClientTCP(clientTCP);
                 ((PerformTransaction) request).setTCPnodes(TCPnodes);
+            }
+            if(request.getClass()==CreateAccount.class)
+            {
+                ((CreateAccount)request).setClientTCP(clientTCP);
             }
             NodeRespond respond = request.handle(connection);
             sendRespond(respond);
