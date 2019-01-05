@@ -399,28 +399,142 @@ public class Database {
         }
     }
 
-    public static List<Transaction> getAllIncomingTransactions(Connection con) throws SQLException {
-        String sql =    "SELECT RECEIVE_BLOCK.SENDER, ACCOUNT.PUBLIC_KEY RECIPIENT, BLOCK.AMOUNT, TRANSACTION_TIME " +
-                        "FROM BLOCK JOIN RECEIVE_BLOCK ON BLOCK.RECEIVE_TYPE = RECEIVE_BLOCK.ID JOIN BLOCKCHAIN ON" +
-                        "   BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID " +
-                        "JOIN ACCOUNT ON BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN ORDER BY TRANSACTION_TIME";
-
-        Statement s = con.createStatement();
-        ResultSet result = s.executeQuery(sql);
-
+    private static List<Transaction> getTransaction(ResultSet result) throws SQLException {
         List<Transaction> transactions = new LinkedList<>();
         while (result.next()) {
             Transaction transaction = new Transaction(
-                result.getString("SENDER"),
-                result.getString("RECIPIENT"),
-                result.getInt("AMOUNT"),
-                result.getTimestamp("TRANSACTION_TIME")
+                    result.getString("SENDER"),
+                    result.getString("RECIPIENT"),
+                    result.getInt("AMOUNT"),
+                    result.getTimestamp("TRANSACTION_TIME")
             );
             transactions.add(transaction);
         }
         result.close();
+        return transactions;
+    }
+
+    public static List<Transaction> getAllOutgoingTransactions(Connection con) throws SQLException {
+        String sql =    "SELECT SEND_BLOCK.RECIPIENT, ACCOUNT.PUBLIC_KEY SENDER, BLOCK.AMOUNT, TRANSACTION_TIME" +
+                " FROM BLOCK JOIN SEND_BLOCK ON BLOCK.SEND_TYPE = SEND_BLOCK.ID JOIN BLOCKCHAIN ON" +
+                " BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID JOIN ACCOUNT ON" +
+                " BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+
+        List<Transaction> transactions = getTransaction(result);
         s.close();
         return transactions;
     }
+
+    public static List<Transaction> getAllOutgoingTransactions(Connection con, String publicKey) throws SQLException {
+        String sql =    "SELECT SEND_BLOCK.RECIPIENT, ACCOUNT.PUBLIC_KEY SENDER, BLOCK.AMOUNT, TRANSACTION_TIME" +
+                " FROM BLOCK JOIN SEND_BLOCK ON BLOCK.SEND_TYPE = SEND_BLOCK.ID JOIN BLOCKCHAIN ON" +
+                " BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID JOIN ACCOUNT ON" +
+                " BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN" +
+                " WHERE ACCOUNT.PUBLIC_KEY = '" + publicKey + "' ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+
+        List<Transaction> transactions = getTransaction(result);
+        s.close();
+        return transactions;
+    }
+
+    public static List<Transaction> getAllIncomingTransactions(Connection con) throws SQLException {
+        String sql =    "SELECT RECEIVE_BLOCK.SENDER, ACCOUNT.PUBLIC_KEY RECIPIENT, BLOCK.AMOUNT, TRANSACTION_TIME " +
+                "FROM BLOCK JOIN RECEIVE_BLOCK ON BLOCK.RECEIVE_TYPE = RECEIVE_BLOCK.ID JOIN BLOCKCHAIN ON" +
+                "   BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID " +
+                "JOIN ACCOUNT ON BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+
+        List<Transaction> transactions = getTransaction(result);
+        s.close();
+        return transactions;
+    }
+
+    public static List<Transaction> getAllIncomingTransactions(Connection con, String publicKey) throws SQLException {
+        String sql =    "SELECT RECEIVE_BLOCK.SENDER, ACCOUNT.PUBLIC_KEY RECIPIENT, BLOCK.AMOUNT, TRANSACTION_TIME " +
+                "FROM BLOCK JOIN RECEIVE_BLOCK ON BLOCK.RECEIVE_TYPE = RECEIVE_BLOCK.ID JOIN BLOCKCHAIN ON" +
+                "   BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID " +
+                "JOIN ACCOUNT ON BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN " +
+                "WHERE ACCOUNT.PUBLIC_KEY = '" + publicKey + "' ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+        List<Transaction> transactions = getTransaction(result);
+        s.close();
+        return transactions;
+    }
+
+    public static List<Transaction> getAllIncomingTransactions(Connection con, String startTime, String stopTime) throws SQLException {
+        // data format = '04.01.2019 21:33:38'
+        System.out.println(startTime + " " + stopTime);
+        String sql =    "SELECT RECEIVE_BLOCK.SENDER, ACCOUNT.PUBLIC_KEY RECIPIENT, BLOCK.AMOUNT, TRANSACTION_TIME " +
+                "FROM BLOCK JOIN RECEIVE_BLOCK ON BLOCK.RECEIVE_TYPE = RECEIVE_BLOCK.ID " +
+                "JOIN BLOCKCHAIN ON BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID JOIN ACCOUNT ON BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN " +
+                "WHERE TRANSACTION_TIME >= to_date('"+ startTime +"', 'DD.MM.YYYY HH24:MI:SS') " +
+                "AND TRANSACTION_TIME <= to_date('"+ stopTime +"', 'DD.MM.YYYY HH24:MI:SS') ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+
+        List<Transaction> transactions = getTransaction(result);
+        s.close();
+        return transactions;
+    }
+
+    public static List<Transaction> getAllIncomingTransactions(Connection con, String publicKey, String startTime, String stopTime) throws SQLException {
+        String sql =    "SELECT RECEIVE_BLOCK.SENDER, ACCOUNT.PUBLIC_KEY RECIPIENT, BLOCK.AMOUNT, TRANSACTION_TIME " +
+                "FROM BLOCK JOIN RECEIVE_BLOCK ON BLOCK.RECEIVE_TYPE = RECEIVE_BLOCK.ID " +
+                "JOIN BLOCKCHAIN ON BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID JOIN ACCOUNT ON BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN " +
+                "WHERE ACCOUNT.PUBLIC_KEY = '"+ publicKey +"' AND TRANSACTION_TIME >= to_date('"+ startTime +"', 'DD.MM.YYYY HH24:MI:SS') " +
+                "AND TRANSACTION_TIME <= to_date('"+ stopTime +"', 'DD.MM.YYYY HH24:MI:SS') ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+
+        List<Transaction> transactions = getTransaction(result);
+        s.close();
+        return transactions;
+    }
+
+    public static List<Transaction> getAllOutgoingTransactions(Connection con, String startTime, String stopTime) throws SQLException {
+        // data format = '04.01.2019 21:33:38'
+        System.out.println(startTime + " " + stopTime);
+        String sql =     "SELECT SEND_BLOCK.RECIPIENT, ACCOUNT.PUBLIC_KEY SENDER, BLOCK.AMOUNT, TRANSACTION_TIME " +
+                "FROM BLOCK JOIN SEND_BLOCK ON BLOCK.SEND_TYPE = SEND_BLOCK.ID JOIN BLOCKCHAIN ON" +
+                " BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID JOIN ACCOUNT ON BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN " +
+                "WHERE TRANSACTION_TIME >= to_date('"+ startTime +"', 'DD.MM.YYYY HH24:MI:SS') " +
+                "AND TRANSACTION_TIME <= to_date('"+ stopTime +"', 'DD.MM.YYYY HH24:MI:SS') ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+
+        List<Transaction> transactions = getTransaction(result);
+        s.close();
+        return transactions;
+    }
+
+    public static List<Transaction> getAllOutgoingTransactions(Connection con, String publicKey, String startTime, String stopTime) throws SQLException {
+        String sql =     "SELECT SEND_BLOCK.RECIPIENT, ACCOUNT.PUBLIC_KEY SENDER, BLOCK.AMOUNT, TRANSACTION_TIME " +
+                "FROM BLOCK JOIN SEND_BLOCK ON BLOCK.SEND_TYPE = SEND_BLOCK.ID JOIN BLOCKCHAIN ON" +
+                " BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID JOIN ACCOUNT ON BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN " +
+                "WHERE ACCOUNT.PUBLIC_KEY = '"+ publicKey +"' AND TRANSACTION_TIME >= to_date('"+ startTime +"', 'DD.MM.YYYY HH24:MI:SS') " +
+                "AND TRANSACTION_TIME <= to_date('"+ stopTime +"', 'DD.MM.YYYY HH24:MI:SS') ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+
+        List<Transaction> transactions = getTransaction(result);
+        s.close();
+        return transactions;
+    }
+
+
 
 }
