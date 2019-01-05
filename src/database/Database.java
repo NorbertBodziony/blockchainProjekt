@@ -6,6 +6,7 @@ import constants.Constants;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -396,6 +397,30 @@ public class Database {
         {
             return false;
         }
+    }
+
+    public static List<Transaction> getAllIncomingTransactions(Connection con) throws SQLException {
+        String sql =    "SELECT RECEIVE_BLOCK.SENDER, ACCOUNT.PUBLIC_KEY RECIPIENT, BLOCK.AMOUNT, TRANSACTION_TIME " +
+                        "FROM BLOCK JOIN RECEIVE_BLOCK ON BLOCK.RECEIVE_TYPE = RECEIVE_BLOCK.ID JOIN BLOCKCHAIN ON" +
+                        "   BLOCK.BLOCKCHAIN_ID = BLOCKCHAIN.BLOCKCHAIN_ID " +
+                        "JOIN ACCOUNT ON BLOCKCHAIN.BLOCKCHAIN_ID = ACCOUNT.BLOCKCHAIN ORDER BY TRANSACTION_TIME";
+
+        Statement s = con.createStatement();
+        ResultSet result = s.executeQuery(sql);
+
+        List<Transaction> transactions = new LinkedList<>();
+        while (result.next()) {
+            Transaction transaction = new Transaction(
+                result.getString("SENDER"),
+                result.getString("RECIPIENT"),
+                result.getInt("AMOUNT"),
+                result.getTimestamp("TRANSACTION_TIME")
+            );
+            transactions.add(transaction);
+        }
+        result.close();
+        s.close();
+        return transactions;
     }
 
 }

@@ -1,18 +1,4 @@
----------------------------------------------DROP SCHEME-------------------------------------------
-
-ALTER TABLE receive_block ADD CONSTRAINT fk_sender FOREIGN KEY (sender) REFERENCES account(public_key);
-ALTER TABLE send_block ADD CONSTRAINT fk_recipient FOREIGN KEY (recipient) REFERENCES account(public_key);
-ALTER TABLE block ADD CONSTRAINT fk_send_block FOREIGN KEY (send_type) REFERENCES send_block(id);
-ALTER TABLE block ADD CONSTRAINT fk_receive_block FOREIGN KEY (receive_type) REFERENCES receive_block(id);
-ALTER TABLE block ADD CONSTRAINT fk_previous_block FOREIGN KEY (previous_block) REFERENCES block(block_id);
-ALTER TABLE account ADD CONSTRAINT fk_blockchain FOREIGN KEY (blockchain) REFERENCES blockchain(blockchain_id);
-ALTER TABLE block ADD CONSTRAINT unique_receive_type UNIQUE(receive_type);
-ALTER TABLE block ADD CONSTRAINT unique_send_type UNIQUE(send_type);
-ALTER TABLE block ADD CONSTRAINT unique_previous_block UNIQUE(previous_block);
-ALTER TABLE blockchain ADD CONSTRAINT fk_last_block FOREIGN KEY (last_block) REFERENCES block(block_id);
-
-
----------------------------------------------DROP TABLE-------------------------------------------
+---------------------------------------------DROP SCHEAM-------------------------------------------
 ALTER TABLE receive_block DROP CONSTRAINT fk_sender;
 ALTER TABLE send_block DROP CONSTRAINT fk_recipient;
 ALTER TABLE block DROP CONSTRAINT fk_send_block;
@@ -23,6 +9,9 @@ DROP TABLE RECEIVE_BLOCK;
 DROP TABLE ACCOUNT;
 DROP TABLE BLOCKCHAIN;
 DROP TABLE BLOCK;
+DROP TABLE CUSTOMER;
+DROP TABLE COMPANY;
+DROP TABLE ADDRESS;
 
 -------------------------------------------DROP SEQUENCE-----------------------------------------
 DROP SEQUENCE BLOCK_ID_SEQ;
@@ -51,3 +40,27 @@ DROP FUNCTION TRANSACTION_VERIFY;
 
 ----------------------------------------DROP PROCEDURE ----------------------------------------------
 DROP PROCEDURE PERFORM_TRANSACTION 
+
+
+-----------------------------------------DROP ONLY CONSTRINTS--------------------------------------
+ALTER TABLE receive_block DROP CONSTRAINT fk_sender;
+ALTER TABLE send_block DROP CONSTRAINT fk_recipient;
+ALTER TABLE block DROP CONSTRAINT fk_send_block;
+ALTER TABLE block DROP CONSTRAINT fk_receive_block;
+ALTER TABLE block DROP CONSTRAINT fk_block_in_blockchain;
+ALTER TABLE account DROP CONSTRAINT fk_company_type;
+ALTER TABLE account DROP CONSTRAINT fk_customer_type;
+ALTER TABLE customer DROP CONSTRAINT fk_company_id;
+ALTER TABLE customer DROP CONSTRAINT fk_address_cust;
+ALTER TABLE company DROP CONSTRAINT fk_address_comp;
+
+
+-----------------------------------------DROP TABLES AFTER DROP CONSTRINTS-------------------------------------
+DROP TABLE SEND_BLOCK;
+DROP TABLE RECEIVE_BLOCK;
+DROP TABLE ACCOUNT;
+DROP TABLE BLOCKCHAIN;
+DROP TABLE BLOCK;
+DROP TABLE CUSTOMER;
+DROP TABLE COMPANY;
+DROP TABLE ADDRESS;

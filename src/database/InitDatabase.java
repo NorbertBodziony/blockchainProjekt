@@ -27,12 +27,13 @@ public class InitDatabase {
                 "    block_id INT PRIMARY KEY,\n" +
                 "    blockchain_id INT NOT NULL,\n" +
                 "    previous_block INT NULL,\n" +
-                "    signature VARCHAR2(%d) NOT NULL,\n" +
-                "    hash_code VARCHAR2(%2$d) NOT NULL,\n" +
-                "    previous_hash_code VARCHAR2(%2$d) NOT NULL,\n" +
+                "    signature VARCHAR2(112) NOT NULL,\n" +
+                "    hash_code VARCHAR2(64) NOT NULL,\n" +
+                "    previous_hash_code VARCHAR2(64) NOT NULL,\n" +
                 "    amount INT NOT NULL,\n" +
                 "    receive_type INT NULL,\n" +
-                "    send_type INT NULL\n" +
+                "    send_type INT NULL,\n" +
+                "    transaction_time TIMESTAMP\n" +
                 ")", s, Constants.SIGNATURE_LENGTH, Constants.HASH_LENGTH);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,14 +42,43 @@ public class InitDatabase {
                 "    last_block INT NULL\n" +
                 ")", s);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         execute("CREATE TABLE account(\n" +
-                "    public_key VARCHAR2(%d) PRIMARY KEY,\n" +
-                "    blockchain INT NOT NULL\n" +
-                ")", s, Constants.PUBLIC_KEY_LENGTH);
+                "public_key VARCHAR2(144) PRIMARY KEY,\n" +
+                "company_type INT,\n" +
+                "customer_type INT,\n" +
+                "blockchain INT NOT NULL" +
+                ")", s);
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        execute("CREATE TABLE company(\n" +
+                "company_id int PRIMARY KEY,\n" +
+                "company_name VARCHAR2(80) NOT NULL,\n" +
+                "sector VARCHAR2(80),\n" +
+                "contact_tel VARCHAR2(12) NOT NULL,\n" +
+                "address_id INT NOT NULL,\n" +
+                "contact_email VARCHAR2(80) NOT NULL)", s, Constants.PUBLIC_KEY_LENGTH);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        execute("CREATE TABLE customer(\n" +
+                "customer_id INT PRIMARY KEY,\n" +
+                "company_id INT NOT NULL,\n" +
+                "address_id INT,\n" +
+                "first_name VARCHAR2(40) NOT NULL,\n" +
+                "last_name VARCHAR2(40) NOT NULL,\n" +
+                "contact_email VARCHAR2(80) NOT NULL)", s, Constants.PUBLIC_KEY_LENGTH);
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        execute("CREATE TABLE address(\n" +
+                "address_id INT PRIMARY KEY,\n" +
+                "country VARCHAR2(40) NOT NULL,\n" +
+                "postal_code VARCHAR2(10) NOT NULL,\n" +
+                "city VARCHAR2(50) NOT NULL,\n" +
+                "street VARCHAR2(60) NOT NULL,\n" +
+                "apartment_number VARCHAR2(60) NOT NULL)", s, Constants.PUBLIC_KEY_LENGTH);
 
     }
 
@@ -56,18 +86,26 @@ public class InitDatabase {
         execute("ALTER TABLE block ADD CONSTRAINT fk_send_block FOREIGN KEY (send_type) REFERENCES send_block(id)", s);
         execute("ALTER TABLE block ADD CONSTRAINT fk_receive_block FOREIGN KEY (receive_type) REFERENCES receive_block(id)", s);
         execute("ALTER TABLE block ADD CONSTRAINT fk_previous_block FOREIGN KEY (previous_block) REFERENCES block(block_id)", s);
-        execute("ALTER TABLE block ADD CONSTRAINT unique_receive_type UNIQUE(receive_type)", s);
-        execute("ALTER TABLE block ADD CONSTRAINT unique_send_type UNIQUE(send_type)", s);
-        execute("ALTER TABLE block ADD CONSTRAINT unique_previous_block UNIQUE(previous_block)", s);
+        //execute("ALTER TABLE block ADD CONSTRAINT unique_receive_type UNIQUE(receive_type)", s);
+        //execute("ALTER TABLE block ADD CONSTRAINT unique_send_type UNIQUE(send_type)", s);
+        //execute("ALTER TABLE block ADD CONSTRAINT unique_previous_block UNIQUE(previous_block)", s);
 
         execute("ALTER TABLE blockchain ADD CONSTRAINT fk_last_block FOREIGN KEY (last_block) REFERENCES block(block_id)", s);
-
-        execute("ALTER TABLE account ADD CONSTRAINT fk_blockchain FOREIGN KEY (blockchain) REFERENCES blockchain(blockchain_id)", s);
-        execute("ALTER TABLE account ADD CONSTRAINT unique_blockchain UNIQUE(blockchain)", s);
 
         execute("ALTER TABLE receive_block ADD CONSTRAINT fk_sender FOREIGN KEY (sender) REFERENCES account(public_key)", s);
         execute("ALTER TABLE send_block ADD CONSTRAINT fk_recipient FOREIGN KEY (recipient) REFERENCES account(public_key)", s);
         execute("ALTER TABLE block ADD CONSTRAINT fk_block_in_blockchain FOREIGN KEY (blockchain_id) REFERENCES blockchain(blockchain_id)", s);
+
+        execute("ALTER TABLE account ADD CONSTRAINT fk_blockchain FOREIGN KEY (blockchain) REFERENCES blockchain(blockchain_id)", s);
+        //execute("ALTER TABLE account ADD CONSTRAINT unique_blockchain UNIQUE(blockchain)", s);
+
+        execute("ALTER TABLE company ADD CONSTRAINT fk_address_comp FOREIGN KEY(address_id) REFERENCES address(address_id)", s);
+
+        execute("ALTER TABLE customer ADD CONSTRAINT fk_company_id FOREIGN KEY(company_id) REFERENCES company(company_id)", s);
+        execute("ALTER TABLE customer ADD CONSTRAINT fk_address_cust FOREIGN KEY(address_id) REFERENCES address(address_id)", s);
+
+        execute("ALTER TABLE account ADD CONSTRAINT fk_company_type FOREIGN KEY (company_type) REFERENCES company(company_id)", s);
+        execute("ALTER TABLE account ADD CONSTRAINT fk_customer_type FOREIGN KEY(customer_type) REFERENCES customer(customer_id)", s);
     }
 
     public static void createFuntions(Statement s) throws SQLException {
@@ -107,13 +145,14 @@ public class InitDatabase {
                 ", PREVIOUS_HASH_CODE IN VARCHAR2 \n" +
                 ", AMOUNT IN INT\n" +
                 ", RECEIVE_TYPE IN INT  \n" +
-                ", SEND_TYPE IN INT  \n" +
+                ", SEND_TYPE IN INT\n" +
+                ", TRANSACTION_TIME IN TIMESTAMP\n" +
                 ") RETURN NUMBER AS\n" +
                 "block_id INT;\n" +
                 "last_block INT;\n" +
                 "BEGIN\n" +
-                "  INSERT INTO BLOCK(previous_block, blockchain_id, signature, hash_code, previous_hash_code, amount, receive_type, send_type)\n" +
-                "  VALUES(PREVIOUS_BLOCK, BLOCKCHAIN_ID, SIGNATURE, HASH_CODE, PREVIOUS_HASH_CODE, AMOUNT, RECEIVE_TYPE, SEND_TYPE);\n" +
+                "  INSERT INTO BLOCK(previous_block, blockchain_id, signature, hash_code, previous_hash_code, amount, receive_type, send_type, transaction_time)\n" +
+                "  VALUES(PREVIOUS_BLOCK, BLOCKCHAIN_ID, SIGNATURE, HASH_CODE, PREVIOUS_HASH_CODE, AMOUNT, RECEIVE_TYPE, SEND_TYPE, TRANSACTION_TIME);\n" +
                 "  SELECT MAX(b.block_id) INTO block_id FROM block b;\n" +
                 "  RETURN block_id;\n" +
                 "END CREATE_BLOCK;", s);
@@ -134,7 +173,7 @@ public class InitDatabase {
                 "  RECEIVE_TYPE_ID := create_receive_block(sender => null);\n" +
                 "  BLOCK_ID := create_block(previous_block => NULL, blockchain_id => BLOCKCHIAN_ID, signature => SIGNATURE, hash_code => HASH_CODE,\n" +
                 "    previous_hash_code => GENESIS_PREVIOUS_HASH, amount => GENESIS_BALANCE,\n" +
-                "    receive_type => RECEIVE_TYPE_ID, send_type => NULL);\n" +
+                "    receive_type => RECEIVE_TYPE_ID, send_type => NULL, transaction_time => SYSTIMESTAMP);\n" +
                 "  RETURN BLOCK_ID;\n" +
                 "  \n" +
                 "END CREATE_GENESIS_BLOCK;", s);
@@ -306,30 +345,33 @@ public class InitDatabase {
                 "recipient_blockchain_id INT;\n" +
                 "BEGIN\n" +
                 "  -- get blockchain\n" +
-                "  SELECT account.blockchain INTO sender_blockchain_id  from account join blockchain \n" +
-                "  on account.blockchain = blockchain.blockchain_id WHERE account.public_key = SENDER;\n" +
-                "  SELECT account.blockchain INTO recipient_blockchain_id  from account join blockchain \n" +
-                "  on account.blockchain = blockchain.blockchain_id WHERE account.public_key = RECIPIENT;\n" +
+                "  SELECT account.blockchain INTO sender_blockchain_id  from account join blockchain on account.blockchain = blockchain.blockchain_id WHERE account.public_key = SENDER;\n" +
+                "  SELECT account.blockchain INTO recipient_blockchain_id  from account join blockchain on account.blockchain = blockchain.blockchain_id WHERE account.public_key = RECIPIENT;\n" +
                 "\n" +
                 "  -- SENDER\n" +
                 "  SELECT last_block INTO sender_previous_block FROM blockchain WHERE blockchain_id = sender_blockchain_id;\n" +
+                "  \n" +
                 "  SELECT hash_code INTO sender_previous_hash_code FROM block WHERE block_id = sender_previous_block;\n" +
-                "  send_type_id := create_send_block(recipient => RECIPIENT);\n" +
                 "\n" +
-                "  sender_block_id := create_block(previous_block => sender_previous_block,blockchain_id => sender_blockchain_id,\n" +
-                "  signature => SEND_BLOCK_SIGNATURE, hash_code => SEND_HASH_CODE, previous_hash_code => sender_previous_hash_code,\n" +
-                "  amount => AMOUNT, receive_type => NULL,send_type => send_type_id);\n" +
+                "  send_type_id := create_send_block(recipient => RECIPIENT);\n" +
+                "  \n" +
+                "  sender_block_id := create_block(previous_block => sender_previous_block,blockchain_id => sender_blockchain_id, signature => SEND_BLOCK_SIGNATURE, hash_code => SEND_HASH_CODE, \n" +
+                "    previous_hash_code => sender_previous_hash_code, amount => AMOUNT, receive_type => NULL,send_type => send_type_id, transaction_time => SYSTIMESTAMP);\n" +
+                "    \n" +
                 "  UPDATE blockchain SET last_block = sender_block_id WHERE blockchain.blockchain_id = sender_blockchain_id;\n" +
                 "\n" +
                 "  -- RECIPEINT\n" +
                 "  SELECT last_block INTO recipient_previous_block FROM blockchain WHERE blockchain_id = recipient_blockchain_id;\n" +
+                "  \n" +
                 "  SELECT hash_code INTO recipient_previous_hash_code FROM block WHERE block_id = recipient_previous_block;\n" +
+                "  \n" +
                 "  receive_type_id := create_receive_block(sender => SENDER);\n" +
                 "  \n" +
-                "  recipient_block_id := create_block(previous_block => recipient_previous_block, blockchain_id => recipient_blockchain_id,\n" +
-                "  signature => RECEIVE_BLOCK_SIGNATURE, hash_code => RECEIVE_HASH_CODE, previous_hash_code => recipient_previous_hash_code,\n" +
-                "  amount => AMOUNT, receive_type => receive_type_id, send_type => NULL);\n" +
+                "  recipient_block_id := create_block(previous_block => recipient_previous_block, blockchain_id => recipient_blockchain_id,signature => RECEIVE_BLOCK_SIGNATURE, hash_code => RECEIVE_HASH_CODE, \n" +
+                "    previous_hash_code => recipient_previous_hash_code, amount => AMOUNT, receive_type => receive_type_id, send_type => NULL, transaction_time => SYSTIMESTAMP);\n" +
+                "    \n" +
                 "  UPDATE blockchain SET last_block = recipient_block_id WHERE blockchain.blockchain_id = recipient_blockchain_id;\n" +
+                "  \n" +
                 "  \n" +
                 "END PERFORM_TRANSACTION;", s, Constants.PUBLIC_KEY_LENGTH, Constants.PUBLIC_KEY_LENGTH);
     }
@@ -376,6 +418,10 @@ public class InitDatabase {
         execute("DROP TABLE ACCOUNT", s);
         execute("DROP TABLE BLOCKCHAIN", s);
         execute("DROP TABLE BLOCK", s);
+
+        execute("DROP TABLE CUSTOMER", s);
+        execute("DROP TABLE COMPANY", s);
+        execute("DROP TABLE ADDRESS", s);
     }
 
     public static void dropConstraints(Statement s) throws SQLException {
@@ -384,6 +430,12 @@ public class InitDatabase {
         execute("ALTER TABLE block DROP CONSTRAINT fk_send_block", s);
         execute("ALTER TABLE block DROP CONSTRAINT fk_receive_block", s);
         execute("ALTER TABLE block DROP CONSTRAINT fk_block_in_blockchain", s);
+
+        execute("ALTER TABLE account DROP CONSTRAINT fk_company_type", s);
+        execute("ALTER TABLE account DROP CONSTRAINT fk_customer_type", s);
+        execute("ALTER TABLE customer DROP CONSTRAINT fk_company_id", s);
+        execute("ALTER TABLE customer DROP CONSTRAINT fk_address_cust", s);
+        execute("ALTER TABLE company DROP CONSTRAINT fk_address_comp", s);
     }
 
     public static void dropFunctions(Statement s) throws SQLException {
