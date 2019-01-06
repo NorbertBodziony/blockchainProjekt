@@ -255,9 +255,10 @@ public class Database {
           int  Amount = rs.getInt("AMOUNT");
          int   Receive_Type = rs.getInt("RECEIVE_TYPE");
           int  Send_Type = rs.getInt("SEND_TYPE");
+            Date  Transaction_time = rs.getDate("TRANSACTION_TIME");
 
 
-            AccountData.add(new BlockData(Block_ID,Blockchain_ID,Previous_Block,Signature,Hash_Code,Previous_Hash_Code,Amount,Receive_Type,Send_Type));
+            AccountData.add(new BlockData(Block_ID,Blockchain_ID,Previous_Block,Signature,Hash_Code,Previous_Hash_Code,Amount,Receive_Type,Send_Type,Transaction_time));
 
         }
 
@@ -265,7 +266,7 @@ public class Database {
     }
     public static void InsertBlocks(Connection con,BlockData Account) throws SQLException {
 
-        String sql = ("INSERT INTO BLOCK(Block_ID,BLOCKCHAIN_ID,PREVIOUS_BLOCK,SIGNATURE,HASH_CODE,PREVIOUS_HASH_CODE,AMOUNT,RECEIVE_TYPE,SEND_TYPE) VALUES(?,?,?,?,?,?,?,?,?)");
+        String sql = ("INSERT INTO BLOCK(Block_ID,BLOCKCHAIN_ID,PREVIOUS_BLOCK,SIGNATURE,HASH_CODE,PREVIOUS_HASH_CODE,AMOUNT,RECEIVE_TYPE,SEND_TYPE,TRANSACTION_TIME) VALUES(?,?,?,?,?,?,?,?,?,?)");
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(4,Account.Signature);
         pstmt.setString(5,Account.Hash_Code);
@@ -297,6 +298,15 @@ public class Database {
 
             pstmt.setObject(9,null);
         }
+        if (Account.Transaction_time!=null)
+        {
+            pstmt.setDate(10,Account.Transaction_time);
+        }else
+
+        {
+            pstmt.setObject(10,null);
+        }
+
 
         pstmt.executeUpdate();
 
