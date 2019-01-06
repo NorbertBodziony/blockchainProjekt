@@ -35,7 +35,24 @@ public class ClientTCP implements Runnable {
         ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
         TCPinterface.TCPid request=TCPinterface.TCPid.Blockchain;
         outToServer.writeObject(request);
+        List<AddressData> AddressData= (List<AddressData>) inFromServer.readObject();
+        for(int i=0;i<AddressData.size();i++)
+        {System.out.println("dataupdate1");
+            Database.InsertAddress(connection,AddressData.get(i));
 
+        }
+        List<Company> Company= (List<Company>) inFromServer.readObject();
+        for(int i=0;i<Company.size();i++)
+        {System.out.println("dataupdate1");
+            Database.InsertCompany(connection,Company.get(i));
+
+        }
+        List<Customer> Customer= (List<Customer>) inFromServer.readObject();
+        for(int i=0;i<Customer.size();i++)
+        {System.out.println("dataupdate1");
+            Database.InsertCustomer(connection,Customer.get(i));
+
+        }
         List<BlockchainData> AccountData= (List<BlockchainData>) inFromServer.readObject();
         for(int i=0;i<AccountData.size();i++)
         {System.out.println("dataupdate1");
