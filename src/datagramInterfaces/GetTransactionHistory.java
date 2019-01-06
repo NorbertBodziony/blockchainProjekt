@@ -39,6 +39,8 @@ public class GetTransactionHistory extends WalletRequest{
         List<Transaction> transactions = getTransaction(con, this);
         List<Transaction> inOnePacket = new LinkedList<>();
 
+        if(transactions.size() == 0)
+            responds.add(new TransactionRespond(OK, new LinkedList<>(), true));
         int i = 0;
         boolean end;
         while (i < transactions.size()) {
