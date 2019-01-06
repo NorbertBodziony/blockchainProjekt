@@ -75,6 +75,11 @@ public class Wallet {
         send(walletRequest);
     }
 
+    public void getTransactionHistory(boolean directory, String publicKey, String startTime, String stopTime) throws IOException {
+        WalletRequest request = new GetTransactionHistory(directory, publicKey, startTime, stopTime);
+        send(request);
+    }
+
 
     public DatagramPacket listenToNodeRespond() throws IOException {
         byte[] data = new byte[DATAGRAM_SIZE];

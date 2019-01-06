@@ -51,9 +51,14 @@ public class RequestHandler implements Runnable {
             {
                 ((CreateAccount)request).setClientTCP(clientTCP);
             }
-            NodeRespond respond = request.handle(connection);
-            sendRespond(respond);
-
+            if(request instanceof GetTransactionHistory) {
+                List<NodeRespond> responds = ((GetTransactionHistory) request).handleHistory(connection);
+                for(NodeRespond respond : responds)
+                    sendRespond(respond);
+            }else {
+                NodeRespond respond = request.handle(connection);
+                sendRespond(respond);
+            }
         } catch (SQLException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -66,10 +71,10 @@ public class RequestHandler implements Runnable {
         os.writeObject(respond);
         os.flush();
         byte[] sendBuf = byteStream.toByteArray();
-      //  System.out.println("buff size: " + sendBuf.length);
+        System.out.println("buff size: " + sendBuf.length);
         DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length,
                 this.packet.getAddress(), this.packet.getPort());
-      // System.out.println("packet length = " + packet.getLength());
+        System.out.println("packet length = " + packet.getLength());
         socket.send(packet);
         os.close();
     }
