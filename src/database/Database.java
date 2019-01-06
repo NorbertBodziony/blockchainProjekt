@@ -358,7 +358,7 @@ public class Database {
         System.out.println("GetLastHash");
         String sql = ("SELECT HASH_CODE FROM BLOCK WHERE BLOCKCHAIN_ID=(SELECT BLOCKCHAIN FROM ACCOUNT WHERE PUBLIC_KEY=?) AND BLOCK_ID=(SELECT LAST_BLOCK FROM BLOCKCHAIN WHERE BLOCKCHAIN_ID=(SELECT BLOCKCHAIN FROM ACCOUNT WHERE PUBLIC_KEY=?)) ");
         PreparedStatement pstmt = con.prepareStatement(sql);
-
+        System.out.println(block.toString());
         pstmt.setString(1,block.getSource());
         pstmt.setString(2,block.getSource());
         ResultSet rs =pstmt.executeQuery();
@@ -369,7 +369,7 @@ public class Database {
     public static void InsertLastBlocks(Connection con) throws  SQLException
     {
         Statement st = con.createStatement();
-        String sql = ("SELECT max(BLOCK_ID) FROM block group by BLOCKCHAIN_ID");
+        String sql = ("SELECT max(BLOCK_ID) FROM block group by BLOCKCHAIN_ID order by Blockchain_id");
         ResultSet rs = st.executeQuery(sql);
         int i=1;
         while(rs.next())
