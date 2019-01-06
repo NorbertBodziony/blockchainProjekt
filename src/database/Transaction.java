@@ -1,8 +1,9 @@
 package database;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Transaction {
+public class Transaction implements Serializable {
     private String sender;
     private String recipient;
     private int amount;
