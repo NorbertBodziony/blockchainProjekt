@@ -180,7 +180,9 @@ public class Database {
         while(rs.next()) {
             String str1 = rs.getString("PUBLIC_KEY");
             int id = rs.getInt("BLOCKCHAIN");
-            AccountData.add(new AccountList(str1,id));
+            int Company_Type =rs.getInt("COMPANY_TYPE");
+            int Customer_Type= rs.getInt("CUSTOMER_TYPE");
+            AccountData.add(new AccountList(str1,id,Company_Type,Customer_Type));
             System.out.println(id);
         }
 
@@ -237,6 +239,69 @@ public class Database {
         }
 
         return AccountData;
+    }
+    public static List<AddressData> GetAddressData(Connection con) throws SQLException {
+        List<AddressData> AddressData=new ArrayList<>();
+        Statement st = con.createStatement();
+        System.out.println("GetAddressData");
+        String sql = ("SELECT * FROM Address");
+        ResultSet rs = st.executeQuery(sql);
+
+        while(rs.next()) {
+
+            int Address_ID= rs.getInt("ADDRESS_ID");
+            String Country=rs.getString("COUNTRY");
+            String Postal_code=rs.getString("POSTAL_CODE");
+            String City=rs.getString("CITY");
+            String Street=rs.getString("STREET");
+            String Apartament_number=rs.getString("APARTMENT_NUMBER");
+
+            AddressData.add(new AddressData(Address_ID,Country,Postal_code,City,Street,Apartament_number));
+        }
+
+        return AddressData;
+    }
+    public static List<Company> GetCompany(Connection con) throws SQLException {
+        List<Company> Company=new ArrayList<>();
+        Statement st = con.createStatement();
+        System.out.println("GetAddressData");
+        String sql = ("SELECT * FROM COMPANY");
+        ResultSet rs = st.executeQuery(sql);
+
+        while(rs.next()) {
+
+            int Company_id=rs.getInt("COMPANY_ID");
+            String Company_name=rs.getString("COMPANY_NAME");
+            String Sector=rs.getString("SECTOR");
+            String Contact_tel=rs.getString("CONTACT_TEL");
+            int Address_id=rs.getInt("ADDRESS_ID");
+            String Contact_email=rs.getString("CONTACT_EMAIL");
+
+            Company.add(new Company(Company_id,Company_name,Sector,Contact_tel,Address_id,Contact_email));
+        }
+
+        return Company;
+    }
+    public static List<Customer> GetCustomer(Connection con) throws SQLException {
+        List<Customer> Customer=new ArrayList<>();
+        Statement st = con.createStatement();
+        System.out.println("GetAddressData");
+        String sql = ("SELECT * FROM CUSTOMER");
+        ResultSet rs = st.executeQuery(sql);
+
+        while(rs.next()) {
+
+            int Customer_id=rs.getInt("CUSTOMER_ID");
+            int Company_id=rs.getInt("COMPANY_ID");
+            int Address_id=rs.getInt("ADDRESS_ID");
+            String First_name=rs.getString("FIRST_NAME");
+            String Last_name=rs.getString("LAST_NAME");
+            String Contact_email=rs.getString("CONTACT_EMAIL");
+
+            Customer.add(new Customer(Customer_id,Company_id,Address_id,First_name,Last_name,Contact_email));
+        }
+
+        return Customer;
     }
     public static List<BlockData> GetBlocks(Connection con) throws SQLException {
         List<BlockData> AccountData=new ArrayList<>();
@@ -322,6 +387,51 @@ public class Database {
 
 
     }
+    public static void InsertAddress(Connection con,AddressData Account) throws SQLException {
+
+        String sql = ("INSERT INTO ADDRESS (ADDRESS_ID,COUNTRY,POSTAL_CODE,CITY,STREET,APARTMENT_NUMBER) VALUES(?,?,?,?,?,?)");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setInt(1,Account.Address_ID);
+        pstmt.setString(2,Account.Country);
+        pstmt.setString(3,Account.Postal_code);
+        pstmt.setString(4,Account.City);
+        pstmt.setString(5,Account.Street);
+        pstmt.setString(6,Account.Apartament_number);
+
+        pstmt.executeUpdate();
+
+
+    }
+    public static void InsertCompany(Connection con,Company Account) throws SQLException {
+
+        String sql = ("INSERT INTO COMPANY (COMPANY_ID,COMPANY_NAME,SECTOR,CONTACT_TEL,ADDRESS_ID,CONTACT_EMAIL) VALUES(?,?,?,?,?,?)");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setInt(1,Account.Company_id);
+        pstmt.setString(2,Account.Company_name);
+        pstmt.setString(3,Account.Sector);
+        pstmt.setString(4,Account.Contact_tel);
+        pstmt.setInt(5,Account.Address_id);
+        pstmt.setString(6,Account.Contact_email);
+
+        pstmt.executeUpdate();
+
+
+    }
+    public static void InsertCustomer(Connection con,Customer Account) throws SQLException {
+
+        String sql = ("INSERT INTO Customer (CUSTOMER_ID,COMPANY_ID,ADDRESS_ID,FIRST_NAME,LAST_NAME,CONTACT_EMAIL) VALUES(?,?,?,?,?,?)");
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setInt(1,Account.Customer_id);
+        pstmt.setInt(2,Account.Company_id);
+        pstmt.setInt(3,Account.Address_id);
+        pstmt.setString(4,Account.First_name);
+        pstmt.setString(5,Account.Last_name);
+        pstmt.setString(6,Account.Contact_email);
+
+        pstmt.executeUpdate();
+
+
+    }
     public static void InsertSendBlock(Connection con,SendBlockData Account) throws SQLException {
 
         String sql = ("INSERT INTO SEND_BLOCK (ID,RECIPIENT) VALUES(?,?)");
@@ -334,10 +444,12 @@ public class Database {
     }
     public static void InsertAccounts(Connection con,AccountList Account) throws SQLException {
 
-        String sql = ("INSERT INTO ACCOUNT (PUBLIC_KEY,BLOCKCHAIN) VALUES(?,?)");
+        String sql = ("INSERT INTO ACCOUNT (PUBLIC_KEY,BLOCKCHAIN,COMPANY_TYPE,CUSTOMER_TYPE) VALUES(?,?,?,?)");
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1,Account.PublicKey);
         pstmt.setInt(2,Account.id);
+        pstmt.setObject(3,Account.Company_Type);
+        pstmt.setObject(4,Account.Customer_Type);
         pstmt.executeUpdate();
 
 
