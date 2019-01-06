@@ -50,6 +50,7 @@ public class RequestHandler implements Runnable {
             if(request.getClass()==CreateAccount.class)
             {
                 ((CreateAccount)request).setClientTCP(clientTCP);
+                System.out.println(clientTCP.toString());
             }
             NodeRespond respond = request.handle(connection);
             sendRespond(respond);

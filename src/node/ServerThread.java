@@ -34,6 +34,7 @@ public class ServerThread extends Thread {
     public void run(){
     while (true) {
         try {
+            System.out.println("new user");
             ObjectOutputStream outToUser = new ObjectOutputStream(connectionSocket.getOutputStream());
             ObjectInputStream inFromUser = new ObjectInputStream(connectionSocket.getInputStream());
             TCPinterface.TCPid request= (TCPinterface.TCPid) inFromUser.readObject();
@@ -75,7 +76,7 @@ public class ServerThread extends Thread {
                     System.out.println("account exist");
                 }
                 else {
-                new CreateAccount(account,receiveBlock).handle(connection);
+                new CreateAccount(account,receiveBlock,clientTCP).handle(connection);
                 }
             }
             sleep(1000);

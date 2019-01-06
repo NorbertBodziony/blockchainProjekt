@@ -15,7 +15,7 @@ public class Database {
     public static String hostname = "localhost";
     public static String dbName = "orcl";
     public static String url = "jdbc:oracle:thin:@" + hostname + ":1521:" + dbName;
-    public static String user = "5BLOCKCHAIN";
+    public static String user = "7BLOCKCHAIN";
     public static String password = "admin";
 
     static {
@@ -247,17 +247,18 @@ public class Database {
 
         while(rs.next()) {
             int Block_ID = rs.getInt("BLOCK_ID");
-           int  Previous_Block = rs.getInt("PREVIOUS_BLOCK");
+            int  Previous_Block = rs.getInt("PREVIOUS_BLOCK");
             int  Blockchain_ID = rs.getInt("BLOCKCHAIN_ID");
             String  Signature =rs.getString("SIGNATURE");
             String Hash_Code = rs.getString("HASH_CODE");
             String  Previous_Hash_Code =rs.getString("PREVIOUS_HASH_CODE");
-          int  Amount = rs.getInt("AMOUNT");
-         int   Receive_Type = rs.getInt("RECEIVE_TYPE");
-          int  Send_Type = rs.getInt("SEND_TYPE");
+            int  Amount = rs.getInt("AMOUNT");
+            int   Receive_Type = rs.getInt("RECEIVE_TYPE");
+            int  Send_Type = rs.getInt("SEND_TYPE");
+            Date  Transaction_time = rs.getDate("TRANSACTION_TIME");
 
 
-            AccountData.add(new BlockData(Block_ID,Blockchain_ID,Previous_Block,Signature,Hash_Code,Previous_Hash_Code,Amount,Receive_Type,Send_Type));
+            AccountData.add(new BlockData(Block_ID,Blockchain_ID,Previous_Block,Signature,Hash_Code,Previous_Hash_Code,Amount,Receive_Type,Send_Type,Transaction_time));
 
         }
 
@@ -265,7 +266,7 @@ public class Database {
     }
     public static void InsertBlocks(Connection con,BlockData Account) throws SQLException {
 
-        String sql = ("INSERT INTO BLOCK(Block_ID,BLOCKCHAIN_ID,PREVIOUS_BLOCK,SIGNATURE,HASH_CODE,PREVIOUS_HASH_CODE,AMOUNT,RECEIVE_TYPE,SEND_TYPE) VALUES(?,?,?,?,?,?,?,?,?)");
+        String sql = ("INSERT INTO BLOCK(Block_ID,BLOCKCHAIN_ID,PREVIOUS_BLOCK,SIGNATURE,HASH_CODE,PREVIOUS_HASH_CODE,AMOUNT,RECEIVE_TYPE,SEND_TYPE,TRANSACTION_TIME) VALUES(?,?,?,?,?,?,?,?,?,?)");
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(4,Account.Signature);
         pstmt.setString(5,Account.Hash_Code);
@@ -297,6 +298,15 @@ public class Database {
 
             pstmt.setObject(9,null);
         }
+        if (Account.Transaction_time!=null)
+        {
+            pstmt.setDate(10,Account.Transaction_time);
+        }else
+
+        {
+            pstmt.setObject(10,null);
+        }
+
 
         pstmt.executeUpdate();
 
@@ -348,7 +358,7 @@ public class Database {
         System.out.println("GetLastHash");
         String sql = ("SELECT HASH_CODE FROM BLOCK WHERE BLOCKCHAIN_ID=(SELECT BLOCKCHAIN FROM ACCOUNT WHERE PUBLIC_KEY=?) AND BLOCK_ID=(SELECT LAST_BLOCK FROM BLOCKCHAIN WHERE BLOCKCHAIN_ID=(SELECT BLOCKCHAIN FROM ACCOUNT WHERE PUBLIC_KEY=?)) ");
         PreparedStatement pstmt = con.prepareStatement(sql);
-
+        System.out.println(block.toString());
         pstmt.setString(1,block.getSource());
         pstmt.setString(2,block.getSource());
         ResultSet rs =pstmt.executeQuery();
@@ -359,7 +369,7 @@ public class Database {
     public static void InsertLastBlocks(Connection con) throws  SQLException
     {
         Statement st = con.createStatement();
-        String sql = ("SELECT max(BLOCK_ID) FROM block group by BLOCKCHAIN_ID");
+        String sql = ("SELECT max(BLOCK_ID) FROM block group by BLOCKCHAIN_ID order by Blockchain_id");
         ResultSet rs = st.executeQuery(sql);
         int i=1;
         while(rs.next())
@@ -377,7 +387,7 @@ public class Database {
         String sql = ("SELECT count(*) FROM Account");
         ResultSet rs = st.executeQuery(sql);
         rs.next();
-        int i=20+rs.getInt(1);
+        int i=1+rs.getInt(1);
         sql = ("alter SEQUENCE Blockchain_seq restart start with ");
         sql=sql+i;
         PreparedStatement pstmt = con.prepareStatement(sql);
