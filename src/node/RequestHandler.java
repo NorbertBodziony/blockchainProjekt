@@ -1,13 +1,15 @@
 package node;
 
-import datagramInterfaces.NodeRespond;
-import datagramInterfaces.WalletRequest;
+import datagramInterfaces.*;
 
 import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 
@@ -15,7 +17,20 @@ public class RequestHandler implements Runnable {
     private DatagramSocket socket;
     private DatagramPacket packet;
     private Connection connection;
+    List<ClientTCP> clientTCP;
+    List<InetAddress> TCPnodes;
 
+    public RequestHandler(DatagramSocket socket, DatagramPacket packet, Connection connection,List<ClientTCP> clientTCP,List<InetAddress> TCPnodes) {
+        this.socket = socket;
+        this.packet = packet;
+        this.connection = connection;
+        this.TCPnodes=TCPnodes;
+        this.clientTCP=clientTCP;
+        if(clientTCP==null)
+        {
+            System.out.println("ERROR");
+        }
+    }
     public RequestHandler(DatagramSocket socket, DatagramPacket packet, Connection connection) {
         this.socket = socket;
         this.packet = packet;
@@ -26,9 +41,24 @@ public class RequestHandler implements Runnable {
     public void run() {
         try {
             WalletRequest request = unpackRequest();
-            System.out.println(request.toString());
-            NodeRespond respond = request.handle(connection);
-            sendRespond(respond);
+
+            if(request.getClass()==PerformTransaction.class)
+            {
+                ((PerformTransaction) request).setClientTCP(clientTCP);
+                ((PerformTransaction) request).setTCPnodes(TCPnodes);
+            }
+            if(request.getClass()==CreateAccount.class)
+            {
+                ((CreateAccount)request).setClientTCP(clientTCP);
+            }
+            if(request instanceof GetTransactionHistory) {
+                List<NodeRespond> responds = ((GetTransactionHistory) request).handleHistory(connection);
+                for(NodeRespond respond : responds)
+                    sendRespond(respond);
+            }else {
+                NodeRespond respond = request.handle(connection);
+                sendRespond(respond);
+            }
         } catch (SQLException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }

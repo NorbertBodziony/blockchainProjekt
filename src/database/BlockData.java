@@ -1,6 +1,7 @@
 package database;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 public class BlockData implements Serializable {
     int Block_ID;
@@ -12,8 +13,9 @@ public class BlockData implements Serializable {
     int Amount;
     int Receive_Type;
     int Send_Type;
-
-    public BlockData(int block_ID, int blockchain_ID, int previous_Block, String signature, String hash_Code, String previous_Hash_Code, int amount, int receive_Type, int send_Type) {
+    Date Transaction_time;
+    public static final long serialVersionUID = 3L;
+    public BlockData(int block_ID, int blockchain_ID, int previous_Block, String signature, String hash_Code, String previous_Hash_Code, int amount, int receive_Type, int send_Type,Date  transaction_time) {
         Block_ID = block_ID;
         Blockchain_ID = blockchain_ID;
         Previous_Block = previous_Block;
@@ -23,5 +25,6 @@ public class BlockData implements Serializable {
         Amount = amount;
         Receive_Type = receive_Type;
         Send_Type = send_Type;
+        Transaction_time= transaction_time;
     }
 }

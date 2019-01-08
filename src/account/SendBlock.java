@@ -2,9 +2,11 @@ package account;
 
 import cryptography.CryptoConverter;
 
-public class SendBlock extends Block {
-    private String recipient;
+import java.io.Serializable;
 
+public class SendBlock extends Block implements Serializable {
+    private String recipient;
+    public static final long serialVersionUID = 12L;
     private SendBlock() { }
 
     public SendBlock(int amount, String signature, String prevBlock, String recipient){

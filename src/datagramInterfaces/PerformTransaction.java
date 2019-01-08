@@ -4,30 +4,47 @@ import account.ReceiveBlock;
 import account.SendBlock;
 import cryptography.CryptoConverter;
 import cryptography.EllipticCurveHelper;
+import node.ClientTCP;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static datagramInterfaces.ErrorCode.*;
 
 public class PerformTransaction extends WalletRequest {
     private SendBlock sendBlock;
     private ReceiveBlock receiveBlock;
+    List<ClientTCP> clientTCP;
+    List<InetAddress> TCPnodes;
 
-    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) {
+    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock) throws IOException {
         this.sendBlock = sendBlock;
         this.receiveBlock = receiveBlock;
     }
+    public PerformTransaction(SendBlock sendBlock, ReceiveBlock receiveBlock,List<ClientTCP> clientTCP, List<InetAddress> TCPnodes) throws IOException {
+        this.sendBlock = sendBlock;
+        this.receiveBlock = receiveBlock;
+        this.TCPnodes=TCPnodes;
+        this.clientTCP=clientTCP;
+    }
 
     @Override
-    public NodeRespond handle(Connection con) throws SQLException {
+    public NodeRespond handle(Connection con) throws SQLException, IOException {
         String sender = receiveBlock.getSource();
         String recipient = sendBlock.getRecipient();
         int amount = sendBlock.getAmount();
+        String recipientSignature = receiveBlock.getSignature();
+
+        String senderPreviousHash = Database.GetLastHash(con,receiveBlock);
         byte[] signature = CryptoConverter.hexStringToByteArray(sendBlock.getSignature());
         if(!Database.accountExists(con, sender))
             return new NodeRespond(UNKNOWN_SENDER);
@@ -41,8 +58,8 @@ public class PerformTransaction extends WalletRequest {
             PublicKey senderPublicKey = CryptoConverter.hexToPublicKey(sender);
             if(!sendBlock.getSignature().equals(receiveBlock.getSignature()))
                 return new NodeRespond(INVALID_SIGNATURE);
-            if(!EllipticCurveHelper.verifySignature(senderPublicKey, sender + recipient + amount, signature)) {
-                System.out.println("valid signature");
+            if(!EllipticCurveHelper.verifySignature(senderPublicKey, senderPreviousHash + amount, signature)) {
+                System.out.println("invalid signature");
                 return new NodeRespond(INVALID_SIGNATURE);
             }
         } catch (InvalidKeyException | InvalidKeySpecException | SignatureException e) {
@@ -54,6 +71,36 @@ public class PerformTransaction extends WalletRequest {
 
         Database.performTransaction(con, sender, recipient, amount, CryptoConverter.bytesToHexString(signature),
                 sendBlock.getHash(), receiveBlock.getHash());
+
+                if(clientTCP!=null){
+
+                    System.out.println("Sending to clients ="+clientTCP.size());
+                for(int i=0;i<clientTCP.size();i++) {
+                    System.out.println("PERFORMIG TCP TRANSACTION");
+                    clientTCP.get(i).SendTransaction(sendBlock, receiveBlock);
+                }
+                }
+                else
+                    {
+                        System.out.println("client are empty");
+                    }
+
         return new NodeRespond(OK);
+    }
+
+    public List<ClientTCP> getClientTCP() {
+        return clientTCP;
+    }
+
+    public void setClientTCP(List<ClientTCP> clientTCP) {
+        this.clientTCP = clientTCP;
+    }
+
+    public List<InetAddress> getTCPnodes() {
+        return TCPnodes;
+    }
+
+    public void setTCPnodes(List<InetAddress> TCPnodes) {
+        this.TCPnodes = TCPnodes;
     }
 }

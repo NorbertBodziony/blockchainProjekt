@@ -12,7 +12,7 @@ public class Account implements Serializable {
     private PublicKey publicKey;
     transient private int balance;
     transient private Blockchain blockchain;
-
+    public static final long serialVersionUID = 8L;
 
     public Account(String privateKey, String publicKey) throws InvalidKeySpecException {
         this.privateKey = CryptoConverter.hexToPrivateKey(privateKey);

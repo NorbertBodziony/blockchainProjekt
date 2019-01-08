@@ -2,9 +2,11 @@ package account;
 
 import cryptography.CryptoConverter;
 
-public class ReceiveBlock extends Block {
-    private String source;
+import java.io.Serializable;
 
+public class ReceiveBlock extends Block implements Serializable {
+    private String source;
+    public static final long serialVersionUID = 11L;
     public ReceiveBlock(int amount, String signature, String prevBlock, String source) {
         super(amount, signature, prevBlock);
         this.source = source;
