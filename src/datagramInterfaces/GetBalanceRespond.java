@@ -8,6 +8,10 @@ public class GetBalanceRespond extends NodeRespond {
         this.balance = balance;
     }
 
+    public int getBalance() {
+        return balance;
+    }
+
     @Override
     public String toString() {
         return String.valueOf(balance);
