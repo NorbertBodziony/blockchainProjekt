@@ -166,10 +166,10 @@ public class Controller {
                 NodeRespond creatingRespond;
                 wallet.getTransactionHistory(true, null, mainView.getStartTimeWalletString(), mainView.getStopTimeWalletScreen());
 
-                packet = wallet.listenToNodeRespond();
-                creatingRespond = wallet.unpackRespond(packet);
+                //packet = wallet.listenToNodeRespond();
+                //creatingRespond = wallet.unpackRespond(packet);
 
-                System.out.println("creatingRespond result: " + creatingRespond);
+                //System.out.println("creatingRespond result: " + creatingRespond);
 
                 List<Transaction> transactions = new LinkedList<>();
                 TransactionRespond tr;
@@ -216,10 +216,10 @@ public class Controller {
                 NodeRespond creatingRespond;
                 wallet.getTransactionHistory(false, null, mainView.getStartTimeWalletString(), mainView.getStopTimeWalletScreen());
 
-                packet = wallet.listenToNodeRespond();
-                creatingRespond = wallet.unpackRespond(packet);
+                //packet = wallet.listenToNodeRespond();
+                //creatingRespond = wallet.unpackRespond(packet);
 
-                System.out.println("creatingRespond result: " + creatingRespond);
+                //System.out.println("creatingRespond result: " + creatingRespond);
 
                 List<Transaction> transactions = new LinkedList<>();
                 TransactionRespond tr;
