@@ -2,28 +2,39 @@ package GUI;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Pair;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class WalletScreen extends GridPane {
 
-    Button send, recive, home, refresh;
+    Button send, recive, home, refresh, refreshHistory;
 
     String sendTo;
     String sendToAmount;
 
+    TextArea inTextArea, outTextArea;
 
-    Label labelAmout, historyOftransaction;
+
+    Label labelAmout, historyOftransaction, Income, Outcome, StartTime, StopTime;
     String amount;
     String text;
+
+    CheckBox checkBox1;
+
+    DatePicker start, stop;
+
+    HBox hBox;
 
 
 
@@ -32,11 +43,48 @@ public class WalletScreen extends GridPane {
 
     public WalletScreen() {
 
+        hBox = new HBox(4);
+
+        inTextArea = new TextArea();
+        inTextArea.setEditable(false);
+        outTextArea = new TextArea();
+        outTextArea.setEditable(false);
+
+        start = new DatePicker();
+
+        start.setEditable(false);
+        stop = new DatePicker();
+        stop.setEditable(false);
+
         labelAmout = new Label();
         text = "Your amout: ";
         labelAmout.setText("Your amount: ");
         labelAmout.setTextFill(Color.WHITE);
         historyOftransaction = new Label("History of transaction: ");
+
+        Income = new Label("Income: ");
+        Outcome = new Label("Outcome: ");
+        StartTime = new Label("Start time: ");
+        StopTime = new Label("Stop time: ");
+        checkBox1 = new CheckBox("Search by date: ");
+
+        Income.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 15));
+        Income.setTextFill(Color.WHITE);
+
+        Outcome.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 15));
+        Outcome.setTextFill(Color.WHITE);
+
+        StartTime.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 15));
+        StartTime.setTextFill(Color.WHITE);
+
+        StopTime.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 15));
+        StopTime.setTextFill(Color.WHITE);
+
+        start.setPrefWidth(130);
+        stop.setPrefWidth(130);
+
+        hBox.setPadding(new Insets(1));
+        hBox.getChildren().addAll(StartTime,start,StopTime,stop);
 
 
         labelAmout.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
@@ -48,6 +96,7 @@ public class WalletScreen extends GridPane {
         send = new Button("Send");
         recive = new Button("Recive");
         refresh = new Button("Refresh");
+        refreshHistory = new Button("Refresh");
 
         send.setPrefSize(220, 30);
         send.setStyle("-fx-background-color: #53f442; ");
@@ -105,9 +154,18 @@ public class WalletScreen extends GridPane {
         this.add(refresh, 2, 1);
         this.add(home, 1, 2);
 
-        //this.add(verticalSeparator,3,0,1,20);
+
         this.add(historyOftransaction, 3, 0);
-        //this.add(horizontalSeparator, 4,1,9,1);
+        this.add(hBox,3,1);
+        this.add(refreshHistory,3,2);
+
+        this.add(Income,3,3);
+        this.add(inTextArea,3,4);
+        this.add(Outcome,3,5);
+        this.add(outTextArea,3,6);
+
+
+
 
         this.setVgap(5);
         this.setHgap(5);
@@ -150,5 +208,37 @@ public class WalletScreen extends GridPane {
     public void setLabelAmout(String am)
     {
         labelAmout.setText("Your amount: " + am);
+    }
+
+    public void setRefreshHistory(EventHandler<ActionEvent> actionEventEventHandler) {
+        refreshHistory.setOnAction(actionEventEventHandler);
+    }
+
+    public void setInTextArea(String in)
+    {
+        inTextArea.appendText(in+"\n");
+    }
+    public void setOutTextArea(String in)
+    {
+        outTextArea.appendText(in+"\n");
+    }
+
+    public void setInTextAreaClear()
+    {
+        inTextArea.clear();
+    }
+    public void setOutTextAreaClear()
+    {
+        outTextArea.clear();
+    }
+    public String getStartTime()
+    {
+        String temp = start.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " 00:00:00";
+        return temp;
+    }
+    public String getStopTime()
+    {
+        String temp = stop.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " 00:00:00";
+        return temp;
     }
 }

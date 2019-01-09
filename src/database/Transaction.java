@@ -25,4 +25,20 @@ public class Transaction implements Serializable {
                 ", transactionTime=" + transactionTime +
                 '}';
     }
+
+    public String getRecipient() {
+        return recipient;
+    }
+
+    public void setRecipient(String recipient) {
+        this.recipient = recipient;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
 }

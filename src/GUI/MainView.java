@@ -198,6 +198,34 @@ public class MainView extends Application {
     {
         middleView.setLabelAmount(am);
     }
+    public void setRefreshHistoryWaletScreen(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setRefreshHistoryWaletScreen(actionEventEventHandler);
+    }
+
+    public void setInTextAreaWalletScreen(String in)
+    {
+        middleView.setInTextAreaWalletScreen(in);
+    }
+    public void setOutTextAreaWalletScreen(String in)
+    {
+        middleView.setOutTextAreaWalletScreen(in);
+    }
+    public String getStartTimeWalletString()
+    {
+        return middleView.getStartTimeWalletString();
+    }
+    public String getStopTimeWalletScreen()
+    {
+        return middleView.getStopTimeWalletScreen();
+    }
+    public void setInTextAreaClearWalletScreen()
+    {
+        middleView.setInTextAreaClearWalletScreen();
+    }
+    public void setOutTextAreaClearWalletScreen()
+    {
+        middleView.setOutTextAreaClearWalletScreen();
+    }
 
 
 

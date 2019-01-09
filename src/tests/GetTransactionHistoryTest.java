@@ -91,7 +91,7 @@ public class GetTransactionHistoryTest {
                 List<Transaction> transactions = new LinkedList<>();
                 TransactionRespond tr;
 
-                wallet.getTransactionHistory(true, null, "06.01.2019 17:00:00", "06.01.2019 18:00:00");
+                wallet.getTransactionHistory(true, "3046301006072A8648CE3D020106052B8104001F03320004761BB03D04934275F6AA1B1ECAF8834ADBF67291AD1B9B9921D35AE51E2E7F08FC1E68C9CCF5A88D7EB91BA3D2274FD7", "06.01.2019 17:00:00", "10.01.2019 18:00:00");
                 do{
                     DatagramPacket respond = wallet.listenToNodeRespond();
                      tr = (TransactionRespond) wallet.unpackRespond(respond);

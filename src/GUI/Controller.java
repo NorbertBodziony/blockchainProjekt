@@ -2,9 +2,11 @@ package GUI;
 
 import constants.Constants;
 import cryptography.CryptoConverter;
+import database.Transaction;
 import datagramInterfaces.GetBalanceRespond;
 import datagramInterfaces.NodeRespond;
 import datagramInterfaces.PreviousHashesRespond;
+import datagramInterfaces.TransactionRespond;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import wallet.Wallet;
@@ -19,6 +21,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.LinkedList;
+import java.util.List;
 
 import static datagramInterfaces.ErrorCode.OK;
 
@@ -55,6 +59,7 @@ public class Controller {
 
         });
 
+        mainView.setInTextAreaWalletScreen("TEST");
         this.mainView.setLoginUsingPrivKey(e ->
         {
 
@@ -140,6 +145,89 @@ public class Controller {
                 e5.printStackTrace();
             }
 
+
+
+        });
+
+        this.mainView.setRefreshHistoryWaletScreen(e->
+        {
+            System.out.println("Działa");
+            System.out.println(mainView.getStartTimeWalletString() + mainView.getStopTimeWalletScreen());
+            System.out.println(wallet.getAddress());
+            mainView.setInTextAreaClearWalletScreen();
+            mainView.setOutTextAreaClearWalletScreen();
+            try {
+
+                DatagramPacket packet;
+
+                // unpack respond
+                NodeRespond creatingRespond;
+                wallet.getTransactionHistory(true, null, mainView.getStartTimeWalletString(), mainView.getStopTimeWalletScreen());
+
+                packet = wallet.listenToNodeRespond();
+                creatingRespond = wallet.unpackRespond(packet);
+
+                System.out.println("creatingRespond result: " + creatingRespond);
+
+                List<Transaction> transactions = new LinkedList<>();
+                TransactionRespond tr;
+
+                do{
+                    DatagramPacket respond = wallet.listenToNodeRespond();
+                    tr = (TransactionRespond) wallet.unpackRespond(respond);
+                    transactions.addAll(tr.getTransactions());
+                }while (!tr.isEnd());
+
+                for(Transaction t : transactions)
+                {
+                    System.out.println(t);
+                    if(t.getRecipient().equals(wallet.getAddress()))
+                    {
+                        mainView.setInTextAreaWalletScreen(t.toString());
+
+                    }
+                }
+
+            }catch (IOException | ClassNotFoundException e9) {
+                e9.printStackTrace();
+            }
+
+            try {
+
+                DatagramPacket packet;
+
+                // unpack respond
+                NodeRespond creatingRespond;
+                wallet.getTransactionHistory(false, null, mainView.getStartTimeWalletString(), mainView.getStopTimeWalletScreen());
+
+                packet = wallet.listenToNodeRespond();
+                creatingRespond = wallet.unpackRespond(packet);
+
+                System.out.println("creatingRespond result: " + creatingRespond);
+
+                List<Transaction> transactions = new LinkedList<>();
+                TransactionRespond tr;
+
+                do{
+                    DatagramPacket respond = wallet.listenToNodeRespond();
+                    tr = (TransactionRespond) wallet.unpackRespond(respond);
+                    transactions.addAll(tr.getTransactions());
+                }while (!tr.isEnd());
+
+                for(Transaction t : transactions)
+                {
+                    System.out.println(t);
+
+                    if(t.getSender().equals(wallet.getAddress()))
+                    {
+                        mainView.setOutTextAreaWalletScreen(t.toString());
+
+                    }
+                }
+
+            }catch (IOException | ClassNotFoundException e9) {
+                e9.printStackTrace();
+            }
         });
 
         this.mainView.setSendButtonWalletScreen(e ->
@@ -358,6 +446,8 @@ public class Controller {
 
         }
     }
+
+
 
     private class listenForViewButtonManageSetting implements EventHandler<ActionEvent> {
         String[] keys;
