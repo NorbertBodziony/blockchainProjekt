@@ -22,11 +22,11 @@ public class TopView extends BorderPane {
 
     public TopView() {
 
-        name = new Text("Twoja Stara");
+        name = new Text("YOYOYOYO");
         name.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
         name.setFill(Color.DARKOLIVEGREEN);
 
-        version = new Text("Version: 0.3");
+        version = new Text("Version: 0.45");
         version.setFill(Color.WHITE);
         logout = new Button("Logout");
         logout.setStyle("-fx-background-color: #4286f4; ");

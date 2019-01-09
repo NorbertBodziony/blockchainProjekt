@@ -320,6 +320,15 @@ public class MiddleView extends StackPane {
         return walletScreen.getStopTime();
     }
 
+    public String getSelectedRadioButtonWalletScreen()
+    {
+        return walletScreen.getSelectedRadioButton();
+    }
+    public String getSpecAccontWalletScreen()
+    {
+        return walletScreen.getSpecAccont();
+    }
+
 
     public class homeButtonAction implements EventHandler<ActionEvent> {
 

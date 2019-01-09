@@ -1,5 +1,7 @@
 package GUI;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -35,6 +37,14 @@ public class WalletScreen extends GridPane {
     DatePicker start, stop;
 
     HBox hBox;
+    VBox vBox;
+
+
+    ToggleGroup group;
+    RadioButton button1;
+    RadioButton button2;
+    RadioButton button3;
+    TextField specAccount;
 
 
 
@@ -44,6 +54,55 @@ public class WalletScreen extends GridPane {
     public WalletScreen() {
 
         hBox = new HBox(4);
+        vBox = new VBox(4);
+
+         group = new ToggleGroup();
+         button1 = new RadioButton("Entire network");
+         button2 = new RadioButton("This account");
+         button3 = new RadioButton("Specified account");
+         specAccount = new TextField();
+         specAccount.setVisible(false);
+         specAccount.setEditable(false);
+        button1.setToggleGroup(group);
+        button2.setToggleGroup(group);
+        button2.setSelected(true);
+        button3.setToggleGroup(group);
+
+        button1.setTextFill(Color.WHITE);
+        button2.setTextFill(Color.WHITE);
+        button3.setTextFill(Color.WHITE);
+
+
+        button3.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            public void changed(ObservableValue<? extends Boolean> ov,
+                                Boolean old_val, Boolean new_val) {
+                System.out.println(button3.isSelected());
+                specAccount.setVisible(true);
+                specAccount.setEditable(true);
+
+            }
+        });
+        button2.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            public void changed(ObservableValue<? extends Boolean> ov,
+                                Boolean old_val, Boolean new_val) {
+                System.out.println(button2.isSelected());
+                specAccount.setVisible(false);
+                specAccount.setEditable(false);
+
+            }
+        });
+        button1.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            public void changed(ObservableValue<? extends Boolean> ov,
+                                Boolean old_val, Boolean new_val) {
+                System.out.println(button1.isSelected());
+                specAccount.setVisible(false);
+                specAccount.setVisible(false);
+
+            }
+        });
+
+        vBox.getChildren().addAll(button1,button2,button3,specAccount);
+
 
         inTextArea = new TextArea();
         inTextArea.setEditable(false);
@@ -156,13 +215,15 @@ public class WalletScreen extends GridPane {
 
 
         this.add(historyOftransaction, 3, 0);
-        this.add(hBox,3,1);
-        this.add(refreshHistory,3,2);
+        this.add(vBox,3,1);
+        this.add(hBox,3,2);
 
-        this.add(Income,3,3);
-        this.add(inTextArea,3,4);
-        this.add(Outcome,3,5);
-        this.add(outTextArea,3,6);
+        this.add(refreshHistory,3,3);
+
+        this.add(Income,3,4);
+        this.add(inTextArea,3,5);
+        this.add(Outcome,3,6);
+        this.add(outTextArea,3,7);
 
 
 
@@ -240,5 +301,14 @@ public class WalletScreen extends GridPane {
     {
         String temp = stop.getValue().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")) + " 00:00:00";
         return temp;
+    }
+    public String getSelectedRadioButton()
+    {
+        RadioButton temp = (RadioButton) group.getSelectedToggle();
+        return temp.getText();
+    }
+    public String getSpecAccont()
+    {
+        return specAccount.getText();
     }
 }

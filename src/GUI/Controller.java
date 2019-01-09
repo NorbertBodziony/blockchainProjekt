@@ -156,6 +156,8 @@ public class Controller {
             System.out.println(wallet.getAddress());
             mainView.setInTextAreaClearWalletScreen();
             mainView.setOutTextAreaClearWalletScreen();
+
+
             try {
 
                 DatagramPacket packet;
@@ -178,21 +180,27 @@ public class Controller {
                     transactions.addAll(tr.getTransactions());
                 }while (!tr.isEnd());
 
-                for(Transaction t : transactions)
-                {
-                    System.out.println(t);
-                    if(t.getRecipient().equals(wallet.getAddress()))
+                for(Transaction t : transactions) {
+                    if (mainView.getSelectedRadioButtonWalletScreen().equals("This account")) {
+                        if (t.getRecipient().equals(wallet.getAddress())) {
+                            //System.out.println(mainView.getSelectedRadioButtonWalletScreen());
+                            mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + " From: " + (t.getSender() == null ? "Genesis Block" : t.getSender()));
+
+
+                        }
+                    } else if (mainView.getSelectedRadioButtonWalletScreen().equals("Entire network"))
                     {
-                        //mainView.setInTextAreaWalletScreen(t.toString());
-                        /*if(t.getSender().isEmpty())
-                        {
-                            mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + " Genesis block ");
+                            mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + "To: " + t.getRecipient()  + " From: " + (t.getSender() == null ? "Genesis Block" : t.getSender()));
 
-                        }*/
+                    }
+                    else if (mainView.getSelectedRadioButtonWalletScreen().equals("Specified account"))
+                    {
+                        if (t.getRecipient().equals(mainView.getSpecAccontWalletScreen())) {
+                            //System.out.println(mainView.getSelectedRadioButtonWalletScreen());
+                            mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + " From: " + (t.getSender() == null ? "Genesis Block" : t.getSender()));
 
-                            mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + " From: " + (t.getSender()==null?  "Genesis Block": t.getSender()));
 
-
+                        }
                     }
                 }
 
@@ -222,15 +230,27 @@ public class Controller {
                     transactions.addAll(tr.getTransactions());
                 }while (!tr.isEnd());
 
-                for(Transaction t : transactions)
-                {
-                    System.out.println(t);
+                for(Transaction t : transactions) {
+                    if (mainView.getSelectedRadioButtonWalletScreen().equals("This account")) {
+                        if (t.getSender().equals(wallet.getAddress())) {
+                            //System.out.println(mainView.getSelectedRadioButtonWalletScreen());
+                            mainView.setOutTextAreaWalletScreen(" Amount: "+t.getAmount()+" To: "+t.getRecipient());
 
-                    if(t.getSender().equals(wallet.getAddress()))
+
+                        }
+                    } else if (mainView.getSelectedRadioButtonWalletScreen().equals("Entire network"))
                     {
-                        //mainView.setOutTextAreaWalletScreen(t.toString());
-                        mainView.setOutTextAreaWalletScreen(" Amount: "+t.getAmount()+" To: "+t.getRecipient());
+                        mainView.setOutTextAreaWalletScreen(" Amount: "+t.getAmount()+" To: "+t.getRecipient() +" From: "+t.getSender());
 
+                    }
+                    else if (mainView.getSelectedRadioButtonWalletScreen().equals("Specified account"))
+                    {
+                        if (t.getSender().equals(mainView.getSpecAccontWalletScreen())) {
+                            //System.out.println(mainView.getSelectedRadioButtonWalletScreen());
+                            mainView.setOutTextAreaWalletScreen(" Amount: "+t.getAmount()+" To: "+t.getRecipient());
+
+
+                        }
                     }
                 }
 

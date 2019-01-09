@@ -226,6 +226,14 @@ public class MainView extends Application {
     {
         middleView.setOutTextAreaClearWalletScreen();
     }
+    public String getSelectedRadioButtonWalletScreen()
+    {
+        return middleView.getSelectedRadioButtonWalletScreen();
+    }
+    public String getSpecAccontWalletScreen()
+    {
+        return middleView.getSpecAccontWalletScreen();
+    }
 
 
 
