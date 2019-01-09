@@ -18,18 +18,12 @@ DROP SEQUENCE BLOCK_ID_SEQ;
 DROP SEQUENCE RECEIVE_BLOCK_SEQ;
 DROP SEQUENCE SEND_BLOCK_SEQ;
 DROP SEQUENCE BLOCKCHAIN_SEQ;
-DROP SEQUENCE address_seq;
-DROP SEQUENCE customer_seq;
-DROP SEQUENCE company_seq;
 
 
 ----------------------------------------DROP TRIGGER----------------------------------------------
 DROP TRIGGER  block_on_insert;
 DROP TRIGGER  receive_block_on_insert;
 DROP TRIGGER  send_block_on_insert;
-DROP TRIGGER address_on_insert;
-DROP TRIGGER company_on_insert;
-DROP TRIGGER customer_on_insert;
 
 
 ----------------------------------------DROP FUNCTION ----------------------------------------------
@@ -43,11 +37,9 @@ DROP FUNCTION CREATE_ACCOUNT;
 DROP FUNCTION GET_FUNDS_FROM_BLOCK;
 DROP FUNCTION GET_BALANCE;
 DROP FUNCTION TRANSACTION_VERIFY;
-DROP FUNCTION ADD_COMPANY;
 
 ----------------------------------------DROP PROCEDURE ----------------------------------------------
 DROP PROCEDURE PERFORM_TRANSACTION 
-DROP PROCEDURE SET_PERSONAL_DATA;
 
 
 -----------------------------------------DROP ONLY CONSTRINTS--------------------------------------

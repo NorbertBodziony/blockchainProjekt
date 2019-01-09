@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Formatter;
 
+import static datagramInterfaces.AddCompany.*;
+import static datagramInterfaces.SetPersonalData.*;
+
 public class InitDatabase {
     private static StringBuilder sb = new StringBuilder();
     private static Formatter f = new Formatter(sb);
@@ -54,11 +57,12 @@ public class InitDatabase {
 
         execute("CREATE TABLE company(\n" +
                 "company_id int PRIMARY KEY,\n" +
-                "company_name VARCHAR2(80) NOT NULL,\n" +
-                "sector VARCHAR2(80),\n" +
-                "contact_tel VARCHAR2(12) NOT NULL,\n" +
+                "company_name VARCHAR2(%d) NOT NULL,\n" +
+                "sector VARCHAR2(%d),\n" +
+                "contact_tel VARCHAR2(%d) NOT NULL,\n" +
                 "address_id INT NOT NULL,\n" +
-                "contact_email VARCHAR2(80) NOT NULL)", s, Constants.PUBLIC_KEY_LENGTH);
+                "contact_email VARCHAR2(%d) NOT NULL)", s, COMPANY_NAME_LEN , SECTOR_LEN, CONTACT_TEL_LEN,
+                CONTACT_EMAIL_LEN);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -66,19 +70,20 @@ public class InitDatabase {
                 "customer_id INT PRIMARY KEY,\n" +
                 "company_id INT NOT NULL,\n" +
                 "address_id INT,\n" +
-                "first_name VARCHAR2(40) NOT NULL,\n" +
-                "last_name VARCHAR2(40) NOT NULL,\n" +
-                "contact_email VARCHAR2(80) NOT NULL)", s, Constants.PUBLIC_KEY_LENGTH);
+                "first_name VARCHAR2(%d) NOT NULL,\n" +
+                "last_name VARCHAR2(%d) NOT NULL,\n" +
+                "contact_email VARCHAR2(%d) NOT NULL)", s, FIRST_NAME_LEN, LAST_NAME_LEN, CONTACT_EMAIL_LEN);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         execute("CREATE TABLE address(\n" +
                 "address_id INT PRIMARY KEY,\n" +
-                "country VARCHAR2(40) NOT NULL,\n" +
-                "postal_code VARCHAR2(10) NOT NULL,\n" +
-                "city VARCHAR2(50) NOT NULL,\n" +
-                "street VARCHAR2(60) NOT NULL,\n" +
-                "apartment_number VARCHAR2(60) NOT NULL)", s, Constants.PUBLIC_KEY_LENGTH);
+                "country VARCHAR2(%d) NOT NULL,\n" +
+                "postal_code VARCHAR2(%d) NOT NULL,\n" +
+                "city VARCHAR2(%d) NOT NULL,\n" +
+                "street VARCHAR2(%d) NOT NULL,\n" +
+                "apartment_number VARCHAR2(%d) NOT NULL)", s, COUNTRY_LEN, POSTAL_CODE_LEN, CITY_LEN,
+                STREET_LEN, APARTMENT_NUMBER_LEN);
 
     }
 
@@ -319,6 +324,44 @@ public class InitDatabase {
                 "  \n" +
                 "  RETURN 1;\n" +
                 "END TRANSACTION_VERIFY;", s);
+
+
+
+        execute("create or replace \n" +
+                "FUNCTION ADD_COMPANY \n" +
+                "(\n" +
+                "  COMPANY_NAME IN VARCHAR2  \n" +
+                ", SECTOR IN VARCHAR2  \n" +
+                ", CONTACT_TEL IN VARCHAR2  \n" +
+                ", CONTACT_EMAIL IN VARCHAR2  \n" +
+                ", COUNTRY IN VARCHAR2  \n" +
+                ", POSTAL_CODE IN VARCHAR2  \n" +
+                ", CITY IN VARCHAR2  \n" +
+                ", STREET IN VARCHAR2  \n" +
+                ", APARTMENT_NUMBER IN VARCHAR2  \n" +
+                ") RETURN NUMBER AS\n" +
+                "new_address_id INT;\n" +
+                "new_company_id INT;\n" +
+                "BEGIN\n" +
+                "  INSERT INTO address(country, postal_code, city, street, apartment_number) VALUES\n" +
+                "    (COUNTRY, POSTAL_CODE, CITY, STREET, APARTMENT_NUMBER);\n" +
+                "  \n" +
+                "  SELECT MAX(address_id) INTO new_address_id FROM address;\n" +
+                "  \n" +
+                "  IF SECTOR IS NULL THEN\n" +
+                "    INSERT INTO company(company_name, sector, contact_tel, address_id, contact_email) VALUES\n" +
+                "      (COMPANY_NAME, NULL, CONTACT_TEL, new_address_id, CONTACT_EMAIL);\n" +
+                "  ELSE\n" +
+                "    INSERT INTO company(company_name, sector, contact_tel, address_id, contact_email) VALUES\n" +
+                "      (COMPANY_NAME, SECTOR, CONTACT_TEL, new_address_id, CONTACT_EMAIL);\n" +
+                "  END IF;\n" +
+                "  \n" +
+                "  SELECT MAX(company_id) INTO new_company_id FROM company;\n" +
+                "  \n" +
+                "  COMMIT;\n" +
+                "  RETURN new_company_id;\n" +
+                "  \n" +
+                "END ADD_COMPANY;", s);
     }
 
     public static void createProcedures(Statement s) throws SQLException {
@@ -374,6 +417,46 @@ public class InitDatabase {
                 "  \n" +
                 "  \n" +
                 "END PERFORM_TRANSACTION;", s, Constants.PUBLIC_KEY_LENGTH, Constants.PUBLIC_KEY_LENGTH);
+
+
+
+        execute("create or replace \n" +
+                "PROCEDURE SET_PERSONAL_DATA \n" +
+                "(\n" +
+                "  PUB_KEY IN VARCHAR2\n" +
+                ", COMPANY_ID IN INT\n" +
+                ", FIRST_NAME IN VARCHAR2  \n" +
+                ", LAST_NAME IN VARCHAR2  \n" +
+                ", CONTACT_EMAIL IN VARCHAR2  \n" +
+                ", COUNTRY IN VARCHAR2  \n" +
+                ", POSTAL_CODE IN VARCHAR2  \n" +
+                ", CITY IN VARCHAR2  \n" +
+                ", STREET IN VARCHAR2  \n" +
+                ", APARTMENT_NUMBER IN VARCHAR2  \n" +
+                ") AS\n" +
+                "  new_address_id INT;\n" +
+                "  new_customer_id INT;\n" +
+                "BEGIN\n" +
+                "  IF COUNTRY IS NULL OR POSTAL_CODE IS NULL OR CITY IS NULL OR\n" +
+                "  STREET IS NULL OR APARTMENT_NUMBER IS NULL THEN\n" +
+                "    INSERT INTO customer(company_id, first_name, last_name, contact_email) VALUES\n" +
+                "      (COMPANY_ID, FIRST_NAME, LAST_NAME, CONTACT_EMAIL);\n" +
+                "  ELSE\n" +
+                "    INSERT INTO address(country, postal_code, city, street, apartment_number) VALUES\n" +
+                "      (COUNTRY, POSTAL_CODE, CITY, STREET, APARTMENT_NUMBER);\n" +
+                "    SELECT MAX(address_id) INTO new_address_id FROM address; \n" +
+                "      \n" +
+                "    INSERT INTO customer(company_id, address_id, first_name, last_name, contact_email) VALUES\n" +
+                "      (COMPANY_ID, new_address_id, FIRST_NAME, LAST_NAME, CONTACT_EMAIL);\n" +
+                "  END IF;\n" +
+                "  \n" +
+                "  SELECT MAX(CUSTOMER_ID) INTO new_customer_id FROM CUSTOMER;\n" +
+                "  \n" +
+                "  UPDATE ACCOUNT SET ACCOUNT.CUSTOMER_TYPE = new_customer_id WHERE\n" +
+                "    PUBLIC_KEY = PUB_KEY;\n" +
+                "  \n" +
+                "  COMMIT;\n" +
+                "END SET_PERSONAL_DATA;", s);
     }
 
     public static void createTriggers(Statement s) throws SQLException {
@@ -403,6 +486,34 @@ public class InitDatabase {
                 "  SELECT block_id_seq.nextval\n" +
                 "  INTO :new.block_id FROM dual;\n" +
                 "END;", s);
+
+
+        execute("create or replace \n" +
+                "TRIGGER address_on_insert\n" +
+                "  BEFORE INSERT ON address\n" +
+                "  FOR EACH ROW\n" +
+                "BEGIN\n" +
+                "  SELECT address_seq.nextval\n" +
+                "  INTO :new.address_id FROM dual;\n" +
+                "END;", s);
+
+        execute("create or replace \n" +
+                "TRIGGER company_on_insert\n" +
+                "  BEFORE INSERT ON company\n" +
+                "  FOR EACH ROW\n" +
+                "BEGIN\n" +
+                "  SELECT company_seq.nextval\n" +
+                "  INTO :new.company_id FROM dual;\n" +
+                "END;", s);
+
+        execute("create or replace \n" +
+                "TRIGGER customer_on_insert\n" +
+                "  BEFORE INSERT ON customer\n" +
+                "  FOR EACH ROW\n" +
+                "BEGIN\n" +
+                "  SELECT customer_seq.nextval\n" +
+                "  INTO :new.customer_id FROM dual;\n" +
+                "END;\n", s);
     }
 
     public static void createSequences(Statement s) throws SQLException {
@@ -410,6 +521,10 @@ public class InitDatabase {
         execute("CREATE SEQUENCE send_block_seq increment by 1 start with 1", s);
         execute("CREATE SEQUENCE receive_block_seq increment by 1 start with 1", s);
         execute("CREATE SEQUENCE blockchain_seq increment by 1 start with 1", s);
+
+        execute("CREATE SEQUENCE address_seq increment by 1 start with 1", s);
+        execute("CREATE SEQUENCE customer_seq increment by 1 start with 1", s);
+        execute("CREATE SEQUENCE company_seq increment by 1 start with 1", s);
     }
 
     public static void dropSchema(Statement s) throws SQLException {
@@ -449,10 +564,14 @@ public class InitDatabase {
         execute("DROP FUNCTION GET_FUNDS_FROM_BLOCK", s);
         execute("DROP FUNCTION GET_BALANCE", s);
         execute("DROP FUNCTION TRANSACTION_VERIFY", s);
+
+        execute("DROP FUNCTION ADD_COMPANY", s);
     }
 
     public static void dropProcedures(Statement s) throws SQLException {
         execute("DROP PROCEDURE PERFORM_TRANSACTION", s);
+
+        execute("DROP PROCEDURE SET_PERSONAL_DATA", s);
     }
 
 
@@ -461,12 +580,20 @@ public class InitDatabase {
         execute("DROP SEQUENCE send_block_seq", s);
         execute("DROP SEQUENCE receive_block_seq", s);
         execute("DROP SEQUENCE blockchain_seq", s);
+
+        execute("DROP SEQUENCE address_seq", s);
+        execute("DROP SEQUENCE customer_seq", s);
+        execute("DROP SEQUENCE company_seq", s);
     }
 
     public static void dropTriggers(Statement s) throws SQLException {
         execute("DROP TRIGGER block_on_insert", s);
         execute("DROP TRIGGER receive_block_on_insert", s);
         execute("DROP TRIGGER send_block_on_insert", s);
+
+        execute("DROP TRIGGER address_on_insert", s);
+        execute("DROP TRIGGER company_on_insert", s);
+        execute("DROP TRIGGER customer_on_insert", s);
     }
 
     private static void execute(String sql, Statement s) throws SQLException {
@@ -485,6 +612,30 @@ public class InitDatabase {
 
     private static void execute(String sql, Statement s, int arg0, int arg1) throws SQLException {
         f.format(sql, arg0, arg1);
+
+        s.executeUpdate(sb.toString());
+        sb.setLength(0);
+    }
+
+    private static void execute(String sql, Statement s, int arg0, int arg1, int arg2)
+            throws SQLException {
+        f.format(sql, arg0, arg1, arg2);
+
+        s.executeUpdate(sb.toString());
+        sb.setLength(0);
+    }
+
+    private static void execute(String sql, Statement s, int arg0, int arg1,
+    int arg2, int arg3) throws SQLException {
+        f.format(sql, arg0, arg1, arg2, arg3);
+
+        s.executeUpdate(sb.toString());
+        sb.setLength(0);
+    }
+
+    private static void execute(String sql, Statement s, int arg0, int arg1,
+                                int arg2, int arg3, int arg4) throws SQLException {
+        f.format(sql, arg0, arg1, arg2, arg3, arg4);
 
         s.executeUpdate(sb.toString());
         sb.setLength(0);

@@ -3,6 +3,8 @@ package database;
 import account.Account;
 import account.ReceiveBlock;
 import constants.Constants;
+import datagramInterfaces.AddCompany;
+import datagramInterfaces.SetPersonalData;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -657,6 +659,44 @@ public class Database {
         return transactions;
     }
 
+    public static int addCompany(Connection con, AddCompany company) throws SQLException {
+        String sql = "{? = call ADD_COMPANY(?, ?, ?, ?, ?, ?, ?, ?, ?)}";
 
+        CallableStatement cs = con.prepareCall(sql);
+        cs.setString(2, company.getCompanyName());
+        cs.setString(3, company.getSector());
+        cs.setString(4, company.getContactTel());
+        cs.setString(5, company.getContactEmail());
+        cs.setString(6, company.getCountry());
+        cs.setString(7, company.getPostalCode());
+        cs.setString(8, company.getCity());
+        cs.setString(9, company.getStreet());
+        cs.setString(10, company.getApartmentNumber());
+
+        cs.registerOutParameter(1, Types.INTEGER);
+        cs.execute();
+
+        int companyId = cs.getInt(1);
+        cs.close();
+        return companyId;
+    }
+
+    public static void setPersonalData(Connection con, SetPersonalData data) throws SQLException {
+        String sql = "{call SET_PERSONAL_DATA(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}";
+
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, data.getPublicKey());
+        ps.setInt(2, data.getCompanyId());
+        ps.setString(3, data.getFirstName());
+        ps.setString(4, data.getLastName());
+        ps.setString(5, data.getContactEmail());
+        ps.setString(6, data.getCountry());
+        ps.setString(7, data.getPostalCode());
+        ps.setString(8, data.getCity());
+        ps.setString(9, data.getStreet());
+        ps.setString(10, data.getApartmentNumber());
+
+        ps.executeUpdate();
+    }
 
 }
