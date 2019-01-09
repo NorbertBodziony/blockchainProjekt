@@ -183,7 +183,15 @@ public class Controller {
                     System.out.println(t);
                     if(t.getRecipient().equals(wallet.getAddress()))
                     {
-                        mainView.setInTextAreaWalletScreen(t.toString());
+                        //mainView.setInTextAreaWalletScreen(t.toString());
+                        /*if(t.getSender().isEmpty())
+                        {
+                            mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + " Genesis block ");
+
+                        }*/
+
+                            mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + " From: " + (t.getSender()==null?  "Genesis Block": t.getSender()));
+
 
                     }
                 }
@@ -220,7 +228,8 @@ public class Controller {
 
                     if(t.getSender().equals(wallet.getAddress()))
                     {
-                        mainView.setOutTextAreaWalletScreen(t.toString());
+                        //mainView.setOutTextAreaWalletScreen(t.toString());
+                        mainView.setOutTextAreaWalletScreen(" Amount: "+t.getAmount()+" To: "+t.getRecipient());
 
                     }
                 }

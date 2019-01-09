@@ -41,4 +41,8 @@ public class Transaction implements Serializable {
     public void setSender(String sender) {
         this.sender = sender;
     }
+
+    public int getAmount() {
+        return amount;
+    }
 }
