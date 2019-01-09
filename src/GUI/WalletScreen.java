@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class WalletScreen extends GridPane {
 
-    Button send, recive, home;
+    Button send, recive, home, refresh;
 
     String sendTo;
     String sendToAmount;
@@ -25,8 +25,7 @@ public class WalletScreen extends GridPane {
     String amount;
     String text;
 
-    //Separator verticalSeparator;
-    //Separator horizontalSeparator;
+
 
     Optional<Pair<String, String>> recipientAndAmount;
 
@@ -34,8 +33,8 @@ public class WalletScreen extends GridPane {
     public WalletScreen() {
 
         labelAmout = new Label();
-        text = new String("Your amout: " + amount);
-        labelAmout.setText(amount);
+        text = "Your amout: ";
+        labelAmout.setText("Your amount: ");
         labelAmout.setTextFill(Color.WHITE);
         historyOftransaction = new Label("History of transaction: ");
 
@@ -46,18 +45,9 @@ public class WalletScreen extends GridPane {
         historyOftransaction.setTextAlignment(TextAlignment.CENTER);
         historyOftransaction.setTextFill(Color.WHITE);
 
-
-
-     /*   verticalSeparator = new Separator();
-        verticalSeparator.setOrientation(Orientation.VERTICAL);
-        verticalSeparator.setStyle("-fx-background-color: #000000; ");
-
-        horizontalSeparator = new Separator();
-        horizontalSeparator.setOrientation(Orientation.HORIZONTAL);*/
-
-
         send = new Button("Send");
         recive = new Button("Recive");
+        refresh = new Button("Refresh");
 
         send.setPrefSize(220, 30);
         send.setStyle("-fx-background-color: #53f442; ");
@@ -71,24 +61,6 @@ public class WalletScreen extends GridPane {
             send.setStyle("-fx-background-color: #53f442; ");
         });
 
-       /* send.setOnAction(e->
-        {
-            recipientAndAmount = new sendDialog().showAndWait();
-            recipientAndAmount.ifPresent(usernamePassword -> {
-                System.out.println("Amount=" + usernamePassword.getKey() + ", Recipent address=" + usernamePassword.getValue());
-                sendToAmount = usernamePassword.getKey();
-                Controller.sendTo = usernamePassword.getValue();
-                Controller.amount = usernamePassword.getKey();
-                try {
-                    sleep(5);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
-                }
-            });
-
-        });*/
-
-
         recive.setPrefSize(220, 30);
         recive.setStyle("-fx-background-color: #53f442; ");
 
@@ -100,12 +72,6 @@ public class WalletScreen extends GridPane {
         {
             recive.setStyle("-fx-background-color: #53f442; ");
         });
-
-
-        /*recive.setOnAction(e->
-        {
-            new reciveDialog().showAndWait();
-        });*/
 
         home = new Button("Home");
 
@@ -121,10 +87,24 @@ public class WalletScreen extends GridPane {
             home.setStyle("-fx-background-color: #53f442; ");
         });
 
+        refresh.setPrefSize(220, 30);
+        refresh.setStyle("-fx-background-color: #53f442; ");
+
+        refresh.setOnMouseEntered(e ->
+        {
+            refresh.setStyle("-fx-background-color: #20a013; ");
+        });
+        refresh.setOnMouseExited(e ->
+        {
+            refresh.setStyle("-fx-background-color: #53f442; ");
+        });
+
         this.add(send, 1, 0);
         this.add(recive, 2, 0);
         this.add(labelAmout, 1, 1);
-        this.add(home, 2, 1);
+        this.add(refresh, 2, 1);
+        this.add(home, 1, 2);
+
         //this.add(verticalSeparator,3,0,1,20);
         this.add(historyOftransaction, 3, 0);
         //this.add(horizontalSeparator, 4,1,9,1);
@@ -162,5 +142,13 @@ public class WalletScreen extends GridPane {
 
     public void setReciveButton(EventHandler<ActionEvent> actionEventEventHandler) {
         recive.setOnAction(actionEventEventHandler);
+    }
+    public void setRefresh(EventHandler<ActionEvent> actionEventEventHandler) {
+        refresh.setOnAction(actionEventEventHandler);
+    }
+
+    public void setLabelAmout(String am)
+    {
+        labelAmout.setText("Your amount: " + am);
     }
 }

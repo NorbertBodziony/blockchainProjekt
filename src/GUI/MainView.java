@@ -191,5 +191,14 @@ public class MainView extends Application {
     public String getPasswordManageSetting() throws Exception {
         return middleView.getPasswordManageSetting();
     }
+    public void setRefreshWalletScree(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setRefreshWalletScree(actionEventEventHandler);
+    }
+    public void setLabelAmountWalletScreen(String am)
+    {
+        middleView.setLabelAmount(am);
+    }
+
+
 
 }

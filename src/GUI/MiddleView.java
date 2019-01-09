@@ -227,6 +227,14 @@ public class MiddleView extends StackPane {
         walletScreen.setAmount(amount);
     }
 
+    public void setRefreshWalletScree(EventHandler<ActionEvent> actionEventEventHandler) {
+        walletScreen.setRefresh(actionEventEventHandler);
+    }
+    public void setLabelAmount(String am)
+    {
+        walletScreen.setLabelAmout(am);
+    }
+
     public void setWalletsLoginUsingSavedWallet(String[] tempWallets) {
         loginUsingSavedWalled.setWallets(tempWallets);
     }

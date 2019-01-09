@@ -1,6 +1,8 @@
 package GUI;
 
+import constants.Constants;
 import cryptography.CryptoConverter;
+import datagramInterfaces.GetBalanceRespond;
 import datagramInterfaces.NodeRespond;
 import datagramInterfaces.PreviousHashesRespond;
 import javafx.event.ActionEvent;
@@ -50,6 +52,7 @@ public class Controller {
         this.mainView.setLoginButtonLoginUsingSavedWallet(e ->
         {
             System.out.println(this.mainView.getSelectedWalletLoginUsingSavedWallet());
+
         });
 
         this.mainView.setLoginUsingPrivKey(e ->
@@ -99,6 +102,46 @@ public class Controller {
 
         this.mainView.setAmountWalletScreen("80");
 
+        this.mainView.setRefreshWalletScree(e->
+        {
+            System.out.println("Refresh");
+            try {
+                System.out.println("Weszlo");
+                // listen to node respond -  result of creating
+                DatagramPacket packet;
+
+                // unpack respond
+                NodeRespond respond;
+
+                // System.out.println(respond);
+
+
+                // send balance request
+                wallet.getBalance();
+
+                // listen to node respond - balance
+                packet = wallet.listenToNodeRespond();
+
+                // unpack respond
+                respond = wallet.unpackRespond(packet);
+
+                // cast to BalanceRespond
+                GetBalanceRespond balanceRespond = (GetBalanceRespond) respond;
+                int balance =  balanceRespond.getBalance();
+
+                System.out.println("Your Balance is: ");
+
+                System.out.println(balance);
+                this.mainView.setLabelAmountWalletScreen(Integer.toString(balance));
+
+
+
+            } catch (IOException | ClassNotFoundException e5) {
+                e5.printStackTrace();
+            }
+
+        });
+
         this.mainView.setSendButtonWalletScreen(e ->
         {
             sendDialog = new sendDialog();
@@ -136,10 +179,43 @@ public class Controller {
                 } catch (ClassNotFoundException e1) {
                     e1.printStackTrace();
                 }
+                try {
+                    System.out.println("Weszlo");
+                    // listen to node respond -  result of creating
+                    DatagramPacket packet;
+
+                    // unpack respond
+                    NodeRespond respond;
+
+                    // System.out.println(respond);
+
+
+                    // send balance request
+                    wallet.getBalance();
+
+                    // listen to node respond - balance
+                    packet = wallet.listenToNodeRespond();
+
+                    // unpack respond
+                    respond = wallet.unpackRespond(packet);
+
+                    // cast to BalanceRespond
+                    GetBalanceRespond balanceRespond = (GetBalanceRespond) respond;
+                    int balance =  balanceRespond.getBalance();
+
+                    System.out.println("Your Balance is: ");
+
+                    System.out.println(balance);
+                    mainView.setLabelAmountWalletScreen(Integer.toString(balance));
+
+
+
+                } catch (IOException | ClassNotFoundException e5) {
+                    e5.printStackTrace();
+                }
+
 
             });
-
-
         });
 
         this.mainView.setLoginButtonLoginUsingSavedWallet(new listenForLoginUsingSavedWallet());
@@ -165,6 +241,41 @@ public class Controller {
 
                 mainView.setScreenVisible("walletScreen");
 
+                try {
+                    System.out.println("Weszlo");
+                    // listen to node respond -  result of creating
+                    DatagramPacket packet;
+
+                    // unpack respond
+                    NodeRespond respond;
+
+                    // System.out.println(respond);
+
+
+                    // send balance request
+                    wallet.getBalance();
+
+                    // listen to node respond - balance
+                    packet = wallet.listenToNodeRespond();
+
+                    // unpack respond
+                    respond = wallet.unpackRespond(packet);
+
+                    // cast to BalanceRespond
+                    GetBalanceRespond balanceRespond = (GetBalanceRespond) respond;
+                    int balance =  balanceRespond.getBalance();
+
+                    System.out.println("Your Balance is: ");
+
+                    System.out.println(balance);
+                    mainView.setLabelAmountWalletScreen(Integer.toString(balance));
+
+
+
+                } catch (IOException | ClassNotFoundException e5) {
+                    e5.printStackTrace();
+                }
+
             } catch (InvalidKeySpecException exec) {
                 System.out.println("InvalidKeySpecException");
 
@@ -185,6 +296,7 @@ public class Controller {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
 
         }
     }

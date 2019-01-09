@@ -11,7 +11,7 @@ public class BotView extends BorderPane {
     Label dontation;
 
     public BotView() {
-        dontation = new Label("Donation via: 1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX");
+        dontation = new Label("Wykonali: Norbert Bodziony, Bartłomiej Smalec, Wojciech Cichocki");
         dontation.setTextFill(Color.WHITE);
 
         this.setPadding(new Insets(10));

@@ -53,7 +53,7 @@ public class GetTransactionHistoryTest {
     @Test
     public void getAllOutgoingTransactionsFromOneAccount() {
         try {
-            String publicKey = "3046301006072A8648CE3D020106052B8104001F033200040ECF3F02B901E842D80B5B03671B5B515777BB4D7794752DA2EDA2C894AD0CD702CA14DCC69C26BC46A7632FC142E9D0";
+            String publicKey = "3046301006072A8648CE3D020106052B8104001F03320004761BB03D04934275F6AA1B1ECAF8834ADBF67291AD1B9B9921D35AE51E2E7F08FC1E68C9CCF5A88D7EB91BA3D2274FD7";
             Wallet wallet = new Wallet(Constants.NODE_IP, Constants.NODE_PORT);
             wallet.createAccount();
             DatagramPacket packet = wallet.listenToNodeRespond();
