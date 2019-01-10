@@ -1,32 +1,20 @@
 package datagramInterfaces;
 
+import account.Address;
+import account.Customer;
 import database.Database;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static datagramInterfaces.AddCompany.*;
 import static datagramInterfaces.ErrorCode.*;
 
 public class SetPersonalData extends WalletRequest {
-    private String publicKey;
-    private int companyId;
-    private String firstName;
-    private String lastName;
-    private String contactEmail;
-    private String country;
-    private String postalCode;
-    private String city;
-    private String street;
-    private String apartmentNumber;
+    private Customer customer;
+    private Address address;
 
-    public static final int FIRST_NAME_LEN = 40;
-    public static final int LAST_NAME_LEN = 40;
 
-    private static String trim(String string, int maxLen) {
-        return string.length() > maxLen ? string.substring(0 ,maxLen) : string;
-    }
 
     public SetPersonalData( String publicKey,  int companyId,  String firstName,  String lastName,
                             String contactEmail,  String country, String postalCode,
@@ -34,56 +22,45 @@ public class SetPersonalData extends WalletRequest {
         boolean setAddress = country != null && postalCode != null &&
                 city != null && street != null && apartmentNumber != null;
 
-        this.publicKey = publicKey;
-        this.companyId = companyId;
-        this.firstName = trim(firstName, FIRST_NAME_LEN);
-        this.lastName = trim(lastName, LAST_NAME_LEN);
-        this.contactEmail = trim(contactEmail, CONTACT_EMAIL_LEN);
-        this.country = !setAddress ? null : trim(country, COUNTRY_LEN);
-        this.postalCode = !setAddress ? null :  trim(postalCode, POSTAL_CODE_LEN);
-        this.city = !setAddress ? null : trim(city, CITY_LEN);
-        this.street = !setAddress ? null : trim(street, STREET_LEN);
-        this.apartmentNumber = !setAddress ? null : trim(apartmentNumber, APARTMENT_NUMBER_LEN);
+        this.customer = new Customer(publicKey, companyId, firstName, lastName, contactEmail);
+        if(setAddress)
+            this.address = new Address(country, postalCode, city, street, apartmentNumber);
     }
 
-    public String getPublicKey() {
-        return publicKey;
-    }
+    public String getPublicKey() { return customer.getPublicKey(); }
 
     public int getCompanyId() {
-        return companyId;
+        return customer.getCompanyId();
     }
 
     public String getFirstName() {
-        return firstName;
+        return customer.getFirstName();
     }
 
-    public String getLastName() {
-        return lastName;
-    }
+    public String getLastName() { return customer.getLastName(); }
 
     public String getContactEmail() {
-        return contactEmail;
+        return customer.getContactEmail();
     }
 
     public String getCountry() {
-        return country;
+        return address == null ? null :address.getCountry();
     }
 
     public String getPostalCode() {
-        return postalCode;
+        return address == null ? null : address.getPostalCode();
     }
 
     public String getCity() {
-        return city;
+        return address == null ? null : address.getCity();
     }
 
     public String getStreet() {
-        return street;
+        return address == null ? null : address.getStreet();
     }
 
     public String getApartmentNumber() {
-        return apartmentNumber;
+        return address == null ? null : address.getApartmentNumber();
     }
 
     @Override
