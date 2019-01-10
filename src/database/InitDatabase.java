@@ -6,8 +6,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Formatter;
 
-import static datagramInterfaces.AddCompany.*;
-import static datagramInterfaces.SetPersonalData.*;
+import static account.Company.*;
+import static account.Address.*;
+import static account.Customer.*;
 
 public class InitDatabase {
     private static StringBuilder sb = new StringBuilder();

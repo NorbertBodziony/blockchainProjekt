@@ -97,6 +97,12 @@ public class Wallet {
         send(request);
     }
 
+    public void findPublicKey(String firstName, String lastName, String companyName) throws IOException {
+        WalletRequest request = new FindPublicKey(firstName, lastName, companyName);
+
+        send(request);
+    }
+
 
     public DatagramPacket listenToNodeRespond() throws IOException {
         byte[] data = new byte[DATAGRAM_SIZE];

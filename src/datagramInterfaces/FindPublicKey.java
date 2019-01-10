@@ -1,4 +1,30 @@
 package datagramInterfaces;
 
-public class FindPublicKey {
+import account.Customer;
+import database.Database;
+
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
+
+import static datagramInterfaces.ErrorCode.OK;
+
+public class FindPublicKey extends WalletRequest {
+    private String firstName;
+    private String lastName;
+    private String company;
+
+    public FindPublicKey(String firstName, String lastName, String company) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.company = company;
+    }
+
+    @Override
+    public NodeRespond handle(Connection con) throws SQLException, IOException {
+        List<String> publicKeys = Database.findPublicKey(con, firstName, lastName, company);
+        return new FindPublicKeyRespond(OK, publicKeys);
+    }
 }
