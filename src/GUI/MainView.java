@@ -251,6 +251,9 @@ public class MainView extends Application {
         middleView.setSearchWalletScreen(actionEventEventHandler);
     }
 
+    public String getNameTextFieldWalletScreen() {
+        return middleView.getNameTextFieldWalletScreen();
+    }
 
 
 }

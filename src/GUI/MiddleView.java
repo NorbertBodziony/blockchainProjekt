@@ -332,6 +332,11 @@ public class MiddleView extends StackPane {
         return walletScreen.getSurnameTextField();
     }
 
+    public String getNameTextFieldWalletScreen() {
+        return walletScreen.getName();
+    }
+
+
     public void clearSurnameTextFieldWalletScreen() {
         walletScreen.clearSurnameTextField();
     }

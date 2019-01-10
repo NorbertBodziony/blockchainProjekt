@@ -9,12 +9,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
 
-public class updatePersonalData extends Dialog<Triplet<String, String, String>> {
+public class updatePersonalData extends Dialog<Nine<String>> {
     double xOffset;
     double yOffset;
 
     public updatePersonalData() {
-        this.setTitle("Send");
+//        this.getDialogPane().setPrefSize(700,1000);
+        this.setHeight(500);
+        // this.setWidth(1000);
+
+        this.setTitle("Update Personal Data");
         this.setHeaderText(null);
         this.setGraphic(null);
         this.initStyle(StageStyle.UNDECORATED);
@@ -38,7 +42,25 @@ public class updatePersonalData extends Dialog<Triplet<String, String, String>> 
         surname.setPromptText("Surname");
 
         TextField company = new TextField();
-        company.setPromptText("Company");
+        company.setPromptText("CompanyID");
+
+        TextField email = new TextField();
+        email.setPromptText("Email");
+
+        TextField country = new TextField();
+        country.setPromptText("Country");
+
+        TextField postalCode = new TextField();
+        postalCode.setPromptText("Postal Code");
+
+        TextField city = new TextField();
+        city.setPromptText("City");
+
+        TextField street = new TextField();
+        street.setPromptText("Street");
+
+        TextField apartment_number = new TextField();
+        apartment_number.setPromptText("Aaprtment number: ");
 
         grid.add(new Label("Name:"), 0, 0);
         grid.add(name, 1, 0);
@@ -47,6 +69,25 @@ public class updatePersonalData extends Dialog<Triplet<String, String, String>> 
 
         grid.add(new Label("Company:"), 0, 2);
         grid.add(company, 1, 2);
+
+
+        grid.add(new Label("Email:"), 0, 3);
+        grid.add(email, 1, 3);
+
+        grid.add(new Label("Country:"), 0, 4);
+        grid.add(country, 1, 4);
+
+        grid.add(new Label("Postal code:"), 0, 5);
+        grid.add(postalCode, 1, 5);
+
+        grid.add(new Label("City:"), 0, 6);
+        grid.add(city, 1, 6);
+
+        grid.add(new Label("Street:"), 0, 7);
+        grid.add(street, 1, 7);
+
+        grid.add(new Label("Apartment number:"), 0, 8);
+        grid.add(apartment_number, 1, 8);
 
         Node loginButton = this.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
@@ -61,7 +102,7 @@ public class updatePersonalData extends Dialog<Triplet<String, String, String>> 
 
         this.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
-                return new Triplet<>(name.getText(), surname.getText(), company.getText());
+                return new Nine<>(name.getText(), surname.getText(), company.getText(), email.getText(), country.getText(), postalCode.getText(), city.getText(), street.getText(), apartment_number.getText());
             }
             return null;
         });

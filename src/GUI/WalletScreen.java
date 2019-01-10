@@ -22,6 +22,7 @@ public class WalletScreen extends GridPane {
 
     Button send, recive, home, refresh, refreshHistory, addPersonalData, search;
     TextField surname;
+    TextField name;
 
     String sendTo;
     String sendToAmount;
@@ -73,7 +74,7 @@ public class WalletScreen extends GridPane {
         button2.setTextFill(Color.WHITE);
         button3.setTextFill(Color.WHITE);
 
-
+        name = new TextField();
         button3.selectedProperty().addListener(new ChangeListener<Boolean>() {
             public void changed(ObservableValue<? extends Boolean> ov,
                                 Boolean old_val, Boolean new_val) {
@@ -238,6 +239,9 @@ public class WalletScreen extends GridPane {
         });
 
 
+        name.setPromptText("Name");
+        surname.setPromptText("Surname");
+
 
         this.add(send, 1, 0);
         this.add(recive, 2, 0);
@@ -245,9 +249,13 @@ public class WalletScreen extends GridPane {
         this.add(refresh, 2, 1);
         this.add(home, 2, 2);
         this.add(addPersonalData, 1, 2);
-        this.add(surnameLabel, 1, 3);
-        this.add(surname, 1, 4);
-        this.add(search, 1, 5);
+        // this.add(surnameLabel, 1, 5);
+        this.add(surname, 1, 3);
+        //this.add(new Label("name"), 1, 3);
+
+        this.add(name, 1, 4);
+
+        this.add(search, 2, 4);
 
 
 
@@ -355,6 +363,10 @@ public class WalletScreen extends GridPane {
 
     public String getSurnameTextField() {
         return surname.getText();
+    }
+
+    public String getName() {
+        return name.getText();
     }
 
     public void clearSurnameTextField() {
