@@ -371,6 +371,27 @@ public class Controller {
 
             updatePersonalData.showAndWait().ifPresent(handler -> {
                 System.out.println("Name=" + handler.getFirst() + ", Surname: " + handler.getSecond() + "Company: " + handler.getThird());
+                try {
+                    DatagramPacket packet;
+                    NodeRespond respond;
+
+                    wallet.setPersonalData(wallet.getAddress(), 1, handler.getFirst(), handler.getSecond(),
+                            handler.getThird(), handler.getFour(), handler.getFive(), handler.getSix(), handler.getSeven(),
+                            handler.getEight());
+
+                  /* wallet.setPersonalData(wallet.getAddress(), handler.getFirst(),  handler.getSecond(),
+                           handler.getThird(),  handler.getFour(),  handler.getFive(), handler.getSix() , handler.getSeven(),
+                           handler.getEight(),handler.getNine());*/
+
+                    packet = wallet.listenToNodeRespond();
+                    respond = wallet.unpackRespond(packet);
+
+                    System.out.println(respond);
+
+
+                } catch (IOException | ClassNotFoundException e10) {
+                    e10.printStackTrace();
+                }
 
             });
 
