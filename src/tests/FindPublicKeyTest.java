@@ -16,7 +16,7 @@ public class FindPublicKeyTest {
     public void simpleTest() throws SQLException {
         Connection con = Database.connect();
         List<String> result =
-                Database.findPublicKey(con,"first", "last", "company");
+                Database.findPublicKey(con,"first", "last");
 
         for(String publicKey : result)
             System.out.println(publicKey);

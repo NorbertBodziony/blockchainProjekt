@@ -97,8 +97,8 @@ public class Wallet {
         send(request);
     }
 
-    public void findPublicKey(String firstName, String lastName, String companyName) throws IOException {
-        WalletRequest request = new FindPublicKey(firstName, lastName, companyName);
+    public void findPublicKey(String firstName, String lastName) throws IOException {
+        WalletRequest request = new FindPublicKey(firstName, lastName);
 
         send(request);
     }

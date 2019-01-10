@@ -14,17 +14,15 @@ import static datagramInterfaces.ErrorCode.OK;
 public class FindPublicKey extends WalletRequest {
     private String firstName;
     private String lastName;
-    private String company;
 
-    public FindPublicKey(String firstName, String lastName, String company) {
+    public FindPublicKey(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.company = company;
     }
 
     @Override
     public NodeRespond handle(Connection con) throws SQLException, IOException {
-        List<String> publicKeys = Database.findPublicKey(con, firstName, lastName, company);
+        List<String> publicKeys = Database.findPublicKey(con, firstName, lastName);
         return new FindPublicKeyRespond(OK, publicKeys);
     }
 }

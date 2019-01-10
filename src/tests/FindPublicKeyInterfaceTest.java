@@ -20,7 +20,7 @@ public class FindPublicKeyInterfaceTest {
     public void simpleTest() throws IOException, ClassNotFoundException {
         Wallet wallet = new Wallet(Constants.NODE_IP, Constants.NODE_PORT);
 
-        wallet.findPublicKey("first", "last", "company");
+        wallet.findPublicKey("first", "last");
 
         DatagramPacket packet = wallet.listenToNodeRespond();
         NodeRespond respond = wallet.unpackRespond(packet);

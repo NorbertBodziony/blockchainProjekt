@@ -699,18 +699,13 @@ public class Database {
         ps.executeUpdate();
     }
 
-    public static List<String> findPublicKey(Connection con, String firstName, String secondName,
-                                             String companyName) throws SQLException {
+    public static List<String> findPublicKey(Connection con, String firstName, String secondName)
+            throws SQLException {
+
         String sql = "SELECT PUBLIC_KEY FROM ACCOUNT JOIN CUSTOMER ON " +
                 "CUSTOMER_TYPE = CUSTOMER_ID " +
-                "WHERE FIRST_NAME LIKE ? AND LAST_NAME LIKE ?";
-
-        sql = "SELECT PUBLIC_KEY FROM ACCOUNT JOIN CUSTOMER ON " +
-                "CUSTOMER_TYPE = CUSTOMER_ID JOIN COMPANY ON " +
-                "CUSTOMER.COMPANY_ID = COMPANY.COMPANY_ID " +
                 "WHERE FIRST_NAME LIKE '" + firstName + "%' " +
-                "AND LAST_NAME LIKE '" + secondName + "%' " +
-                "AND COMPANY_NAME LIKE '" + companyName +"%'";
+                "AND LAST_NAME LIKE '" + secondName + "%'";
 
         PreparedStatement ps = con.prepareStatement(sql);
 
