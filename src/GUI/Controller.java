@@ -2,10 +2,7 @@ package GUI;
 
 import cryptography.CryptoConverter;
 import database.Transaction;
-import datagramInterfaces.GetBalanceRespond;
-import datagramInterfaces.NodeRespond;
-import datagramInterfaces.PreviousHashesRespond;
-import datagramInterfaces.TransactionRespond;
+import datagramInterfaces.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import wallet.Wallet;
@@ -340,8 +337,31 @@ public class Controller {
         this.mainView.setSearchWalletScreen(e -> {
             System.out.println("setSendButtonWalletScreen");
             System.out.println(this.mainView.getSurnameTextFieldWalletScreen());
+            System.out.println(this.mainView.getNameTextFieldWalletScreen());
 
-            searchBySurname = new reciveDialog(this.mainView.getSurnameTextFieldWalletScreen());
+            try {
+                wallet.findPublicKey(this.mainView.getNameTextFieldWalletScreen(), this.mainView.getSurnameTextFieldWalletScreen());
+
+                DatagramPacket packet = wallet.listenToNodeRespond();
+                NodeRespond respond = wallet.unpackRespond(packet);
+
+                FindPublicKeyRespond r = (FindPublicKeyRespond) respond;
+                List<String> publicKeys = r.getPublicKeys();
+
+                for (String publicKey : publicKeys) {
+                    System.out.println(publicKey);
+
+                    searchBySurname = new reciveDialog(publicKey);
+
+                }
+
+            } catch (IOException | ClassNotFoundException e1) {
+                e1.printStackTrace();
+            }
+
+
+
+
             searchBySurname.showAndWait();
         });
 

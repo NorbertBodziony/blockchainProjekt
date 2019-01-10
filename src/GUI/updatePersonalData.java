@@ -92,9 +92,10 @@ public class updatePersonalData extends Dialog<Nine<String>> {
         Node loginButton = this.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
 
-        name.textProperty().addListener((observable, oldValue, newValue) -> {
+        apartment_number.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
         });
+
 
         this.getDialogPane().setContent(grid);
 
