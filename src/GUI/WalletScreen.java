@@ -20,7 +20,8 @@ import java.util.Optional;
 
 public class WalletScreen extends GridPane {
 
-    Button send, recive, home, refresh, refreshHistory;
+    Button send, recive, home, refresh, refreshHistory, addPersonalData, search;
+    TextField surname;
 
     String sendTo;
     String sendToAmount;
@@ -207,11 +208,50 @@ public class WalletScreen extends GridPane {
             refresh.setStyle("-fx-background-color: #53f442; ");
         });
 
+        addPersonalData = new Button("Add Personal Data: ");
+
+        addPersonalData.setPrefSize(220, 30);
+        addPersonalData.setStyle("-fx-background-color: #53f442; ");
+
+        addPersonalData.setOnMouseEntered(e ->
+        {
+            addPersonalData.setStyle("-fx-background-color: #20a013; ");
+        });
+        addPersonalData.setOnMouseExited(e ->
+        {
+            addPersonalData.setStyle("-fx-background-color: #53f442; ");
+        });
+        Label surnameLabel = new Label("Surname: ");
+        surname = new TextField();
+        search = new Button("Search");
+
+        search.setPrefSize(220, 30);
+        search.setStyle("-fx-background-color: #53f442; ");
+
+        search.setOnMouseEntered(e ->
+        {
+            search.setStyle("-fx-background-color: #20a013; ");
+        });
+        search.setOnMouseExited(e ->
+        {
+            search.setStyle("-fx-background-color: #53f442; ");
+        });
+
+
+
         this.add(send, 1, 0);
         this.add(recive, 2, 0);
         this.add(labelAmout, 1, 1);
         this.add(refresh, 2, 1);
-        this.add(home, 1, 2);
+        this.add(home, 2, 2);
+        this.add(addPersonalData, 1, 2);
+        this.add(surnameLabel, 1, 3);
+        this.add(surname, 1, 4);
+        this.add(search, 1, 5);
+
+
+
+
 
 
         this.add(historyOftransaction, 3, 0);
@@ -266,6 +306,7 @@ public class WalletScreen extends GridPane {
         refresh.setOnAction(actionEventEventHandler);
     }
 
+
     public void setLabelAmout(String am)
     {
         labelAmout.setText("Your amount: " + am);
@@ -310,5 +351,21 @@ public class WalletScreen extends GridPane {
     public String getSpecAccont()
     {
         return specAccount.getText();
+    }
+
+    public String getSurnameTextField() {
+        return surname.getText();
+    }
+
+    public void clearSurnameTextField() {
+        surname.clear();
+    }
+
+    public void setAddPersonalData(EventHandler<ActionEvent> actionEventEventHandler) {
+        addPersonalData.setOnAction(actionEventEventHandler);
+    }
+
+    public void setSearch(EventHandler<ActionEvent> actionEventEventHandler) {
+        search.setOnAction(actionEventEventHandler);
     }
 }

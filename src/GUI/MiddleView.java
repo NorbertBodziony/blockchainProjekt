@@ -13,7 +13,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -327,6 +326,22 @@ public class MiddleView extends StackPane {
     public String getSpecAccontWalletScreen()
     {
         return walletScreen.getSpecAccont();
+    }
+
+    public String getSurnameTextFieldWalletScreen() {
+        return walletScreen.getSurnameTextField();
+    }
+
+    public void clearSurnameTextFieldWalletScreen() {
+        walletScreen.clearSurnameTextField();
+    }
+
+    public void setAddPersonalDataWalletScreen(EventHandler<ActionEvent> actionEventEventHandler) {
+        walletScreen.setAddPersonalData(actionEventEventHandler);
+    }
+
+    public void setSearchWalletScreen(EventHandler<ActionEvent> actionEventEventHandler) {
+        walletScreen.setSearch(actionEventEventHandler);
     }
 
 

@@ -235,6 +235,22 @@ public class MainView extends Application {
         return middleView.getSpecAccontWalletScreen();
     }
 
+    public String getSurnameTextFieldWalletScreen() {
+        return middleView.getSurnameTextFieldWalletScreen();
+    }
+
+    public void clearSurnameTextFieldWalletScreen() {
+        middleView.clearSurnameTextFieldWalletScreen();
+    }
+
+    public void setAddPersonalDataWalletScreen(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setAddPersonalDataWalletScreen(actionEventEventHandler);
+    }
+
+    public void setSearchWalletScreen(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setSearchWalletScreen(actionEventEventHandler);
+    }
+
 
 
 }

@@ -1,6 +1,5 @@
 package GUI;
 
-import constants.Constants;
 import cryptography.CryptoConverter;
 import database.Transaction;
 import datagramInterfaces.GetBalanceRespond;
@@ -31,8 +30,9 @@ public class Controller {
     private Wallet wallet;
     private Utility utils;
     private keysDialog keysDialog;
-    private reciveDialog reciveDialog;
+    private reciveDialog reciveDialog, searchBySurname;
     private sendDialog sendDialog;
+    private updatePersonalData updatePersonalData;
 
 
     public Controller(MainView mainView, Wallet wallet) throws Exception {
@@ -46,6 +46,8 @@ public class Controller {
 
 
         this.mainView.setGenerateWalletButton(new listenForGenerateNewWallet());
+
+        this.mainView.clearSurnameTextFieldWalletScreen();
 
         this.mainView.setReciveButtonWalletScreen(e ->
         {
@@ -190,7 +192,7 @@ public class Controller {
                         }
                     } else if (mainView.getSelectedRadioButtonWalletScreen().equals("Entire network"))
                     {
-                            mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + "To: " + t.getRecipient()  + " From: " + (t.getSender() == null ? "Genesis Block" : t.getSender()));
+                        mainView.setInTextAreaWalletScreen(" Amount: " + t.getAmount() + " To: " + t.getRecipient() + " From: " + (t.getSender() == null ? " Genesis Block" : t.getSender()));
 
                     }
                     else if (mainView.getSelectedRadioButtonWalletScreen().equals("Specified account"))
@@ -333,6 +335,25 @@ public class Controller {
 
 
             });
+        });
+
+        this.mainView.setSearchWalletScreen(e -> {
+            System.out.println("setSendButtonWalletScreen");
+            System.out.println(this.mainView.getSurnameTextFieldWalletScreen());
+
+            searchBySurname = new reciveDialog(this.mainView.getSurnameTextFieldWalletScreen());
+            searchBySurname.showAndWait();
+        });
+
+        this.mainView.setAddPersonalDataWalletScreen(e ->
+        {
+            updatePersonalData = new updatePersonalData();
+
+            updatePersonalData.showAndWait().ifPresent(handler -> {
+                System.out.println("Name=" + handler.getFirst() + ", Surname: " + handler.getSecond() + "Company: " + handler.getThird());
+
+            });
+
         });
 
         this.mainView.setLoginButtonLoginUsingSavedWallet(new listenForLoginUsingSavedWallet());

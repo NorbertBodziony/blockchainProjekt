@@ -8,13 +8,12 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.StageStyle;
-import javafx.util.Pair;
 
-public class sendDialog extends Dialog<Pair<String, String>> {
+public class updatePersonalData extends Dialog<Triplet<String, String, String>> {
     double xOffset;
     double yOffset;
 
-    public sendDialog() {
+    public updatePersonalData() {
         this.setTitle("Send");
         this.setHeaderText(null);
         this.setGraphic(null);
@@ -33,30 +32,36 @@ public class sendDialog extends Dialog<Pair<String, String>> {
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField amount = new TextField();
-        amount.setPromptText("Amount");
-        TextField recipent = new TextField();
-        recipent.setPromptText("Adress");
+        TextField name = new TextField();
+        name.setPromptText("Name");
+        TextField surname = new TextField();
+        surname.setPromptText("Surname");
 
-        grid.add(new Label("Amount:"), 0, 0);
-        grid.add(amount, 1, 0);
-        grid.add(new Label("Address:"), 0, 1);
-        grid.add(recipent, 1, 1);
+        TextField company = new TextField();
+        company.setPromptText("Company");
+
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(name, 1, 0);
+        grid.add(new Label("Surname:"), 0, 1);
+        grid.add(surname, 1, 1);
+
+        grid.add(new Label("Company:"), 0, 2);
+        grid.add(company, 1, 2);
 
         Node loginButton = this.getDialogPane().lookupButton(loginButtonType);
         loginButton.setDisable(true);
 
-        amount.textProperty().addListener((observable, oldValue, newValue) -> {
+        name.textProperty().addListener((observable, oldValue, newValue) -> {
             loginButton.setDisable(newValue.trim().isEmpty());
         });
 
         this.getDialogPane().setContent(grid);
 
-        Platform.runLater(() -> amount.requestFocus());
+        Platform.runLater(() -> name.requestFocus());
 
         this.setResultConverter(dialogButton -> {
             if (dialogButton == loginButtonType) {
-                return new Pair<>(amount.getText(), recipent.getText());
+                return new Triplet<>(name.getText(), surname.getText(), company.getText());
             }
             return null;
         });
@@ -97,3 +102,4 @@ public class sendDialog extends Dialog<Pair<String, String>> {
 
     }
 }
+
