@@ -7,7 +7,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.layout.*;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import wallet.Wallet;
@@ -62,12 +62,12 @@ public class MainView extends Application {
             stage.setY(e.getScreenY() - yOffset);
         });
 
-        javafx.scene.image.Image image = new javafx.scene.image.Image(getClass().getResource("back3.png").toExternalForm());
+        /*javafx.scene.image.Image image = new javafx.scene.image.Image(getClass().getResource("back3.png").toExternalForm());
 
         BackgroundImage myBI = new BackgroundImage(image,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
-        vBox.setBackground(new Background(myBI));
+        vBox.setBackground(new Background(myBI));*/
 
 
         Scene scene = new Scene(vBox, WIDTH, HEIGHT);
