@@ -31,8 +31,13 @@ public class CreateANewWallet extends GridPane {
         walletLabel.setTextFill(Color.WHITE);
 
         passwordField = new PasswordField();
+        passwordField.setPromptText("Password: ");
         repeatPassword = new PasswordField();
+        repeatPassword.setPromptText("Repeat password: ");
+
+
         walletName = new TextField();
+        walletName.setPromptText("Name: ");
 
         text.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
 
@@ -49,8 +54,8 @@ public class CreateANewWallet extends GridPane {
 
         this.add(passwordField, 1, 1, 2, 1);
         this.add(repeatPassword, 1, 2, 2, 1);
-        this.add(walletLabel, 1, 3);
-        this.add(walletName, 2, 3);
+        //this.add(walletLabel, 2, 3);
+        this.add(walletName, 1, 3);
 
         HBox hBox = new HBox();
         hBox.getChildren().addAll(generateWalletButton, home);

@@ -355,8 +355,10 @@ public class Controller {
                     searchBySurname = new reciveDialog(publicKey);
 
                 }*/
-               if(publicKeys.size() == 0)
+               if(publicKeys.size() == 0) {
+                   System.out.println("Pub key: " + publicKeys.size());
                    searchBySurname = new reciveDialog("not found");
+               }
                 else
                     searchBySurname = new reciveDialog(publicKeys.get(0));
 
@@ -413,12 +415,16 @@ public class Controller {
                     DatagramPacket packet;
                     NodeRespond respond;
 
-                    wallet.setPersonalData(wallet.getAddress(), 1, handler.getFirst(), handler.getSecond(),
-                            handler.getThird(), handler.getFour(), handler.getFive(), handler.getSix(), handler.getSeven(),
-                            handler.getEight());
+                    wallet.setPersonalData(wallet.getAddress(), Integer.parseInt(handler.getThird()), handler.getFirst(), handler.getSecond(),
+                            handler.getFour(), handler.getFive(), handler.getSix(), handler.getSeven(),
+                            handler.getEight(), handler.getNine());
 
-                  /* wallet.setPersonalData(wallet.getAddress(), handler.getFirst(),  handler.getSecond(),
-                           handler.getThird(),  handler.getFour(),  handler.getFive(), handler.getSix() , handler.getSeven(),
+                    System.out.println("ID" + Integer.parseInt(handler.getThird()) + "Name" + handler.getFirst() + "Surname" + handler.getSecond() +
+                            "Email" + handler.getFour() + "Country" + handler.getFive() + "Postal Code" + handler.getSix() + "City" + handler.getSeven() +
+                            "Street" + handler.getEight() + "Apartment" + handler.getNine());
+
+                  /* wallet.setPersonalData(wallet.getAddress(), Integer.parseInt(handler.getThird()), handler.getFirst(),  handler.getSecond(),
+                           handler.getFour(),  handler.getFive(), handler.getSix() , handler.getSeven(),
                            handler.getEight(),handler.getNine());*/
 
                     packet = wallet.listenToNodeRespond();
@@ -546,6 +552,8 @@ public class Controller {
                     mainView.setWalletsLoginUsingSavedWallet(utils.getListOfWallets().toArray(new String[0]));
 
                     System.out.println("Password Equals ");
+                    mainView.setScreenVisible("mainPanel");
+
                 } else {
                     System.out.println("Password not equal");
                 }
