@@ -355,7 +355,10 @@ public class Controller {
                     searchBySurname = new reciveDialog(publicKey);
 
                 }*/
-                searchBySurname = new reciveDialog(publicKeys.get(0));
+               if(publicKeys.size() == 0)
+                   searchBySurname = new reciveDialog("not found");
+                else
+                    searchBySurname = new reciveDialog(publicKeys.get(0));
 
 
             } catch (IOException | ClassNotFoundException e1) {
