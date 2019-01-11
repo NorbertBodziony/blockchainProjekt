@@ -8,6 +8,7 @@ public class Transaction implements Serializable {
     private String recipient;
     private int amount;
     private Timestamp transactionTime;
+    static final long serialVersionUID = 42L;
 
     public Transaction(String sender, String recipient, int amount, Timestamp transactionTime) {
         this.sender = sender;

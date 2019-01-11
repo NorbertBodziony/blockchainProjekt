@@ -30,6 +30,7 @@ public class Controller {
     private reciveDialog reciveDialog, searchBySurname;
     private sendDialog sendDialog;
     private updatePersonalData updatePersonalData;
+    private addCompanyDialog addCompanyDialog;
 
 
     public Controller(MainView mainView, Wallet wallet) throws Exception {
@@ -348,12 +349,14 @@ public class Controller {
                 FindPublicKeyRespond r = (FindPublicKeyRespond) respond;
                 List<String> publicKeys = r.getPublicKeys();
 
-                for (String publicKey : publicKeys) {
+               /* for (String publicKey : publicKeys) {
                     System.out.println(publicKey);
 
                     searchBySurname = new reciveDialog(publicKey);
 
-                }
+                }*/
+                searchBySurname = new reciveDialog(publicKeys.get(0));
+
 
             } catch (IOException | ClassNotFoundException e1) {
                 e1.printStackTrace();
@@ -363,6 +366,38 @@ public class Controller {
 
 
             searchBySurname.showAndWait();
+        });
+
+        this.mainView.setAddCompanyMainView(e ->
+        {
+            addCompanyDialog = new addCompanyDialog();
+
+            addCompanyDialog.showAndWait().ifPresent(handler -> {
+                System.out.println("Name=" + handler.getFirst() + ", Surname: " + handler.getSecond() + "Company: " + handler.getThird());
+                try {
+                    DatagramPacket packet;
+                    NodeRespond respond;
+
+
+                    wallet.addCompany(handler.getFirst(), handler.getSecond(),
+                            handler.getThird(), handler.getFour(), handler.getFive(), handler.getSix(), handler.getSeven(),
+                            handler.getEight(), handler.getNine());
+
+
+                    packet = wallet.listenToNodeRespond();
+                    respond = wallet.unpackRespond(packet);
+
+                    AddCompanyRespond companyRespond = (AddCompanyRespond) respond;
+
+                    System.out.println(companyRespond.getCompanyId());
+
+
+                } catch (IOException | ClassNotFoundException e10) {
+                    e10.printStackTrace();
+                }
+
+            });
+
         });
 
         this.mainView.setAddPersonalDataWalletScreen(e ->

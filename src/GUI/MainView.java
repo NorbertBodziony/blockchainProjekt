@@ -255,5 +255,8 @@ public class MainView extends Application {
         return middleView.getNameTextFieldWalletScreen();
     }
 
+    public void setAddCompanyMainView(EventHandler<ActionEvent> actionEventEventHandler) {
+        middleView.setAddCompany(actionEventEventHandler);
+    }
 
 }

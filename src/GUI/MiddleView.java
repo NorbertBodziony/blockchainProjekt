@@ -27,6 +27,8 @@ public class MiddleView extends StackPane {
     private Button createWallet;
     private Button manageSetting;
     private Button generateKeys;
+    private Button addCompany;
+
     private String publicKey = "null";
     private String privateKey = "null2";
     private GridPane mainPanel;
@@ -78,12 +80,14 @@ public class MiddleView extends StackPane {
         createWallet = new Button("Create a new wallet");
         manageSetting = new Button("Manage wallet settings");
         generateKeys = new Button("Generate keys");
+        addCompany = new Button("Add company: ");
 
         buttonList.add(loginUsingPrivKey);
         buttonList.add(loginUsingWallet);
         buttonList.add(createWallet);
         buttonList.add(manageSetting);
         buttonList.add(generateKeys);
+        buttonList.add(addCompany);
 
 
         for (Button but : buttonList) {
@@ -110,6 +114,7 @@ public class MiddleView extends StackPane {
         mainPanel.add(createWallet, 1, 1);
         mainPanel.add(manageSetting, 2, 1);
         mainPanel.add(generateKeys, 3, 0);
+        mainPanel.add(addCompany, 3, 1);
 
 
         loginUsingWallet.setOnAction(e ->
@@ -245,6 +250,10 @@ public class MiddleView extends StackPane {
 
     public void setLoginButtonLoginUsingSavedWallet(EventHandler<ActionEvent> actionEventEventHandler) {
         loginUsingSavedWalled.setLoginButton(actionEventEventHandler);
+    }
+
+    public void setAddCompany(EventHandler<ActionEvent> actionEventEventHandler) {
+        addCompany.setOnAction(actionEventEventHandler);
     }
 
     public String getPasswordLoginUsingSavedWallet() throws Exception {
