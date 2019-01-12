@@ -8,7 +8,10 @@ import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.StageStyle;
 import javafx.util.Pair;
@@ -28,6 +31,7 @@ public class reciveDialog extends Dialog<Pair<String, String>> {
         this.setHeaderText(null);
         this.setGraphic(null);
         this.initStyle(StageStyle.UNDECORATED);
+
         //this.setHeight(1000);
         //this.setWidth(1000);
         //this.getDialogPane().setStyle("-fx-background-color: #20a013; ");
@@ -65,13 +69,14 @@ public class reciveDialog extends Dialog<Pair<String, String>> {
 
         Platform.runLater(() -> publicKeyField.requestFocus());
 
-
+/*
         javafx.scene.image.Image image = new javafx.scene.image.Image(getClass().getResource("back3.png").toExternalForm());
 
         BackgroundImage myBI = new BackgroundImage(image,
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
-        this.getDialogPane().setBackground(new Background(myBI));
+        this.getDialogPane().setBackground(new Background(myBI));*/
+        this.getDialogPane().setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
 
         this.getDialogPane().setOnMousePressed(new EventHandler<MouseEvent>() {

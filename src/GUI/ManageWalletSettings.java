@@ -7,7 +7,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -23,7 +22,7 @@ public class ManageWalletSettings extends GridPane {
 
     public ManageWalletSettings() {
         text = new Label("Manage your wallets: ");
-        text.setTextFill(Color.WHITE);
+        // text.setTextFill(Color.WHITE);
         text.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
 
 

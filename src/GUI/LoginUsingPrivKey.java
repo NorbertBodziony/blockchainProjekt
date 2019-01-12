@@ -5,7 +5,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -37,7 +36,7 @@ public class LoginUsingPrivKey extends GridPane {
 
 
         text.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
-        text.setTextFill(Color.WHITE);
+        // text.setTextFill(Color.WHITE);
 
 
         login = new Button("Login");

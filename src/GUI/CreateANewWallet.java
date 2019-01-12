@@ -8,7 +8,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
@@ -26,9 +25,9 @@ public class CreateANewWallet extends GridPane {
 
     public CreateANewWallet() {
         text = new Label("Choose a passphrase to encrypt your private key: ");
-        text.setTextFill(Color.WHITE);
+        //text.setTextFill(Color.WHITE);
         walletLabel = new Label("Wallet Name: ");
-        walletLabel.setTextFill(Color.WHITE);
+        // walletLabel.setTextFill(Color.WHITE);
 
         passwordField = new PasswordField();
         passwordField.setPromptText("Password: ");

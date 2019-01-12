@@ -69,6 +69,7 @@ public class MainView extends Application {
                 BackgroundSize.DEFAULT);
         vBox.setBackground(new Background(myBI));*/
 
+//        vBox.setBackground(new Background(new BackgroundFill(Color.GRAY, CornerRadii.EMPTY, Insets.EMPTY)));
 
         Scene scene = new Scene(vBox, WIDTH, HEIGHT);
 

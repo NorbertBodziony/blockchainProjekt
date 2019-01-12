@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -70,9 +69,9 @@ public class WalletScreen extends GridPane {
         button2.setSelected(true);
         button3.setToggleGroup(group);
 
-        button1.setTextFill(Color.WHITE);
+       /* button1.setTextFill(Color.WHITE);
         button2.setTextFill(Color.WHITE);
-        button3.setTextFill(Color.WHITE);
+        button3.setTextFill(Color.WHITE);*/
 
         name = new TextField();
         button3.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -120,7 +119,7 @@ public class WalletScreen extends GridPane {
         labelAmout = new Label();
         text = "Your amout: ";
         labelAmout.setText("Your amount: ");
-        labelAmout.setTextFill(Color.WHITE);
+        // labelAmout.setTextFill(Color.WHITE);
         historyOftransaction = new Label("History of transaction: ");
 
         Income = new Label("Income: ");
@@ -130,16 +129,16 @@ public class WalletScreen extends GridPane {
         checkBox1 = new CheckBox("Search by date: ");
 
         Income.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 15));
-        Income.setTextFill(Color.WHITE);
+        // Income.setTextFill(Color.WHITE);
 
         Outcome.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 15));
-        Outcome.setTextFill(Color.WHITE);
+        // Outcome.setTextFill(Color.WHITE);
 
         StartTime.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 15));
-        StartTime.setTextFill(Color.WHITE);
+        // StartTime.setTextFill(Color.WHITE);
 
         StopTime.setFont(Font.font(null, FontWeight.EXTRA_BOLD, 15));
-        StopTime.setTextFill(Color.WHITE);
+        // StopTime.setTextFill(Color.WHITE);
 
         start.setPrefWidth(130);
         stop.setPrefWidth(130);
@@ -149,10 +148,10 @@ public class WalletScreen extends GridPane {
 
 
         labelAmout.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
-        labelAmout.setTextFill(Color.WHITE);
+        //labelAmout.setTextFill(Color.WHITE);
         historyOftransaction.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
         historyOftransaction.setTextAlignment(TextAlignment.CENTER);
-        historyOftransaction.setTextFill(Color.WHITE);
+        // historyOftransaction.setTextFill(Color.WHITE);
 
         send = new Button("Send");
         recive = new Button("Recive");
