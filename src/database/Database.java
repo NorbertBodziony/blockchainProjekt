@@ -734,7 +734,7 @@ public class Database {
     }
 
     public static int GetLastIdPersonalData(Connection con) throws SQLException {
-        String sql = ("Select max(Customer_ID from Customer ");
+        String sql = ("Select max(Customer_ID) from Customer ");
 
         PreparedStatement pstmt = con.prepareStatement(sql);
         ResultSet rs =pstmt.executeQuery();

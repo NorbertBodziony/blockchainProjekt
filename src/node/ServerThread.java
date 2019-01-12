@@ -81,6 +81,9 @@ public class ServerThread extends Thread {
                     Company company = (Company) inFromUser.readObject();
                     if(Database.Companyexist(connection,Id)==false){
                    new AddCompany( company, address, clientTCP).handle(connection);}
+                    else {
+                        System.out.println("data exist");
+                    }
                 }
                 if (request.equals(TCPinterface.TCPid.PersonalData)) {
                     System.out.println("new PersonalData");
@@ -89,7 +92,10 @@ public class ServerThread extends Thread {
                     Customer customer = (Customer) inFromUser.readObject();
                     if(Database.GetLastIdPersonalData(connection)<Id){
                     new SetPersonalData(customer,address,clientTCP);
-                }}
+                }else {
+                        System.out.println("data exist");
+                    }
+                }
                 sleep(1000);
             }
         } catch (IOException e) {

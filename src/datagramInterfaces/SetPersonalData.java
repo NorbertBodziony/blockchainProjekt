@@ -81,13 +81,13 @@ public class SetPersonalData extends WalletRequest {
         }catch (SQLException e){
             return new NodeRespond(DB_CONNECTION);
         }
-
+        int Id=Database.GetLastIdPersonalData(con);
         if(clientTCP!=null){
 
             System.out.println("Sending to clients ="+clientTCP.size());
             for(int i=0;i<clientTCP.size();i++) {
                 System.out.println("PERFORMIG TCP TRANSACTION");
-             //   clientTCP.get(i).SendPersonalData(Id,address,customer);
+                clientTCP.get(i).SendPersonalData(Id,address,customer);
             }
         }
         else
