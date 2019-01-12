@@ -17,8 +17,8 @@ public class Database {
     public static String hostname = "localhost";
     public static String dbName = "orcl";
     public static String url = "jdbc:oracle:thin:@" + hostname + ":1521:" + dbName;
-    public static String user = "infamia";
-    public static String password = "nic23ponito32";
+    public static String user = "5BLOCKCHAIN";
+    public static String password = "admin";
 
     static {
         if(!loadDriver())
@@ -718,4 +718,18 @@ public class Database {
         return publicKey;
     }
 
+    public static boolean Companyexist(Connection con,int Id) throws SQLException {
+        String sql = ("Select * from Company where COMPANY_ID=? ");
+
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        pstmt.setInt(1,Id);
+        ResultSet rs =pstmt.executeQuery();
+        if(rs.next())
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
+    }
 }

@@ -3,23 +3,30 @@ package datagramInterfaces;
 import account.Address;
 import account.Company;
 import database.Database;
+import node.ClientTCP;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import static datagramInterfaces.ErrorCode.*;
 
 public class AddCompany extends WalletRequest {
     private Address address;
     private Company company;
-
+    List<ClientTCP> clientTCP;
 
     public AddCompany(String companyName, String sector, String contactTel, String contactEmail, String country,
                       String postalCode, String city, String street, String apartmentNumber) {
 
         this.company = new Company(companyName, sector, contactTel, contactEmail);
         this.address = new Address(country, postalCode, city, street, apartmentNumber);
+    }
+    public AddCompany(Company company,Address address ,List<ClientTCP> clientTCP) {
+        this.company = company;
+        this.address = address;
+        this.clientTCP=clientTCP;
     }
 
 
@@ -62,6 +69,20 @@ public class AddCompany extends WalletRequest {
     @Override
     public NodeRespond handle(Connection con) throws SQLException, IOException {
         int companyId = Database.addCompany(con, this);
+
+        if(clientTCP!=null){
+
+            System.out.println("Sending to clients ="+clientTCP.size());
+            for(int i=0;i<clientTCP.size();i++) {
+                System.out.println("PERFORMING TCP COMPANY");
+                clientTCP.get(i).SendCompany(companyId,address,company);
+            }
+        }
+        else
+        {
+            System.out.println("client are empty");
+        }
+
         return new AddCompanyRespond(OK, companyId);
     }
 }

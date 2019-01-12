@@ -1,6 +1,9 @@
 package node;
 
 import account.Account;
+import account.Address;
+import account.Company;
+import account.Customer;
 import account.ReceiveBlock;
 import account.SendBlock;
 import constants.Constants;
@@ -90,6 +93,30 @@ public class ClientTCP implements Runnable {
         outToServer.writeObject(account);
         outToServer.writeObject(genesisBlock);
     }
+
+    public void SendCompany(int Id,Address address, Company company) throws IOException {
+        ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+
+        TCPinterface.TCPid request=TCPinterface.TCPid.Company;
+
+        outToServer.writeObject(request);
+        outToServer.writeObject(Id);
+        outToServer.writeObject(address);
+        outToServer.writeObject(company);
+    }
+
+    public void SendPersonalData(int Id,Address address, Customer customer) throws IOException {
+        ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+
+        TCPinterface.TCPid request=TCPinterface.TCPid.PersonalData;
+
+        outToServer.writeObject(request);
+        outToServer.writeObject(Id);
+        outToServer.writeObject(address);
+        outToServer.writeObject(customer);
+    }
+
+
     @Override
     public void run() {
         while(true)

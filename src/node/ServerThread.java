@@ -1,9 +1,8 @@
 package node;
 
-import account.Account;
-import account.ReceiveBlock;
-import account.SendBlock;
+import account.*;
 import database.Database;
+import datagramInterfaces.AddCompany;
 import datagramInterfaces.CreateAccount;
 import datagramInterfaces.PerformTransaction;
 import datagramInterfaces.TCPinterface;
@@ -54,6 +53,7 @@ public class ServerThread extends Thread {
                         e.printStackTrace();
                     }
                     System.out.println(connectionSocket.getInetAddress());
+                    System.out.println(connectionSocket.toString());
 
                     clientTCP.add(new ClientTCP(new Socket(connectionSocket.getInetAddress(), 6666)));
                     new Thread(clientTCP.get(clientTCP.size() - 1)).start();
@@ -76,6 +76,21 @@ public class ServerThread extends Thread {
                     } else {
                         new CreateAccount(account, receiveBlock, clientTCP).handle(connection);
                     }
+                }
+                if (request.equals(TCPinterface.TCPid.Company)) {
+                    System.out.println("new Company");
+                    int Id= (int) inFromUser.readObject();
+                    Address address = (Address) inFromUser.readObject();
+                    Company company = (Company) inFromUser.readObject();
+                    if(Database.Companyexist(connection,Id)==false){
+                   new AddCompany( company, address, clientTCP).handle(connection);}
+                }
+                if (request.equals(TCPinterface.TCPid.PersonalData)) {
+                    System.out.println("new PersonalData");
+                    int Id= (int) inFromUser.readObject();
+                    Address address = (Address) inFromUser.readObject();
+                    Customer customer = (Customer) inFromUser.readObject();
+                  //  new PerformTransaction(sendBlock, receiveBlock, clientTCP, TCPnodes).handle(connection);
                 }
                 sleep(1000);
             }

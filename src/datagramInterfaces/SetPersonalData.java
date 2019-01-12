@@ -3,17 +3,19 @@ package datagramInterfaces;
 import account.Address;
 import account.Customer;
 import database.Database;
+import node.ClientTCP;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import static datagramInterfaces.ErrorCode.*;
 
 public class SetPersonalData extends WalletRequest {
     private Customer customer;
     private Address address;
-
+    List<ClientTCP> clientTCP;
 
 
     public SetPersonalData( String publicKey,  int companyId,  String firstName,  String lastName,
@@ -25,6 +27,11 @@ public class SetPersonalData extends WalletRequest {
         this.customer = new Customer(publicKey, companyId, firstName, lastName, contactEmail);
         if(setAddress)
             this.address = new Address(country, postalCode, city, street, apartmentNumber);
+    }
+    public SetPersonalData(Customer customer,Address address ,List<ClientTCP> clientTCP) {
+        this.customer=customer;
+        this.address=address;
+        this.clientTCP=clientTCP;
     }
 
     public String getPublicKey() { return customer.getPublicKey(); }
@@ -70,6 +77,19 @@ public class SetPersonalData extends WalletRequest {
             Database.setPersonalData(con, this);
         }catch (SQLException e){
             return new NodeRespond(DB_CONNECTION);
+        }
+
+        if(clientTCP!=null){
+
+            System.out.println("Sending to clients ="+clientTCP.size());
+            for(int i=0;i<clientTCP.size();i++) {
+                System.out.println("PERFORMIG TCP TRANSACTION");
+             //   clientTCP.get(i).SendPersonalData(Id,address,customer);
+            }
+        }
+        else
+        {
+            System.out.println("client are empty");
         }
         return new NodeRespond(OK);
     }
