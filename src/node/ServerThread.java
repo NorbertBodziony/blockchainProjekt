@@ -2,10 +2,7 @@ package node;
 
 import account.*;
 import database.Database;
-import datagramInterfaces.AddCompany;
-import datagramInterfaces.CreateAccount;
-import datagramInterfaces.PerformTransaction;
-import datagramInterfaces.TCPinterface;
+import datagramInterfaces.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -90,8 +87,9 @@ public class ServerThread extends Thread {
                     int Id= (int) inFromUser.readObject();
                     Address address = (Address) inFromUser.readObject();
                     Customer customer = (Customer) inFromUser.readObject();
-                  //  new PerformTransaction(sendBlock, receiveBlock, clientTCP, TCPnodes).handle(connection);
-                }
+                    if(Database.GetLastIdPersonalData(connection)<Id){
+                    new SetPersonalData(customer,address,clientTCP);
+                }}
                 sleep(1000);
             }
         } catch (IOException e) {

@@ -732,4 +732,16 @@ public class Database {
             return false;
         }
     }
+
+    public static int GetLastIdPersonalData(Connection con) throws SQLException {
+        String sql = ("Select max(Customer_ID from Customer ");
+
+        PreparedStatement pstmt = con.prepareStatement(sql);
+        ResultSet rs =pstmt.executeQuery();
+        if(rs.next())
+        {
+            return rs.getInt(1);
+        }
+        return 0;
+    }
 }
