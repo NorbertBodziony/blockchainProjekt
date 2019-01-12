@@ -263,8 +263,8 @@ public class Database {
 
         return AddressData;
     }
-    public static List<Company> GetCompany(Connection con) throws SQLException {
-        List<Company> Company=new ArrayList<>();
+    public static List<database.Company> GetCompany(Connection con) throws SQLException {
+        List<database.Company> Company=new ArrayList<>();
         Statement st = con.createStatement();
         System.out.println("GetAddressData");
         String sql = ("SELECT * FROM COMPANY");
@@ -284,8 +284,8 @@ public class Database {
 
         return Company;
     }
-    public static List<Customer> GetCustomer(Connection con) throws SQLException {
-        List<Customer> Customer=new ArrayList<>();
+    public static List<database.Customer> GetCustomer(Connection con) throws SQLException {
+        List<database.Customer> Customer=new ArrayList<>();
         Statement st = con.createStatement();
         System.out.println("GetAddressData");
         String sql = ("SELECT * FROM CUSTOMER");

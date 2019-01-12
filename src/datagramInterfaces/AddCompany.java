@@ -17,6 +17,10 @@ public class AddCompany extends WalletRequest {
     private Company company;
     List<ClientTCP> clientTCP;
 
+    public void setClientTCP(List<ClientTCP> clientTCP) {
+        this.clientTCP = clientTCP;
+    }
+
     public AddCompany(String companyName, String sector, String contactTel, String contactEmail, String country,
                       String postalCode, String city, String street, String apartmentNumber) {
 

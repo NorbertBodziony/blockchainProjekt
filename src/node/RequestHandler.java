@@ -51,6 +51,14 @@ public class RequestHandler implements Runnable {
             {
                 ((CreateAccount)request).setClientTCP(clientTCP);
             }
+            if(request.getClass()==AddCompany.class)
+            {
+                ((AddCompany)request).setClientTCP(clientTCP);
+            }
+            if(request.getClass()==SetPersonalData.class)
+            {
+                ((SetPersonalData)request).setClientTCP(clientTCP);
+            }
             if(request instanceof GetTransactionHistory) {
                 List<NodeRespond> responds = ((GetTransactionHistory) request).handleHistory(connection);
                 for(NodeRespond respond : responds)

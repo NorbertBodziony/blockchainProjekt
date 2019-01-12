@@ -17,10 +17,13 @@ public class SetPersonalData extends WalletRequest {
     private Address address;
     List<ClientTCP> clientTCP;
 
+    public void setClientTCP(List<ClientTCP> clientTCP) {
+        this.clientTCP = clientTCP;
+    }
 
-    public SetPersonalData( String publicKey,  int companyId,  String firstName,  String lastName,
-                            String contactEmail,  String country, String postalCode,
-                            String city, String street, String apartmentNumber) {
+    public SetPersonalData(String publicKey, int companyId, String firstName, String lastName,
+                           String contactEmail, String country, String postalCode,
+                           String city, String street, String apartmentNumber) {
         boolean setAddress = country != null && postalCode != null &&
                 city != null && street != null && apartmentNumber != null;
 
