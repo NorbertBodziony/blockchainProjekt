@@ -529,8 +529,11 @@ public class Controller {
 
         @Override
         public void handle(ActionEvent actionEvent) {
+
+            List<String> util = new Utility().getListOfWallets();
             try {
-                if (mainView.getCreateNewWalletPassword().equals(mainView.getCreateNewWalletPassword2())) {
+
+                if (mainView.getCreateNewWalletPassword().equals(mainView.getCreateNewWalletPassword2()) && !(util.contains(mainView.getCreateNewWalletWalletName() + ".wallet"))) {
                     try {
                         wallet.createAccount();
                         DatagramPacket packet = wallet.listenToNodeRespond();
@@ -557,7 +560,7 @@ public class Controller {
                     mainView.setScreenVisible("mainPanel");
 
                 } else {
-                    System.out.println("Password not equal");
+                    System.out.println("Password not equal or name exist");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

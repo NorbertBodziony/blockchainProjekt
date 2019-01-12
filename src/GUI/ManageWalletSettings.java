@@ -7,6 +7,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -20,6 +21,8 @@ public class ManageWalletSettings extends GridPane {
 
     private PasswordField passwordField;
 
+    private HBox hBox, hBox1;
+
 
     public ManageWalletSettings() {
         text = new Label("Manage your wallets: ");
@@ -32,19 +35,28 @@ public class ManageWalletSettings extends GridPane {
         viewButton = new Button("View");
         passwordField = new PasswordField();
         passwordField.setPromptText("Password");
-        passwordField.setMaxWidth(150);
+        passwordField.setMinWidth(100);
 
         wallets = new ChoiceBox<>();
-        wallets.setMaxWidth(150);
+        wallets.setMinWidth(100);
         wallets.getSelectionModel().selectFirst();
 
+        hBox = new HBox();
+        hBox1 = new HBox();
+
+        hBox.getChildren().addAll(wallets, deleteButton);
+        hBox.setSpacing(5);
+        hBox1.getChildren().addAll(passwordField, viewButton);
+        hBox1.setSpacing(5);
 
         this.add(text, 1, 0);
-        this.add(wallets, 1, 1);
+       /* this.add(wallets, 1, 1);
         this.add(deleteButton, 2, 1);
         this.add(passwordField, 1, 2);
-        this.add(viewButton, 2, 2);
-        this.add(home, 5, 1);
+        this.add(viewButton, 2, 2);*/
+        this.add(hBox, 1, 1);
+        this.add(hBox1, 1, 2);
+        this.add(home, 1, 3);
 
 
         for (String a : new Utility().getListOfWallets()) {
