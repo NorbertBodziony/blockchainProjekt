@@ -378,7 +378,7 @@ public class Controller {
             addCompanyDialog = new addCompanyDialog();
 
             addCompanyDialog.showAndWait().ifPresent(handler -> {
-                System.out.println("Name=" + handler.getFirst() + ", Surname: " + handler.getSecond() + "Company: " + handler.getThird());
+                System.out.println("Name=" + handler.getFirst() + ", Sector: " + handler.getSecond() + "PhoneNumber: " + handler.getThird());
                 try {
                     DatagramPacket packet;
                     NodeRespond respond;
@@ -550,6 +550,8 @@ public class Controller {
 
 
                     mainView.setWalletsLoginUsingSavedWallet(utils.getListOfWallets().toArray(new String[0]));
+                    mainView.setWalletsManageSetting(utils.getListOfWallets().toArray(new String[0]));
+
 
                     System.out.println("Password Equals ");
                     mainView.setScreenVisible("mainPanel");
@@ -568,6 +570,7 @@ public class Controller {
 
         @Override
         public void handle(ActionEvent event) {
+
 
             try {
                 String temp = mainView.getSelectedWalletManageSetting();

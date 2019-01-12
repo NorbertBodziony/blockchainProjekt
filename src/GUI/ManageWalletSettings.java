@@ -31,17 +31,19 @@ public class ManageWalletSettings extends GridPane {
         deleteButton = new Button("Delete");
         viewButton = new Button("View");
         passwordField = new PasswordField();
+        passwordField.setPromptText("Password");
+        passwordField.setMaxWidth(150);
 
         wallets = new ChoiceBox<>();
-        wallets.setPrefWidth(150);
+        wallets.setMaxWidth(150);
         wallets.getSelectionModel().selectFirst();
 
 
         this.add(text, 1, 0);
         this.add(wallets, 1, 1);
         this.add(deleteButton, 2, 1);
-        this.add(passwordField, 3, 1);
-        this.add(viewButton, 4, 1);
+        this.add(passwordField, 1, 2);
+        this.add(viewButton, 2, 2);
         this.add(home, 5, 1);
 
 
@@ -49,7 +51,7 @@ public class ManageWalletSettings extends GridPane {
             System.out.println("Wallets: " + a);
         }
         this.setVgap(0);
-        this.setHgap(5);
+        this.setHgap(0);
         this.setVisible(false);
 
 

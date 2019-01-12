@@ -39,10 +39,10 @@ public class addCompanyDialog extends Dialog<Nine<String>> {
         TextField name = new TextField();
         name.setPromptText("Name");
         TextField surname = new TextField();
-        surname.setPromptText("Surname");
+        surname.setPromptText("Sector");
 
         TextField company = new TextField();
-        company.setPromptText("CompanyID");
+        company.setPromptText("Phone number");
 
         TextField email = new TextField();
         email.setPromptText("Email");
@@ -67,7 +67,7 @@ public class addCompanyDialog extends Dialog<Nine<String>> {
         grid.add(new Label("Sector:"), 0, 1);
         grid.add(surname, 1, 1);
 
-        grid.add(new Label("Name:"), 0, 2);
+        grid.add(new Label("Phone number:"), 0, 2);
         grid.add(company, 1, 2);
 
 
