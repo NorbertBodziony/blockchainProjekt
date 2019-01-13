@@ -26,10 +26,13 @@ public class LoginUsingPrivKey extends GridPane {
         Tooltip tooltipPublicKey = new Tooltip("Type publick key here: ");
         publicKey.setTooltip(tooltipPublicKey);
 
+        publicKey.setPromptText("Publick key: ");
+
         Tooltip tooltipPassword = new Tooltip("Type private key here: ");
 
         passwordField = new PasswordField();
         passwordField.setTooltip(tooltipPassword);
+        passwordField.setPromptText("Private key: ");
         //passwordField.setStyle("-fx-background-color: #53f442; ");
 
 
@@ -47,7 +50,13 @@ public class LoginUsingPrivKey extends GridPane {
 
         this.add(text, 1, 0);
 
+
+        // this.add(new Label("Publick key: "), 1, 1, 2, 1);
+
         this.add(publicKey, 1, 1, 2, 1);
+
+        // this.add(new Label("Private key: "), 1, 2, 2, 1);
+
         this.add(passwordField, 1, 2, 2, 1);
 
 

@@ -28,25 +28,27 @@ public class LoginUsingSavedWallet extends GridPane {
         wallets.setPrefWidth(100);
 
 
+
         passwordField = new PasswordField();
-        //publicKey = new TextField();
+        passwordField.setPromptText("Password");
 
-
+/*
         // 4'th parameter in rgba is a % of transparency
         passwordField.setStyle("-fx-background-color: rgba(255, 0, 172, 0.4);" +
                 "-fx-border-color: #630043;");
-/*
+*//*
         +"-fx-border-radius: 10 10 10 10;" +
-                "-fx-background-radius: 10 10 10 10;");*/
+                "-fx-background-radius: 10 10 10 10;");*//*
 
-        /*publicKey.setStyle("-fx-background-color: rgba(255, 0, 172, 0.4);" +
-                "-fx-border-color: #630043");*/
+         *//*publicKey.setStyle("-fx-background-color: rgba(255, 0, 172, 0.4);" +
+                "-fx-border-color: #630043");*//*
 
         wallets.setStyle("-fx-background-color: rgba(255, 0, 172, 0.4);" +
-                "-fx-border-color: #630043;");
+                "-fx-border-color: #630043;");*/
 
 
         //wallets.getItems().setAll("Wallet 1", "Wallet 2", "Wallet 3");
+
         wallets.getSelectionModel().selectFirst();
 
 
@@ -63,7 +65,11 @@ public class LoginUsingSavedWallet extends GridPane {
         });
 
         this.add(text, 1, 0);
+        //this.add(new Label("Wallet: "), 1, 1);
+
         this.add(wallets, 1, 1);
+        //this.add(new Label("Password: "), 1, 1);
+
         this.add(passwordField, 1, 2, 2, 1);
         //this.add(passwordField,1,3,2,1);
 
@@ -81,10 +87,6 @@ public class LoginUsingSavedWallet extends GridPane {
         this.setVisible(false);
 
 
-    }
-
-    public Button getHome() {
-        return home;
     }
 
     public void setHomeButton(EventHandler<ActionEvent> actionEventEventHandler) {

@@ -20,10 +20,6 @@ public class sendDialog extends Dialog<Pair<String, String>> {
         this.setGraphic(null);
         this.initStyle(StageStyle.UNDECORATED);
         this.setResizable(true);
-        //this.getDialogPane().setPrefSize(700,1000);
-        //this.setHeight(1000);
-        //this.setWidth(1000);
-        //this.getDialogPane().setStyle("-fx-background-color: #20a013; ");
 
 
         ButtonType loginButtonType = new ButtonType("Send", ButtonBar.ButtonData.OK_DONE);

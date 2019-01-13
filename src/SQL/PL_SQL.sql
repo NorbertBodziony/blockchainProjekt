@@ -4,6 +4,9 @@ CREATE SEQUENCE block_id_seq increment by 1 start with 1;
 CREATE SEQUENCE send_block_seq increment by 1 start with 1;
 CREATE SEQUENCE receive_block_seq increment by 1 start with 1;
 CREATE SEQUENCE blockchain_seq increment by 1 start with 1;
+CREATE SEQUENCE address_seq increment by 1 start with 1;
+CREATE SEQUENCE customer_seq increment by 1 start with 1;
+CREATE SEQUENCE company_seq increment by 1 start with 1;
 ---------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------
@@ -17,7 +20,6 @@ BEGIN
 END;
 
 
-
 CREATE OR REPLACE TRIGGER receive_block_on_insert
   BEFORE INSERT ON receive_block
   FOR EACH ROW
@@ -26,13 +28,39 @@ BEGIN
   INTO :new.id FROM dual;
 END;
 
-
 CREATE OR REPLACE TRIGGER block_on_insert
   BEFORE INSERT ON block
   FOR EACH ROW
 BEGIN
   SELECT block_id_seq.nextval
   INTO :new.block_id FROM dual;
+END;
+
+create or replace 
+TRIGGER address_on_insert
+  BEFORE INSERT ON address
+  FOR EACH ROW
+BEGIN
+  SELECT address_seq.nextval
+  INTO :new.address_id FROM dual;
+END;
+
+create or replace 
+TRIGGER company_on_insert
+  BEFORE INSERT ON company
+  FOR EACH ROW
+BEGIN
+  SELECT company_seq.nextval
+  INTO :new.company_id FROM dual;
+END;
+
+create or replace 
+TRIGGER customer_on_insert
+  BEFORE INSERT ON customer
+  FOR EACH ROW
+BEGIN
+  SELECT customer_seq.nextval
+  INTO :new.customer_id FROM dual;
 END;
 
 
@@ -82,13 +110,14 @@ FUNCTION CREATE_BLOCK
 , PREVIOUS_HASH_CODE IN VARCHAR2 
 , AMOUNT IN INT
 , RECEIVE_TYPE IN INT  
-, SEND_TYPE IN INT  
+, SEND_TYPE IN INT
+, TRANSACTION_TIME IN TIMESTAMP
 ) RETURN NUMBER AS
 block_id INT;
 last_block INT;
 BEGIN
-  INSERT INTO BLOCK(previous_block, blockchain_id, signature, hash_code, previous_hash_code, amount, receive_type, send_type)
-  VALUES(PREVIOUS_BLOCK, BLOCKCHAIN_ID, SIGNATURE, HASH_CODE, PREVIOUS_HASH_CODE, AMOUNT, RECEIVE_TYPE, SEND_TYPE);
+  INSERT INTO BLOCK(previous_block, blockchain_id, signature, hash_code, previous_hash_code, amount, receive_type, send_type, transaction_time)
+  VALUES(PREVIOUS_BLOCK, BLOCKCHAIN_ID, SIGNATURE, HASH_CODE, PREVIOUS_HASH_CODE, AMOUNT, RECEIVE_TYPE, SEND_TYPE, TRANSACTION_TIME);
   SELECT MAX(b.block_id) INTO block_id FROM block b;
   RETURN block_id;
 END CREATE_BLOCK;
@@ -111,7 +140,7 @@ BEGIN
   RECEIVE_TYPE_ID := create_receive_block(sender => null);
   BLOCK_ID := create_block(previous_block => NULL, blockchain_id => BLOCKCHIAN_ID, signature => SIGNATURE, hash_code => HASH_CODE,
     previous_hash_code => GENESIS_PREVIOUS_HASH, amount => GENESIS_BALANCE,
-    receive_type => RECEIVE_TYPE_ID, send_type => NULL);
+    receive_type => RECEIVE_TYPE_ID, send_type => NULL, transaction_time => SYSTIMESTAMP);
   RETURN BLOCK_ID;
   
 END CREATE_GENESIS_BLOCK;
@@ -280,6 +309,45 @@ BEGIN
   return 0 - NIEprawidlowa
   */
 END TRANSACTION_VERIFY;
+
+
+create or replace 
+FUNCTION ADD_COMPANY 
+(
+  COMPANY_NAME IN VARCHAR2  
+, SECTOR IN VARCHAR2  
+, CONTACT_TEL IN VARCHAR2  
+, CONTACT_EMAIL IN VARCHAR2  
+, COUNTRY IN VARCHAR2  
+, POSTAL_CODE IN VARCHAR2  
+, CITY IN VARCHAR2  
+, STREET IN VARCHAR2  
+, APARTMENT_NUMBER IN VARCHAR2  
+) RETURN NUMBER AS
+new_address_id INT;
+new_company_id INT;
+BEGIN
+  INSERT INTO address(country, postal_code, city, street, apartment_number) VALUES
+    (COUNTRY, POSTAL_CODE, CITY, STREET, APARTMENT_NUMBER);
+  
+  SELECT MAX(address_id) INTO new_address_id FROM address;
+  
+  IF SECTOR IS NULL THEN
+    INSERT INTO company(company_name, sector, contact_tel, address_id, contact_email) VALUES
+      (COMPANY_NAME, NULL, CONTACT_TEL, new_address_id, CONTACT_EMAIL);
+  ELSE
+    INSERT INTO company(company_name, sector, contact_tel, address_id, contact_email) VALUES
+      (COMPANY_NAME, SECTOR, CONTACT_TEL, new_address_id, CONTACT_EMAIL);
+  END IF;
+  
+  SELECT MAX(company_id) INTO new_company_id FROM company;
+  
+  COMMIT;
+  RETURN new_company_id;
+  
+END ADD_COMPANY;
+
+DROP FUNCTION ADD_COMPANY;
 --------------------------------------------------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------------------------------------------------
@@ -320,7 +388,7 @@ BEGIN
   send_type_id := create_send_block(recipient => RECIPIENT);
   
   sender_block_id := create_block(previous_block => sender_previous_block,blockchain_id => sender_blockchain_id, signature => SEND_BLOCK_SIGNATURE, hash_code => SEND_HASH_CODE, 
-    previous_hash_code => sender_previous_hash_code, amount => AMOUNT, receive_type => NULL,send_type => send_type_id);
+    previous_hash_code => sender_previous_hash_code, amount => AMOUNT, receive_type => NULL,send_type => send_type_id, transaction_time => SYSTIMESTAMP);
     
   UPDATE blockchain SET last_block = sender_block_id WHERE blockchain.blockchain_id = sender_blockchain_id;
 
@@ -332,10 +400,48 @@ BEGIN
   receive_type_id := create_receive_block(sender => SENDER);
   
   recipient_block_id := create_block(previous_block => recipient_previous_block, blockchain_id => recipient_blockchain_id,signature => RECEIVE_BLOCK_SIGNATURE, hash_code => RECEIVE_HASH_CODE, 
-    previous_hash_code => recipient_previous_hash_code, amount => AMOUNT, receive_type => receive_type_id, send_type => NULL);
+    previous_hash_code => recipient_previous_hash_code, amount => AMOUNT, receive_type => receive_type_id, send_type => NULL, transaction_time => SYSTIMESTAMP);
     
   UPDATE blockchain SET last_block = recipient_block_id WHERE blockchain.blockchain_id = recipient_blockchain_id;
   
   
 END PERFORM_TRANSACTION;
 --------------------------------------------------------------------------------------------------------------------------
+
+create or replace 
+PROCEDURE SET_PERSONAL_DATA 
+(
+  PUB_KEY IN VARCHAR2
+, COMPANY_ID IN INT
+, FIRST_NAME IN VARCHAR2  
+, LAST_NAME IN VARCHAR2  
+, CONTACT_EMAIL IN VARCHAR2  
+, COUNTRY IN VARCHAR2  
+, POSTAL_CODE IN VARCHAR2  
+, CITY IN VARCHAR2  
+, STREET IN VARCHAR2  
+, APARTMENT_NUMBER IN VARCHAR2  
+) AS
+  new_address_id INT;
+  new_customer_id INT;
+BEGIN
+  IF COUNTRY IS NULL OR POSTAL_CODE IS NULL OR CITY IS NULL OR
+  STREET IS NULL OR APARTMENT_NUMBER IS NULL THEN
+    INSERT INTO customer(company_id, first_name, last_name, contact_email) VALUES
+      (COMPANY_ID, FIRST_NAME, LAST_NAME, CONTACT_EMAIL);
+  ELSE
+    INSERT INTO address(country, postal_code, city, street, apartment_number) VALUES
+      (COUNTRY, POSTAL_CODE, CITY, STREET, APARTMENT_NUMBER);
+    SELECT MAX(address_id) INTO new_address_id FROM address; 
+      
+    INSERT INTO customer(company_id, address_id, first_name, last_name, contact_email) VALUES
+      (COMPANY_ID, new_address_id, FIRST_NAME, LAST_NAME, CONTACT_EMAIL);
+  END IF;
+  
+  SELECT MAX(CUSTOMER_ID) INTO new_customer_id FROM CUSTOMER;
+  
+  UPDATE ACCOUNT SET ACCOUNT.CUSTOMER_TYPE = new_customer_id WHERE
+    PUBLIC_KEY = PUB_KEY;
+  
+  COMMIT;
+END SET_PERSONAL_DATA;

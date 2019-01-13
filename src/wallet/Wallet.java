@@ -75,6 +75,34 @@ public class Wallet {
         send(walletRequest);
     }
 
+    public void getTransactionHistory(boolean directory, String publicKey, String startTime, String stopTime) throws IOException {
+        WalletRequest request = new GetTransactionHistory(directory, publicKey, startTime, stopTime);
+        send(request);
+    }
+
+    public void addCompany(String companyName, String sector, String contactTel, String contactEmail, String country,
+                           String postalCode, String city, String street, String apartmentNumber) throws IOException {
+        WalletRequest request = new AddCompany(companyName, sector, contactTel, contactEmail,
+                country, postalCode, city, street, apartmentNumber);
+
+        send(request);
+    }
+
+    public void setPersonalData(String publicKey,  int companyId,  String firstName,  String lastName,
+                                String contactEmail,  String country, String postalCode,
+                                String city, String street, String apartmentNumber) throws IOException {
+        WalletRequest request = new SetPersonalData(publicKey, companyId, firstName, lastName,
+                contactEmail, country, postalCode, city, street, apartmentNumber);
+
+        send(request);
+    }
+
+    public void findPublicKey(String firstName, String lastName) throws IOException {
+        WalletRequest request = new FindPublicKey(firstName, lastName);
+
+        send(request);
+    }
+
 
     public DatagramPacket listenToNodeRespond() throws IOException {
         byte[] data = new byte[DATAGRAM_SIZE];

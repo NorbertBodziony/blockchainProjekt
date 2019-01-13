@@ -14,8 +14,8 @@ import javafx.stage.StageStyle;
 import javafx.util.Pair;
 
 public class reciveDialog extends Dialog<Pair<String, String>> {
-    double xOffset;
-    double yOffset;
+    private double xOffset;
+    private double yOffset;
     private String publicKey;
     private Clipboard clipboard;
     private ClipboardContent content;

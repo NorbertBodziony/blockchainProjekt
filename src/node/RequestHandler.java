@@ -1,9 +1,6 @@
 package node;
 
-import datagramInterfaces.ErrorCode;
-import datagramInterfaces.NodeRespond;
-import datagramInterfaces.PerformTransaction;
-import datagramInterfaces.WalletRequest;
+import datagramInterfaces.*;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -44,15 +41,32 @@ public class RequestHandler implements Runnable {
     public void run() {
         try {
             WalletRequest request = unpackRequest();
-            System.out.println(request.toString());
+
             if(request.getClass()==PerformTransaction.class)
             {
                 ((PerformTransaction) request).setClientTCP(clientTCP);
                 ((PerformTransaction) request).setTCPnodes(TCPnodes);
             }
-            NodeRespond respond = request.handle(connection);
-            sendRespond(respond);
-
+            if(request.getClass()==CreateAccount.class)
+            {
+                ((CreateAccount)request).setClientTCP(clientTCP);
+            }
+            if(request.getClass()==AddCompany.class)
+            {
+                ((AddCompany)request).setClientTCP(clientTCP);
+            }
+            if(request.getClass()==SetPersonalData.class)
+            {
+                ((SetPersonalData)request).setClientTCP(clientTCP);
+            }
+            if(request instanceof GetTransactionHistory) {
+                List<NodeRespond> responds = ((GetTransactionHistory) request).handleHistory(connection);
+                for(NodeRespond respond : responds)
+                    sendRespond(respond);
+            }else {
+                NodeRespond respond = request.handle(connection);
+                sendRespond(respond);
+            }
         } catch (SQLException | IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -65,10 +79,10 @@ public class RequestHandler implements Runnable {
         os.writeObject(respond);
         os.flush();
         byte[] sendBuf = byteStream.toByteArray();
-      //  System.out.println("buff size: " + sendBuf.length);
+        System.out.println("buff size: " + sendBuf.length);
         DatagramPacket packet = new DatagramPacket(sendBuf, sendBuf.length,
                 this.packet.getAddress(), this.packet.getPort());
-      // System.out.println("packet length = " + packet.getLength());
+        System.out.println("packet length = " + packet.getLength());
         socket.send(packet);
         os.close();
     }

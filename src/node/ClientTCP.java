@@ -1,6 +1,9 @@
 package node;
 
 import account.Account;
+import account.Address;
+import account.Company;
+import account.Customer;
 import account.ReceiveBlock;
 import account.SendBlock;
 import constants.Constants;
@@ -35,6 +38,25 @@ public class ClientTCP implements Runnable {
         ObjectInputStream inFromServer = new ObjectInputStream(clientSocket.getInputStream());
         TCPinterface.TCPid request=TCPinterface.TCPid.Blockchain;
         outToServer.writeObject(request);
+
+        List<AddressData> AddressData= (List<AddressData>) inFromServer.readObject();
+        for(int i=0;i<AddressData.size();i++)
+        {System.out.println("dataupdate1");
+            Database.InsertAddress(connection,AddressData.get(i));
+
+        }
+        List<database.Company> Company= (List<database.Company>) inFromServer.readObject();
+        for(int i=0;i<Company.size();i++)
+        {System.out.println("dataupdate1");
+            Database.InsertCompany(connection,Company.get(i));
+
+        }
+        List<database.Customer> Customer= (List<database.Customer>) inFromServer.readObject();
+        for(int i=0;i<Customer.size();i++)
+        {System.out.println("dataupdate1");
+            Database.InsertCustomer(connection,Customer.get(i));
+
+        }
 
         List<BlockchainData> AccountData= (List<BlockchainData>) inFromServer.readObject();
         for(int i=0;i<AccountData.size();i++)
@@ -90,6 +112,30 @@ public class ClientTCP implements Runnable {
         outToServer.writeObject(account);
         outToServer.writeObject(genesisBlock);
     }
+
+    public void SendCompany(int Id,Address address, Company company) throws IOException {
+        ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+
+        TCPinterface.TCPid request=TCPinterface.TCPid.Company;
+
+        outToServer.writeObject(request);
+        outToServer.writeObject(Id);
+        outToServer.writeObject(address);
+        outToServer.writeObject(company);
+    }
+
+    public void SendPersonalData(int Id,Address address, Customer customer) throws IOException {
+        ObjectOutputStream outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+
+        TCPinterface.TCPid request=TCPinterface.TCPid.PersonalData;
+
+        outToServer.writeObject(request);
+        outToServer.writeObject(Id);
+        outToServer.writeObject(address);
+        outToServer.writeObject(customer);
+    }
+
+
     @Override
     public void run() {
         while(true)
@@ -100,7 +146,7 @@ public class ClientTCP implements Runnable {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException {
-        Socket clientSocket = new Socket("localhost", Constants.TCP_PORT);
+        Socket clientSocket = new Socket("localhost", 6667);
         ClientTCP client=new ClientTCP(clientSocket);
         client.GetDatabase();
         client.run();

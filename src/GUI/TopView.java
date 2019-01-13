@@ -22,11 +22,11 @@ public class TopView extends BorderPane {
 
     public TopView() {
 
-        name = new Text("Oxygen Network");
+        name = new Text("YOYOYOYO");
         name.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
         name.setFill(Color.DARKOLIVEGREEN);
 
-        version = new Text("Version: 0.2");
+        version = new Text("Version: 0.45");
         version.setFill(Color.WHITE);
         logout = new Button("Logout");
         logout.setStyle("-fx-background-color: #4286f4; ");
@@ -58,14 +58,6 @@ public class TopView extends BorderPane {
         this.setRight(hBox);
 
 
-    }
-
-    public int returnOne() {
-        return 1;
-    }
-
-    public void setLogoutOnAction(LogoutAction logoutAction) {
-        logout.setOnAction(logoutAction);
     }
 
     public class LogoutAction implements EventHandler {

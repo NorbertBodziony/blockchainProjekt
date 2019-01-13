@@ -26,17 +26,6 @@ public class Utility {
         }
     }
 
-    public static void main(String[] args) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, InvalidKeySpecException {
-        //System.out.println(new Utility().getListOfWallets());
-        System.out.println(new Utility().getListOfWallets());
-
-        Utility a = new Utility();
-        // a.createWalletFile("a","aaaaa2","bbbb","Wallet4");
-
-        //a.cipherWalletFile("Wallet4","a");
-        a.deleteWalletFile("ada.wallet");
-    }
-
     public List<String> getListOfWallets() {
 
         String paths = System.getProperty("user.dir");
@@ -67,7 +56,6 @@ public class Utility {
     }
 
     public void createWalletFile(String password, String publicKey, String privateKey, String walletName) throws NoSuchPaddingException, InvalidKeyException, NoSuchAlgorithmException, IOException, BadPaddingException, IllegalBlockSizeException, InvalidAlgorithmParameterException, InvalidKeySpecException {
-        //walletName += ".wallet";
         System.out.println(walletName);
         String paths = System.getProperty("user.dir");
         paths += File.separator + "Wallets";
@@ -84,11 +72,7 @@ public class Utility {
                      BufferedWriter bw = new BufferedWriter(fw);
                      PrintWriter out = new PrintWriter(bw)) {
                     out.println(publicKey);
-                    //more code
                     out.println(privateKey);
-                    //more code
-
-                    //cipherWalletFile(walletName,password);
 
 
                     System.out.println("Zaszyfrowano");
@@ -142,9 +126,6 @@ public class Utility {
         if (output != null)
             outFile.write(output);
 
-       /* File newFile = new File(paths +"/"+ walletName);
-        newFile.delete();*/
-
         inFile.close();
         outFile.flush();
         outFile.close();
@@ -172,9 +153,8 @@ public class Utility {
             cipher.init(Cipher.DECRYPT_MODE, secretKey, pbeParameterSpec);
 
 
-            //FileOutputStream fos = new FileOutputStream(paths +"/"+ walletName +".txt");
-
             ByteArrayOutputStream fos = new ByteArrayOutputStream();
+
             byte[] in = new byte[1024];
             int read;
             while ((read = fis.read(in)) != -1) {
@@ -187,15 +167,12 @@ public class Utility {
             if (output != null)
                 fos.write(output);
 
-            //System.out.println(fos.toString());
-
             lines = fos.toString().split("\\r?\\n");
 
             fis.close();
             fos.flush();
             fos.close();
         }
-
 
         return lines;
     }
