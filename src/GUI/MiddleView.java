@@ -80,7 +80,7 @@ public class MiddleView extends StackPane {
         createWallet = new Button("Create a new wallet");
         manageSetting = new Button("Manage wallet settings");
         generateKeys = new Button("Generate keys");
-        addCompany = new Button("Add company: ");
+        addCompany = new Button("Add company");
 
         buttonList.add(loginUsingPrivKey);
         buttonList.add(loginUsingWallet);

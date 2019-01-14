@@ -55,10 +55,12 @@ public class NodeTCP implements Runnable {
         this.connection = Database.connect();
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
 
-        clientTCP.add(new ClientTCP(new Socket("localhost", 6667)));
+        clientTCP.add(new ClientTCP(new Socket("192.168.43.223", 6667)));
         System.out.println("getdatabase");
         clientTCP.get(0).GetDatabase();
+        System.out.println("constraint");
         InitDatabase.createConstraints(statement);
+        System.out.println("constraint");
         new Thread(clientTCP.get(clientTCP.size()-1)).start();
 
         Node nodeUDP=new Node(TCPnodes,clientTCP);
