@@ -22,7 +22,7 @@ public class TopView extends BorderPane {
 
     public TopView() {
 
-        name = new Text("YOYOYOYO");
+        name = new Text("Blockchain");
         name.setFont(Font.font("Tahoma", FontWeight.EXTRA_BOLD, 25));
         name.setFill(Color.DARKOLIVEGREEN);
 
