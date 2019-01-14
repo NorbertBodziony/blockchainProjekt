@@ -36,7 +36,7 @@ public class Database {
             if(decision.toLowerCase().equals("d")) {
                 System.out.println("DROP");
                 InitDatabase.dropTriggers(statement);
-                //InitDatabase.dropConstraints(statement);
+                InitDatabase.dropConstraints(statement);
                 InitDatabase.dropSchema(statement);
                 InitDatabase.dropSequences(statement);
                 InitDatabase.dropProcedures(statement);
@@ -44,7 +44,7 @@ public class Database {
             }else {
                 System.out.println("INIT");
                 InitDatabase.createSchema(statement);
-                //InitDatabase.createConstraints(statement);
+                InitDatabase.createConstraints(statement);
                 InitDatabase.createSequences(statement);
                 InitDatabase.createTriggers(statement);
                 InitDatabase.createProcedures(statement);

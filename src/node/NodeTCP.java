@@ -35,7 +35,7 @@ public class NodeTCP implements Runnable {
         try {
             System.out.println("DROP");
             InitDatabase.dropTriggers(statement);
-            //InitDatabase.dropConstraints(statement);
+            InitDatabase.dropConstraints(statement);
             InitDatabase.dropSchema(statement);
             InitDatabase.dropSequences(statement);
             InitDatabase.dropProcedures(statement);
@@ -46,13 +46,11 @@ public class NodeTCP implements Runnable {
         }
             System.out.println("INIT");
             InitDatabase.createSchema(statement);
-            //InitDatabase.createConstraints(statement);
             InitDatabase.createSequences(statement);
             InitDatabase.createTriggers(statement);
             InitDatabase.createProcedures(statement);
             InitDatabase.createFuntions(statement);
 
-        Database.closeConnection(connection, statement);
 
         this.connection = Database.connect();
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
@@ -60,6 +58,7 @@ public class NodeTCP implements Runnable {
         clientTCP.add(new ClientTCP(new Socket("localhost", 6667)));
         System.out.println("getdatabase");
         clientTCP.get(0).GetDatabase();
+        InitDatabase.createConstraints(statement);
         new Thread(clientTCP.get(clientTCP.size()-1)).start();
 
         Node nodeUDP=new Node(TCPnodes,clientTCP);
