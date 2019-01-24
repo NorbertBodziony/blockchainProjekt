@@ -2,14 +2,14 @@ package datagramInterfaces;
 
 import database.Database;
 import database.Transaction;
-import node.Node;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
-import static datagramInterfaces.ErrorCode.*;
+import static datagramInterfaces.ErrorCode.OK;
 import static datagramInterfaces.TransactionRespond.MAX_IN_ONE_PACKET;
 
 public class GetTransactionHistory extends WalletRequest{

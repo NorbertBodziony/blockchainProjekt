@@ -1,7 +1,6 @@
 package tests;
 
 import constants.Constants;
-import datagramInterfaces.FindPublicKey;
 import datagramInterfaces.FindPublicKeyRespond;
 import datagramInterfaces.NodeRespond;
 import org.junit.Test;
@@ -9,10 +8,9 @@ import wallet.Wallet;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.SocketException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 public class FindPublicKeyInterfaceTest {
 
@@ -28,8 +26,11 @@ public class FindPublicKeyInterfaceTest {
         FindPublicKeyRespond r = (FindPublicKeyRespond) respond;
         List<String> publicKeys = r.getPublicKeys();
 
-        for(String publicKey : publicKeys)
+        for(String publicKey : publicKeys){
             System.out.println(publicKey);
+            assertFalse(publicKey.length() != Constants.PUBLIC_KEY_LENGTH);
+        }
+
     }
 
 }

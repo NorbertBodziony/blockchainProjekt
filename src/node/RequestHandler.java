@@ -8,7 +8,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;

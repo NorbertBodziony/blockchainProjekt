@@ -8,13 +8,12 @@ import wallet.Wallet;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.SocketException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 
-import static datagramInterfaces.ErrorCode.*;
-import static org.junit.Assert.*;
+import static datagramInterfaces.ErrorCode.OK;
+import static org.junit.Assert.assertTrue;
 
 public class GetBalanceTest {
 

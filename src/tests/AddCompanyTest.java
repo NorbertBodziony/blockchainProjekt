@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class AddCompanyTest {
 
@@ -20,11 +20,10 @@ public class AddCompanyTest {
                     "street", "apartmentNumber");
             int companyId = Database.addCompany(con, newCompany);
             System.out.println(companyId);
-            assertTrue(true);
+            assertTrue(companyId > 0);
 
         } catch (SQLException e) {
             e.printStackTrace();
-            assertTrue(false);
         }
     }
 

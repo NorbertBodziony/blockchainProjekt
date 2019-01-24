@@ -7,7 +7,7 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class SetPersonalDataTest {
 
@@ -25,7 +25,6 @@ public class SetPersonalDataTest {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            assertTrue(false);
         }
     }
 

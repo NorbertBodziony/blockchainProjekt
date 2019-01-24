@@ -6,9 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Formatter;
 
-import static account.Company.*;
 import static account.Address.*;
-import static account.Customer.*;
+import static account.Company.*;
+import static account.Customer.FIRST_NAME_LEN;
+import static account.Customer.LAST_NAME_LEN;
 
 public class InitDatabase {
     private static StringBuilder sb = new StringBuilder();

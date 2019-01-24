@@ -1,10 +1,8 @@
 package datagramInterfaces;
 
-import account.Customer;
 import database.Database;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;

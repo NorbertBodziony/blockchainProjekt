@@ -8,11 +8,8 @@ import wallet.Wallet;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SignatureException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class AddCompanyInterfaceTest {
 
@@ -29,13 +26,11 @@ public class AddCompanyInterfaceTest {
             NodeRespond respond = wallet.unpackRespond(packet);
 
             AddCompanyRespond companyRespond = (AddCompanyRespond) respond;
-
             System.out.println(companyRespond.getCompanyId());
-            assertTrue(true);
+            assertTrue(companyRespond.getCompanyId() > 0);
 
         }catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            assertTrue(false);
         }
     }
 
@@ -60,11 +55,10 @@ public class AddCompanyInterfaceTest {
             AddCompanyRespond companyRespond = (AddCompanyRespond) respond;
 
             System.out.println(companyRespond.getCompanyId());
-            assertTrue(true);
+            assertTrue(companyRespond.getCompanyId() > 0);
 
         }catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
-            assertTrue(false);
         }
     }
 

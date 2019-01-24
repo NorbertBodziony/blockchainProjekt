@@ -1,17 +1,10 @@
 package node;
-import account.ReceiveBlock;
-import account.SendBlock;
+
 import constants.Constants;
 import database.Database;
-
 import database.InitDatabase;
-import datagramInterfaces.PerformTransaction;
-import datagramInterfaces.TCPinterface;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -20,8 +13,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 
 public class NodeTCP implements Runnable {
 
@@ -35,7 +26,7 @@ public class NodeTCP implements Runnable {
         try {
             System.out.println("DROP");
             InitDatabase.dropTriggers(statement);
-            //InitDatabase.dropConstraints(statement);
+            InitDatabase.dropConstraints(statement);
             InitDatabase.dropSchema(statement);
             InitDatabase.dropSequences(statement);
             InitDatabase.dropProcedures(statement);
@@ -46,7 +37,6 @@ public class NodeTCP implements Runnable {
         }
             System.out.println("INIT");
             InitDatabase.createSchema(statement);
-            //InitDatabase.createConstraints(statement);
             InitDatabase.createSequences(statement);
             InitDatabase.createTriggers(statement);
             InitDatabase.createProcedures(statement);
@@ -54,7 +44,7 @@ public class NodeTCP implements Runnable {
 
         Database.closeConnection(connection, statement);
 
-        this.connection = Database.connect();
+        InitDatabase.createConstraints(statement);
         this.welcomeSocket =new ServerSocket(Constants.TCP_PORT);
 
         clientTCP.add(new ClientTCP(new Socket("localhost", 6667)));

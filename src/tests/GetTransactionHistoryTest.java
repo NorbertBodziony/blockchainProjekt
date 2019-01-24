@@ -9,15 +9,13 @@ import wallet.Wallet;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
-import java.net.SocketException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Scanner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 public class GetTransactionHistoryTest {
     // first run genesis node
@@ -41,8 +39,11 @@ public class GetTransactionHistoryTest {
                 transactions.addAll(tr.getTransactions());
             }while (!tr.isEnd());
 
-            for(Transaction t : transactions)
+            for(Transaction t : transactions){
                 System.out.println(t);
+                assertFalse(t == null);
+            }
+
 
         } catch (IOException | NoSuchAlgorithmException | SignatureException |
                 InvalidKeyException | ClassNotFoundException e) {

@@ -1,14 +1,14 @@
 package tests;
 
+import constants.Constants;
 import database.Database;
 import org.junit.Test;
-import wallet.Wallet;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
 
 public class FindPublicKeyTest {
 
@@ -18,8 +18,11 @@ public class FindPublicKeyTest {
         List<String> result =
                 Database.findPublicKey(con,"first", "last");
 
-        for(String publicKey : result)
+        for(String publicKey : result) {
             System.out.println(publicKey);
+            assertFalse(publicKey.length() != Constants.PUBLIC_KEY_LENGTH);
+        }
+
     }
 
 }

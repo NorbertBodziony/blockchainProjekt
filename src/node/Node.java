@@ -1,6 +1,7 @@
 package node;
-import database.Database;
+
 import constants.Constants;
+import database.Database;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -9,7 +10,6 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;

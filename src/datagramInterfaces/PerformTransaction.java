@@ -1,21 +1,20 @@
 package datagramInterfaces;
-import database.Database;
+
 import account.ReceiveBlock;
 import account.SendBlock;
 import cryptography.CryptoConverter;
 import cryptography.EllipticCurveHelper;
+import database.Database;
 import node.ClientTCP;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.security.InvalidKeyException;
 import java.security.PublicKey;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import static datagramInterfaces.ErrorCode.*;

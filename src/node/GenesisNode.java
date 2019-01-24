@@ -1,26 +1,15 @@
 package node;
-import account.ReceiveBlock;
-import account.SendBlock;
+
 import constants.Constants;
 import database.Database;
 
-import datagramInterfaces.PerformTransaction;
-import datagramInterfaces.TCPinterface;
-
-import javax.sound.midi.Soundbank;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static datagramInterfaces.DatagramMessage.DATAGRAM_SIZE;
 
 public class GenesisNode implements Runnable {
 

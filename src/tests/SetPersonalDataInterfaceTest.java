@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 
 import static datagramInterfaces.ErrorCode.OK;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class SetPersonalDataInterfaceTest {
 

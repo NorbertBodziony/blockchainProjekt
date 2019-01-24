@@ -1,22 +1,18 @@
 package node;
 
-import account.Account;
-import account.Address;
+import account.*;
 import account.Company;
 import account.Customer;
-import account.ReceiveBlock;
-import account.SendBlock;
-import constants.Constants;
 import database.*;
-
 import datagramInterfaces.TCPinterface;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClientTCP implements Runnable {

@@ -11,7 +11,6 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ServerThread extends Thread {

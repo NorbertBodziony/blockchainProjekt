@@ -8,7 +8,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class HistoryDatabaseQueryTest {
 
@@ -18,11 +19,13 @@ public class HistoryDatabaseQueryTest {
             List<Transaction> transactions;
             Connection con = Database.connect();
             transactions = Database.getAllIncomingTransactions(con);
-            for(Transaction t : transactions)
+            for(Transaction t : transactions){
                 System.out.println(t);
+                assertFalse(t == null);
+            }
+
 
         } catch (SQLException e) {
-            assertTrue(false);
             e.printStackTrace();
         }
     }
@@ -33,11 +36,12 @@ public class HistoryDatabaseQueryTest {
             List<Transaction> transactions;
             Connection con = Database.connect();
             transactions = Database.getAllOutgoingTransactions(con);
-            for(Transaction t : transactions)
+            for(Transaction t : transactions){
+                assertFalse(t == null);
                 System.out.println(t);
+            }
 
         } catch (SQLException e) {
-            assertTrue(false);
             e.printStackTrace();
         }
     }

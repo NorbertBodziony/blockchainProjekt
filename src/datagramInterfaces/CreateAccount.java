@@ -1,6 +1,8 @@
 package datagramInterfaces;
+
+import account.Account;
+import account.ReceiveBlock;
 import database.Database;
-import account.*;
 import node.ClientTCP;
 
 import java.io.IOException;
@@ -8,7 +10,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static datagramInterfaces.ErrorCode.*;
+import static datagramInterfaces.ErrorCode.CANNOT_CREATE_ACCOUNT;
+import static datagramInterfaces.ErrorCode.OK;
 
 public class CreateAccount extends WalletRequest {
     private Account account;

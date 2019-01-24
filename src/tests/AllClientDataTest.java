@@ -13,7 +13,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 
 import static datagramInterfaces.ErrorCode.OK;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 public class AllClientDataTest {
 
@@ -35,7 +35,7 @@ public class AllClientDataTest {
             assertTrue(companyRespond.getErrorCode() == OK);
             int companyId = companyRespond.getCompanyId();
             System.out.println("company id");
-            assertTrue(true);
+            assertTrue(companyRespond.getCompanyId() > 0);
 
             // create new account
             wallet.createAccount();

@@ -10,7 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static datagramInterfaces.ErrorCode.*;
+import static datagramInterfaces.ErrorCode.OK;
 
 public class AddCompany extends WalletRequest {
     private Address address;
